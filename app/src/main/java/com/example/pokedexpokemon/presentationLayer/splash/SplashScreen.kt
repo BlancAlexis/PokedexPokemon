@@ -31,10 +31,7 @@ fun SplashScreen() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                modifier = Modifier.size(100.dp),
-                painter = painterResource(R.drawable.ic_app_logo)
-            )
+
             Text(
                 text = "Nom de votre application",
                 //style = MaterialTheme.typography.h5,
