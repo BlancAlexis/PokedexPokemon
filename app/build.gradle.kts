@@ -51,6 +51,14 @@ android {
 }
 
 dependencies {
+    //Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+
+    //Injection de dépendance koin
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.navigation)
+
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
