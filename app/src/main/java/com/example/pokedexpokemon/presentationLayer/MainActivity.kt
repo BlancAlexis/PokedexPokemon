@@ -141,7 +141,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                     ListDetailLayout(
                         modifier = Modifier.padding(innerPadding),
-                        ListDetailsPokemonUiState("Absol", listOf("Ténèbre","Psy"),"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/1.gif" )
+                        ListDetailsPokemonUiState(name = "Absol", type = listOf("Ténèbre","Psy"), sprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/1.gif" )
                     )
                 }
             }

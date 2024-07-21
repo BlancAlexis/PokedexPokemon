@@ -37,9 +37,9 @@ class ListDetailPokemonViewModel (
 }
 
 data class ListDetailsPokemonUiState(
+    val sprite : String ?= null,
     val name : String?= null,
     val type : List<String> = listOf(),
-    val sprite : String ?= null,
 
     val talent : String ?= null,
     val weight : String ?= null,
