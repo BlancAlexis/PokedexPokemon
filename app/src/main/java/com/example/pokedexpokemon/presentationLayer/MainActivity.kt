@@ -59,6 +59,8 @@ import com.example.pokedexpokemon.dataLayer.di.injectFeature
 import com.example.pokedexpokemon.dataLayer.utils.Ressource
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemon
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemonList
+import com.example.pokedexpokemon.presentationLayer.mainScreen.ListDetailLayout
+import com.example.pokedexpokemon.presentationLayer.mainScreen.ListDetailsPokemonUiState
 import com.example.pokedexpokemon.presentationLayer.theme.PokedexPokemonTheme
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -71,20 +73,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
-        GlobalScope.launch {
-            when(val resullt = getPokemon.invoke()){
-                is Ressource.Error -> { println("result.data suicde ${resullt.error}")}
-                is Ressource.Loading -> {}
-                is Ressource.Success -> println("result.data suicde ${resullt.data}")
-            }
-        }
-        GlobalScope.launch {
-            when(val resullt = getList.invoke()){
-                is Ressource.Error -> { println("result.data ${resullt.error}")}
-                is Ressource.Loading -> {}
-                is Ressource.Success -> println("result.data ${resullt.data}")
-            }
-        }
            /* .apply {
             setKeepOnScreenCondition {
                 //Check auto co puis mais ok
@@ -152,7 +140,8 @@ class MainActivity : ComponentActivity() {
                         }
                     ) {
                     ListDetailLayout(
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding),
+                        ListDetailsPokemonUiState("Absol", listOf("Ténèbre","Psy"),"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/1.gif" )
                     )
                 }
             }
@@ -166,123 +155,5 @@ class MainActivity : ComponentActivity() {
         SETTINGS("Settings", Icons.Default.Settings),
     }
 
-@Preview
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
-@Composable
-fun ListDetailLayout(modifier: Modifier = Modifier) {
-    val navigator = rememberListDetailPaneScaffoldNavigator<Any>()
-    NavigableListDetailPaneScaffold(
-        modifier = modifier,
-        navigator = navigator,
-        listPane = {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize(),
-                contentPadding = PaddingValues(16.dp)
-            ) {
-                items(100) {
-                    Spacer(modifier = Modifier.height(20.dp))
-                    Card (
-                        onClick = {
-                            navigator.navigateTo(
-                                pane = ListDetailPaneScaffoldRole.Detail,
-                                content = "Item $it"
-                            )
-                        },
-                        colors = CardDefaults.cardColors(containerColor = Color.Yellow),
-                        modifier = Modifier.fillMaxWidth()
-                    ){
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start,
-                            modifier = Modifier.padding(10.dp)
-                        ) {
-                            Icon(imageVector = Icons.Filled.Home, contentDescription = "", modifier = Modifier.size(55.dp))
-                            Column(
-                                modifier = Modifier.padding(start = 30.dp)
-                            ) {
-                                Text(text = "bulbisar", style = TextStyle( ))
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(0.6f),
-                                    horizontalArrangement = Arrangement.SpaceAround
-                                ) {
-                                    AssistChip(onClick = { /*TODO*/ }, label = { Text(text = "plant")})
-                                    AssistChip(onClick = { /*TODO*/ }, label = { Text(text = "plant")})
 
-                                }
-
-                            }
-                        }
-
-                    }
-                  /*  Text(
-                        "Item $it",
-                        modifier = Modifier
-                            .fillParentMaxWidth()
-                            .clickable {
-                                navigator.navigateTo(
-                                    pane = ListDetailPaneScaffoldRole.Detail,
-                                    content = "Item $it"
-                                )
-                            }
-                            .padding(16.dp)
-                    )*/
-                }
-            }
-        },
-        detailPane = {
-            val content = navigator.currentDestination?.content?.toString() ?: "Select an item"
-            AnimatedPane {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.primaryContainer),
-                    verticalArrangement = Arrangement.Top,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Icon(imageVector = Icons.Filled.Home, contentDescription = "", modifier = Modifier.size(55.dp))
-                    Text(text = content)
-                    Row {
-                        AssistChip(
-                            onClick = {
-                                navigator.navigateTo(
-                                    pane = ListDetailPaneScaffoldRole.Extra,
-                                    content = "Option 1"
-                                )
-                            },
-                            label = {
-                                Text(text = "Option 1")
-                            }
-                        )
-                        Spacer(modifier = Modifier.width(16.dp))
-                        AssistChip(
-                            onClick = {
-                                navigator.navigateTo(
-                                    pane = ListDetailPaneScaffoldRole.Extra,
-                                    content = "Option 2"
-                                )
-                            },
-                            label = {
-                                Text(text = "Option 2")
-                            }
-                        )
-                    }
-                }
-            }
-        },
-        extraPane = {
-            val content = navigator.currentDestination?.content?.toString() ?: "Select an option"
-            AnimatedPane {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.tertiaryContainer),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(text = content)
-                }
-            }
-        }
-    )
-}
 
