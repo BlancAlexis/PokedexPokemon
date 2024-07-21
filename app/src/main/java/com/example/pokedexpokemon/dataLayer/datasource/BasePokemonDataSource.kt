@@ -16,7 +16,8 @@ class BasePokemonDataSourceImpl(
 ) : BasePokemonDataSource, KoinComponent {
     override suspend fun getListBasePokemon(): List<BasePokemonDTO> {
         println("${pokedexService.fetchPokemonList()}")
-        return pokedexService.fetchPokemonList().results
+         pokedexService.fetchPokemonList().results
+        return listOf()
     }
 
     override suspend fun getPokemon(): BasePokemonDTO {

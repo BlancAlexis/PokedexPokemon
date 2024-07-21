@@ -75,16 +75,18 @@ class MainActivity : ComponentActivity() {
             when(val resullt = getPokemon.invoke()){
                 is Ressource.Error -> { println("result.data suicde ${resullt.error}")}
                 is Ressource.Loading -> {}
-                is Ressource.Success -> println("result.data suicde ${resullt.data}")
+                is Ressource.Success -> {
+                    println("result.data suicde ${resullt.data}")
+                }
             }
         }
-        GlobalScope.launch {
+      /*  GlobalScope.launch {
             when(val resullt = getList.invoke()){
                 is Ressource.Error -> { println("result.data ${resullt.error}")}
                 is Ressource.Loading -> {}
                 is Ressource.Success -> println("result.data ${resullt.data}")
             }
-        }
+        }*/
            /* .apply {
             setKeepOnScreenCondition {
                 //Check auto co puis mais ok
