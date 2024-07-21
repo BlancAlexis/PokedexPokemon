@@ -6,13 +6,20 @@ import com.example.pokedexpokemon.dataLayer.utils.Ressource
 import org.koin.core.component.KoinComponent
 
 interface BasePokemonDataSource {
-    suspend fun getListBasePokemon(): Ressource<List<BasePokemonDTO>>
+    suspend fun getListBasePokemon(): List<BasePokemonDTO>
+    suspend fun getPokemon() : BasePokemonDTO
+
 }
 
 class BasePokemonDataSourceImpl(
     private val pokedexService: PokedexService
 ) : BasePokemonDataSource, KoinComponent {
-    override suspend fun getListBasePokemon(): Ressource<List<BasePokemonDTO>> {
-        return pokedexService.fetchPokemonList()
+    override suspend fun getListBasePokemon(): List<BasePokemonDTO> {
+        println("${pokedexService.fetchPokemonList()}")
+        return pokedexService.fetchPokemonList().results
+    }
+
+    override suspend fun getPokemon(): BasePokemonDTO {
+        return pokedexService.fetchPokemonInfo("1")
     }
 }

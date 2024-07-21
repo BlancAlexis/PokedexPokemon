@@ -16,16 +16,41 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.example.pokedexpokemon.dataLayer.di.injectFeature
+import com.example.pokedexpokemon.dataLayer.utils.Ressource
+import com.example.pokedexpokemon.domainLayer.usecase.GetPokemon
+import com.example.pokedexpokemon.domainLayer.usecase.GetPokemonList
 import com.example.pokedexpokemon.presentationLayer.theme.PokedexPokemonTheme
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.core.context.loadKoinModules
 
 class MainActivity : ComponentActivity() {
+    val getList by inject<GetPokemonList>()
+    val getPokemon by inject<GetPokemon>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        installSplashScreen().apply {
+        installSplashScreen()
+        GlobalScope.launch {
+            when(val resullt = getPokemon.invoke()){
+                is Ressource.Error -> { println("result.data suicde ${resullt.error}")}
+                is Ressource.Loading -> {}
+                is Ressource.Success -> println("result.data suicde ${resullt.data}")
+            }
+        }
+        GlobalScope.launch {
+            when(val resullt = getList.invoke()){
+                is Ressource.Error -> { println("result.data ${resullt.error}")}
+                is Ressource.Loading -> {}
+                is Ressource.Success -> println("result.data ${resullt.data}")
+            }
+        }
+           /* .apply {
             setKeepOnScreenCondition {
                 //Check auto co puis mais ok
 
-                true
+                false
             }
             setOnExitAnimationListener { screen ->
                 val zoomX = ObjectAnimator.ofFloat(
@@ -48,7 +73,7 @@ class MainActivity : ComponentActivity() {
                 zoomY.doOnEnd { screen.remove() }
 
             }
-        }
+        }*/
 
         enableEdgeToEdge()
 

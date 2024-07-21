@@ -1,157 +1,76 @@
 package com.example.pokedexpokemon.dataLayer.dto
 
-import com.example.pokedexpokemon.domainLayer.model.Ability
-import com.example.pokedexpokemon.domainLayer.model.BasePokemon
-import com.example.pokedexpokemon.domainLayer.model.Cries
-import com.example.pokedexpokemon.domainLayer.model.Form
-import com.example.pokedexpokemon.domainLayer.model.GameIndex
-import com.example.pokedexpokemon.domainLayer.model.InnerAbility
-import com.example.pokedexpokemon.domainLayer.model.InnerMove
-import com.example.pokedexpokemon.domainLayer.model.Move
-import com.example.pokedexpokemon.domainLayer.model.MoveLearnMethod
-import com.example.pokedexpokemon.domainLayer.model.Version
-import com.example.pokedexpokemon.domainLayer.model.VersionGroup
-import com.example.pokedexpokemon.domainLayer.model.VersionGroupDetail
 
+import com.google.gson.annotations.SerializedName
+
+
+import androidx.compose.runtime.Immutable
+
+
+import kotlin.random.Random
+
+
+@Immutable
 data class BasePokemonDTO(
-    val abilities: List<AbilityDTO>,
-    val baseExperience: Int,
-    val criesDTO: CriesDTO,
-    val formDTOS: List<FormDTO>,
-    val gameIndices: List<GameIndexDTO>,
-    val height: Int,
-    //val heldItems: List<Any>, // Any because the field is empty in the JSON
+    @SerializedName(value = "id")
     val id: Int,
-    val isDefault: Boolean,
-    val locationAreaEncounters: String,
-    val moves: List<MoveDTO>,
-    val name: String
-)
+    @SerializedName(value = "name") val name: String,
+    @SerializedName(value = "height") val height: Int,
+    @SerializedName(value = "weight") val weight: Int,
+    @SerializedName(value = "base_experience") val experience: Int,
+    @SerializedName(value = "types") val types: List<TypeResponse>,
+    @SerializedName(value = "stats") val stats: List<StatsResponse>,
+    val exp: Int = Random.nextInt(MAX_EXP),
+) {
+    val hp: Int by lazy {
+        stats.firstOrNull { it.stat.name == "hp" }?.baseStat ?: Random.nextInt(MAX_HP)
+    }
+    val attack: Int by lazy {
+        stats.firstOrNull { it.stat.name == "attack" }?.baseStat ?: Random.nextInt(MAX_ATTACK)
+    }
+    val defense: Int by lazy {
+        stats.firstOrNull { it.stat.name == "defense" }?.baseStat ?: Random.nextInt(MAX_DEFENSE)
+    }
+    val speed: Int by lazy {
+        stats.firstOrNull { it.stat.name == "speed" }?.baseStat ?: Random.nextInt(MAX_SPEED)
+    }
 
-data class AbilityDTO(
-    val ability: InnerAbilityDTO,
-    val isHidden: Boolean,
-    val slot: Int
-)
+    fun getIdString(): String = String.format("#%03d", id)
+    fun getWeightString(): String = String.format("%.1f KG", weight.toFloat() / 10)
+    fun getHeightString(): String = String.format("%.1f M", height.toFloat() / 10)
+    fun getHpString(): String = " $hp/$MAX_HP"
+    fun getAttackString(): String = " $attack/$MAX_ATTACK"
+    fun getDefenseString(): String = " $defense/$MAX_DEFENSE"
+    fun getSpeedString(): String = " $speed/$MAX_SPEED"
+    fun getExpString(): String = " $exp/$MAX_EXP"
 
-data class InnerAbilityDTO(
-    val name: String,
-    val url: String
-)
 
-data class CriesDTO(
-    val latest: String,
-    val legacy: String
-)
-
-data class FormDTO(
-    val name: String,
-    val url: String
-)
-
-data class GameIndexDTO(
-    val gameIndex: Int,
-    val version: VersionDTO
-)
-
-data class VersionDTO(
-    val name: String,
-    val url: String
-)
-
-data class MoveDTO(
-    val move: InnerMoveDTO,
-    val versionGroupDetailDTOS: List<VersionGroupDetailDTO>
-)
-
-data class InnerMoveDTO(
-    val name: String,
-    val url: String
-)
-
-data class VersionGroupDetailDTO(
-    val levelLearnedAt: Int,
-    val moveLearnMethodDTO: MoveLearnMethodDTO,
-    val versionGroupDTO: VersionGroupDTO
-)
-
-data class MoveLearnMethodDTO(
-    val name: String,
-    val url: String
-)
-
-data class VersionGroupDTO(
-    val name: String,
-    val url: String
-)
-
-fun BasePokemonDTO.toDomain(): BasePokemon {
-    return BasePokemon(
-        abilities = abilities.map { it.toDomain() },
-        baseExperience = baseExperience,
-        cries = criesDTO.toDomain(),
-        form = formDTOS.map { it.toDomain() },
-        gameIndices = gameIndices.map { it.toDomain() },
-        height = height,
-        id = id,
-        isDefault = isDefault,
-        locationAreaEncounters = locationAreaEncounters,
-        moves = moves.map { it.toDomain() },
-        name = name
+    data class TypeResponse(
+        @SerializedName(value = "slot") val slot: Int,
+        @SerializedName(value = "type") val type: Type,
     )
-}
 
-private fun AbilityDTO.toDomain(): Ability {
-    return Ability(
-        ability = ability.toDomain(),
-        isHidden = isHidden,
-        slot = slot
+
+    data class StatsResponse(
+        @SerializedName(value = "base_stat") val baseStat: Int,
+        @SerializedName(value = "effort") val effort: Int,
+        @SerializedName(value = "stat") val stat: Stat,
     )
-}
 
-private fun InnerAbilityDTO.toDomain(): InnerAbility {
-    return InnerAbility(name = name, url = url)
-}
 
-private fun CriesDTO.toDomain(): Cries {
-    return Cries(latest = latest, legacy = legacy)
-}
-
-private fun FormDTO.toDomain(): Form {
-    return Form(name = name, url = url)
-}
-
-private fun GameIndexDTO.toDomain(): GameIndex {
-    return GameIndex(gameIndex = gameIndex, version = version.toDomain())
-}
-
-private fun VersionDTO.toDomain(): Version {
-    return Version(name = name, url = url)
-}
-
-private fun MoveDTO.toDomain(): Move {
-    return Move(
-        move = move.toDomain(),
-        versionGroupDetailDTOS = versionGroupDetailDTOS.map { it.toDomain() }
+    data class Stat(
+        @SerializedName(value = "name") val name: String,
     )
-}
 
-private fun InnerMoveDTO.toDomain(): InnerMove {
-    return InnerMove(name = name, url = url)
-}
-
-private fun VersionGroupDetailDTO.toDomain(): VersionGroupDetail {
-    return VersionGroupDetail(
-        levelLearnedAt = levelLearnedAt,
-        moveLearnMethodDTO = moveLearnMethodDTO.toDomain(),
-        versionGroupDTO = versionGroupDTO.toDomain()
+    data class Type(
+        @SerializedName(value = "name") val name: String,
     )
-}
 
-private fun MoveLearnMethodDTO.toDomain(): MoveLearnMethod {
-    return MoveLearnMethod(name = name, url = url)
-}
-
-private fun VersionGroupDTO.toDomain(): VersionGroup {
-    return VersionGroup(name = name, url = url)
+    companion object {
+        const val MAX_HP = 300
+        const val MAX_ATTACK = 300
+        const val MAX_DEFENSE = 300
+        const val MAX_SPEED = 300
+        const val MAX_EXP = 1000
+    }
 }

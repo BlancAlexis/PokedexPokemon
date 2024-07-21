@@ -3,10 +3,13 @@ package com.example.pokedexpokemon.dataLayer.di
 import com.example.pokedexpokemon.dataLayer.datasource.BasePokemonDataSource
 import com.example.pokedexpokemon.dataLayer.datasource.BasePokemonDataSourceImpl
 import com.example.pokedexpokemon.dataLayer.dto.BasePokemonDTO
+import com.example.pokedexpokemon.dataLayer.dto.PokedexResponse
 import com.example.pokedexpokemon.dataLayer.utils.NetworkInterceptor
 import com.example.pokedexpokemon.dataLayer.utils.Ressource
 import com.example.pokedexpokemon.domainLayer.repository.BasePokemonRepository
 import com.example.pokedexpokemon.domainLayer.repository.BasePokemonRepositoryImpl
+import com.example.pokedexpokemon.domainLayer.usecase.GetPokemon
+import com.example.pokedexpokemon.domainLayer.usecase.GetPokemonList
 import okhttp3.OkHttpClient
 import org.koin.core.context.loadKoinModules
 import org.koin.dsl.module
@@ -34,7 +37,7 @@ val retrofitModule = module {
             .build()
 
         Retrofit.Builder()
-            .baseUrl("https://maps.googleapis.com/maps/api/place/")
+            .baseUrl("https://pokeapi.co/api/v2/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()
@@ -43,6 +46,8 @@ val retrofitModule = module {
 
     factory<BasePokemonRepository> { BasePokemonRepositoryImpl(get()) }
     factory<BasePokemonDataSource> { BasePokemonDataSourceImpl(get()) }
+    factory<GetPokemonList> {GetPokemonList(get())}
+    factory<GetPokemon> { GetPokemon(get()) }
 }
 
 interface PokedexService {
@@ -51,8 +56,8 @@ interface PokedexService {
     suspend fun fetchPokemonList(
         @Query("limit") limit: Int = 20,
         @Query("offset") offset: Int = 0,
-    ): Ressource<List<BasePokemonDTO>>
+    ): PokedexResponse
 
     @GET("pokemon/{name}")
-    suspend fun fetchPokemonInfo(@Path("name") name: String): Ressource<BasePokemonDTO>
+    suspend fun fetchPokemonInfo(@Path("name") name: String): BasePokemonDTO
 }
