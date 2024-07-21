@@ -7,7 +7,7 @@ import org.koin.core.component.KoinComponent
 
 interface BasePokemonRepository {
     suspend fun getListBasePokemon(): List<BasePokemonDTO>
-    suspend fun getPokemon() : BasePokemonDTO
+    suspend fun getPokemon(index : String) : BasePokemonDTO
 }
 class BasePokemonRepositoryImpl(
     private val basePokemonDataSource: BasePokemonDataSource
@@ -16,8 +16,8 @@ class BasePokemonRepositoryImpl(
          return basePokemonDataSource.getListBasePokemon()
     }
 
-    override suspend fun getPokemon(): BasePokemonDTO {
-        return basePokemonDataSource.getPokemon()
+    override suspend fun getPokemon(index : String): BasePokemonDTO {
+        return basePokemonDataSource.getPokemon(index)
 
     }
 }

@@ -12,5 +12,5 @@ data class PokedexResponse(
 
 data class jenaimarre(
     @SerializedName(value = "name") val name: String,
-    @SerializedName(value = "url") val url: BasePokemonDTO,
+    @SerializedName(value = "url") val url: String,
 )
