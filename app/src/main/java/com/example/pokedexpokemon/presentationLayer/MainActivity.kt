@@ -73,6 +73,22 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
+        GlobalScope.launch {
+            when(val resullt = getPokemon.invoke("2")){
+                is Ressource.Error -> { println("result.data suicde ${resullt.error}")}
+                is Ressource.Loading -> {}
+                is Ressource.Success -> {
+                    println("result.data suicde ${resullt.data}")
+                }
+            }
+        }
+        GlobalScope.launch {
+            when(val resullt = getList.invoke()){
+                is Ressource.Error -> { println("result.data ${resullt.error}")}
+                is Ressource.Loading -> {}
+                is Ressource.Success -> println("result.data ${resullt.data}")
+            }
+        }
            /* .apply {
             setKeepOnScreenCondition {
                 //Check auto co puis mais ok
