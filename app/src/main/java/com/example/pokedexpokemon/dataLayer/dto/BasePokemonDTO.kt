@@ -23,7 +23,7 @@ data class BasePokemonDTO(
     @SerializedName("location_area_encounters") val locationAreaEncounters: String,
     @SerializedName("moves") val moves: List<MoveDTO>,
     @SerializedName("name") val name: String,
-    @SerializedName("stats") val stats: List<Stat>,
+    @SerializedName("stats") val stats: List<StatDTO>,
     @SerializedName("sprites") val sprites: Sprites
 )
 
@@ -75,13 +75,13 @@ data class ShowdownSprites(
     val frontShiny: String,
     val frontShinyFemale: String?
 )
-data class Stat(
+data class StatDTO(
     val baseStat: Int,
     val effort: Int,
-    val stat: InnerStat
+    val stat: InnerStatDTO
 )
 
-data class InnerStat(
+data class InnerStatDTO(
     val name: String,
     val url: String
 )
@@ -142,119 +142,3 @@ data class VersionGroupDTO(
     @SerializedName("name") val name: String,
     @SerializedName("url") val url: String
 )
-
-fun toBasePokemon(dto: BasePokemonDTO): BasePokemon {
-    val abilities = dto.abilities.map { it.toAbility() }
-    val gameIndices = dto.gameIndices.map { it.toGameIndex() }
-    val moves = dto.moves.map { it.toMove() }
-    val stats = dto.stats.map { it.toStat() }
-    val sprites = dto.sprites.toSprites()
-    return BasePokemon(
-        abilities = abilities,
-        baseExperience = dto.baseExperience,
-        roar = Roar(dto.criesDTO.latest, dto.criesDTO.legacy),
-        gameIndices = gameIndices,
-        height = dto.height,
-        id = dto.id,
-        moves = moves,
-        name = dto.name,
-        stats = stats,
-        sprites = sprites
-    )
-}
-
-private fun Sprites.toSprites(): Sprites {
-    return Sprites(
-        backDefault = backDefault,
-        frontDefault = frontDefault,
-        backFemale = backFemale,
-        backShiny = backShiny,
-        backShinyFemale = backShinyFemale,
-        frontFemale = frontFemale,
-        frontShiny = frontShiny,
-        frontShinyFemale = frontShinyFemale,
-        other = other.toOtherSprites()
-    )
-}
-
-private fun OtherSprites.toOtherSprites(): OtherSprites {
-    return OtherSprites(
-        dreamWorld = dreamWorld.toDreamWorldSprites(),
-        home = home.toHomeSprites(),
-        officialArtwork = officialArtwork.toOfficialArtworkSprites(),
-        showdown = showdown.toShowdownSprites()
-    )
-}
-
-private fun DreamWorldSprites.toDreamWorldSprites(): DreamWorldSprites {
-    return DreamWorldSprites(frontDefault = frontDefault, frontFemale = frontFemale)
-}
-
-private fun HomeSprites.toHomeSprites(): HomeSprites {
-    return HomeSprites(
-        frontDefault = frontDefault,
-        frontFemale = frontFemale,
-        frontShiny = frontShiny,
-        frontShinyFemale = frontShinyFemale
-    )
-}
-
-private fun OfficialArtworkSprites.toOfficialArtworkSprites(): OfficialArtworkSprites {
-    return OfficialArtworkSprites(frontDefault = frontDefault, frontShiny = frontShiny)
-}
-
-private fun ShowdownSprites.toShowdownSprites(): ShowdownSprites {
-    return ShowdownSprites(
-        backDefault = backDefault,
-        backFemale = backFemale,
-        backShiny = backShiny,
-        backShinyFemale = backShinyFemale,
-        frontDefault = frontDefault,
-        frontFemale = frontFemale,
-        frontShiny = frontShiny,
-        frontShinyFemale = frontShinyFemale
-    )
-}
-
-private fun Stat.toStat(): Stat {
-    return Stat(baseStat = baseStat, effort = effort, stat = stat.toInnerStat())
-}
-
-private fun InnerStat.toInnerStat(): InnerStat {
-    return InnerStat(name = name, url = url)
-}
-
-private fun AbilityDTO.toAbility(): Ability {
-    return Ability(ability = ability.toInnerAbility(), isHidden = isHidden, slot = slot)
-}
-
-private fun InnerAbilityDTO.toInnerAbility(): InnerAbility {
-    return InnerAbility(name = name, url = url)
-}
-
-private fun GameIndexDTO.toGameIndex(): GameIndex {
-    return GameIndex(gameIndex = gameIndex, version = version.toVersion())
-}
-
-private fun VersionDTO.toVersion(): Version {
-    return Version(name = name, url = url)
-}
-
-private fun MoveDTO.toMove(): Move {
-    return Move(move = move.toInnerMove(), versionGroupDetailDTOS = versionGroupDetailDTOS.map { it.toVersionGroupDetail() })
-}
-
-private fun InnerMoveDTO.toInnerMove(): InnerMove {
-    return InnerMove(name = name, url = url)
-}
-
-private fun VersionGroupDetailDTO.toVersionGroupDetail(): VersionGroupDetail {
-    return VersionGroupDetail(
-        levelLearnedAt = levelLearnedAt,
-        versionGroup = versionGroupDTO.toVersionGroup()
-    )
-}
-
-private fun VersionGroupDTO.toVersionGroup(): VersionGroup {
-    return VersionGroup(name = name, url = url)
-}

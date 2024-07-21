@@ -61,3 +61,13 @@ data class VersionGroup(
     val name: String, val url: String
 )
 
+data class Stat(
+    val baseStat: Int,
+    val effort: Int,
+    val stat: InnerStat
+)
+
+data class InnerStat(
+    val name: String,
+    val url: String
+)
