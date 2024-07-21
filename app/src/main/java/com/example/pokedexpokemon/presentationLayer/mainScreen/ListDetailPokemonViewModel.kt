@@ -20,7 +20,7 @@ class ListDetailPokemonViewModel (
 
     init {
         viewModelScope.launch {
-            when(val resullt = getPokemon.invoke()){
+            when(val resullt = getPokemon.invoke("1")){
                 is Ressource.Error -> { println("result.data suicde ${resullt.error}")}
                 is Ressource.Loading -> {}
                 is Ressource.Success -> println("result.data suicde ${resullt.data}")

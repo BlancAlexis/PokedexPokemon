@@ -1,6 +1,9 @@
 package com.example.pokedexpokemon.presentationLayer
 
+import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.view.View
+import android.view.animation.OvershootInterpolator
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -53,6 +56,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.pokedexpokemon.dataLayer.di.injectFeature
@@ -62,7 +66,9 @@ import com.example.pokedexpokemon.domainLayer.usecase.GetPokemonList
 import com.example.pokedexpokemon.presentationLayer.mainScreen.ListDetailLayout
 import com.example.pokedexpokemon.presentationLayer.mainScreen.ListDetailsPokemonUiState
 import com.example.pokedexpokemon.presentationLayer.theme.PokedexPokemonTheme
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.core.context.loadKoinModules
@@ -70,30 +76,20 @@ import org.koin.core.context.loadKoinModules
 class MainActivity : ComponentActivity() {
     val getList by inject<GetPokemonList>()
     val getPokemon by inject<GetPokemon>()
+    var ready = false
+
+    @OptIn(DelicateCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        installSplashScreen()
         GlobalScope.launch {
-            when(val resullt = getPokemon.invoke("2")){
-                is Ressource.Error -> { println("result.data suicde ${resullt.error}")}
-                is Ressource.Loading -> {}
-                is Ressource.Success -> {
-                    println("result.data suicde ${resullt.data}")
-                }
-            }
+            delay(5000L)
+            ready= true
         }
-        GlobalScope.launch {
-            when(val resullt = getList.invoke()){
-                is Ressource.Error -> { println("result.data ${resullt.error}")}
-                is Ressource.Loading -> {}
-                is Ressource.Success -> println("result.data ${resullt.data}")
-            }
-        }
-           /* .apply {
+        installSplashScreen().apply {
             setKeepOnScreenCondition {
                 //Check auto co puis mais ok
+ready
 
-                false
             }
             setOnExitAnimationListener { screen ->
                 val zoomX = ObjectAnimator.ofFloat(
@@ -116,60 +112,104 @@ class MainActivity : ComponentActivity() {
                 zoomY.doOnEnd { screen.remove() }
 
             }
-        }*/
-
-        enableEdgeToEdge()
-
-
-        setContent {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    var selectedItemIndex by remember {
-                        mutableIntStateOf(0)
-                    }
-                    val windowWidthClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
-                    NavigationSuiteScaffold(
-                        navigationSuiteItems = {
-                            Screen.entries.forEachIndexed { index, screen ->
-                                item(
-                                    selected = index == selectedItemIndex,
-                                    onClick = {
-                                        selectedItemIndex = index
-                                    },
-                                    icon = {
-                                        Icon(
-                                            imageVector = screen.icon,
-                                            contentDescription = screen.title
-                                        )
-                                    },
-                                    label = {
-                                        Text(text = screen.title)
-                                    }
-                                )
-                            }
-                        },
-                        layoutType = if(windowWidthClass == WindowWidthSizeClass.EXPANDED) {
-                            NavigationSuiteType.NavigationDrawer
-                        } else {
-                            NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(
-                                currentWindowAdaptiveInfo()
-                            )
-                        }
-                    ) {
-                    ListDetailLayout(
-                        modifier = Modifier.padding(innerPadding),
-                        ListDetailsPokemonUiState(name = "Absol", type = listOf("Ténèbre","Psy"), sprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/1.gif" )
-                    )
-                }
-            }
         }
-    }
+GlobalScope.launch {
+   when(val resullt = getPokemon.invoke("2")){
+       is Ressource.Error -> { println("result.data suicde ${resullt.error}")}
+       is Ressource.Loading -> {}
+       is Ressource.Success -> {
+           println("result.data suicde ${resullt.data}")
+       }
+   }
+}
+GlobalScope.launch {
+   when(val resullt = getList.invoke()){
+       is Ressource.Error -> { println("result.data ${resullt.error}")}
+       is Ressource.Loading -> {}
+       is Ressource.Success -> println("result.data ${resullt.data}")
+   }
+}
+  /* .apply {
+   setKeepOnScreenCondition {
+       //Check auto co puis mais ok
+
+       false
+   }
+   setOnExitAnimationListener { screen ->
+       val zoomX = ObjectAnimator.ofFloat(
+           screen.iconView,
+           View.SCALE_X,
+           0.4f,
+           0.0f
+       )
+       zoomX.interpolator = OvershootInterpolator()
+       zoomX.duration = 500L
+       zoomX.doOnEnd { screen.remove() }
+       val zoomY = ObjectAnimator.ofFloat(
+           screen.iconView,
+           View.SCALE_Y,
+           0.4f,
+           0.0f
+       )
+       zoomY.interpolator = OvershootInterpolator()
+       zoomY.duration = 500L
+       zoomY.doOnEnd { screen.remove() }
+
+   }
+}*/
+
+enableEdgeToEdge()
+
+
+setContent {
+       Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+           var selectedItemIndex by remember {
+               mutableIntStateOf(0)
+           }
+           val windowWidthClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
+           NavigationSuiteScaffold(
+               navigationSuiteItems = {
+                   Screen.entries.forEachIndexed { index, screen ->
+                       item(
+                           selected = index == selectedItemIndex,
+                           onClick = {
+                               selectedItemIndex = index
+                           },
+                           icon = {
+                               Icon(
+                                   imageVector = screen.icon,
+                                   contentDescription = screen.title
+                               )
+                           },
+                           label = {
+                               Text(text = screen.title)
+                           }
+                       )
+                   }
+               },
+               layoutType = if(windowWidthClass == WindowWidthSizeClass.EXPANDED) {
+                   NavigationSuiteType.NavigationDrawer
+               } else {
+                   NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(
+                       currentWindowAdaptiveInfo()
+                   )
+               }
+           ) {
+           ListDetailLayout(
+               modifier = Modifier.padding(innerPadding),
+               ListDetailsPokemonUiState(name = "Absol", type = listOf("Ténèbre","Psy"), sprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/1.gif" )
+           )
+       }
+   }
+}
+}
 }
 
-    enum class Screen(val title: String, val icon: ImageVector) {
-        HOME("Home", Icons.Default.Home),
-        SEARCH("Search", Icons.Default.Search),
-        SETTINGS("Settings", Icons.Default.Settings),
-    }
+enum class Screen(val title: String, val icon: ImageVector) {
+HOME("Home", Icons.Default.Home),
+SEARCH("Search", Icons.Default.Search),
+SETTINGS("Settings", Icons.Default.Settings),
+}
 
 
 
