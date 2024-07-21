@@ -32,6 +32,31 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+sealed interface Type(
+        val type : PokemonType,
+    val color: Color
+       data class  )
+
+enum class PokemonType {
+    BUG,
+    DARK,
+    DRAGON,
+    ELECTRIC,
+    FAIRY,
+    FIGHTING,
+    FIRE,
+    FLYING,
+    GHOST,
+    GRASS,
+    GROUND,
+    ICE,
+    NORMAL,
+    POISON,
+    PSYCHIC,
+    ROCK,
+    STEEL,
+    WATER
+}
 
 @Composable
 fun PokedexProgressBar(
