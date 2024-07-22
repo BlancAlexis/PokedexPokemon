@@ -34,7 +34,7 @@ import com.example.pokedexpokemon.presentationLayer.PokedexProgressBar
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailsPokemonUiState
 
 @Composable
-fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState, onNavigate: () -> Unit = {}) {
+fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState?= null, onNavigate: () -> Unit = {}) {
     val context = LocalContext.current
     Column(
         modifier = Modifier
@@ -51,7 +51,7 @@ fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState, onNavigate: () -> U
         ) {
             val view = remember { ImageView(context) }
             DisposableEffect(context) {
-                Glide.with(context).asGif().load(uiState.sprite).into(view)
+                Glide.with(context).asGif().load("uiState.sprite").into(view)
                 onDispose {
                     Glide.with(context).clear(view)
                 }
@@ -61,17 +61,17 @@ fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState, onNavigate: () -> U
         Text(text = "Salamèche")
         Row {
             AssistChip(onClick = {
-                navigator.navigateTo(
-                    pane = ListDetailPaneScaffoldRole.Extra, content = "Option 1"
-                )
+//                navigator.navigateTo(
+//                    pane = ListDetailPaneScaffoldRole.Extra, content = "Option 1"
+//                )
             }, label = {
                 Text(text = "Option 1")
             })
             Spacer(modifier = Modifier.width(16.dp))
             AssistChip(onClick = {
-                navigator.navigateTo(
-                    pane = ListDetailPaneScaffoldRole.Extra, content = "Option 2"
-                )
+//                navigator.navigateTo(
+//                    pane = ListDetailPaneScaffoldRole.Extra, content = "Option 2"
+//                )
             }, label = {
                 Text(text = "Option 2")
             })
@@ -179,5 +179,5 @@ fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState, onNavigate: () -> U
 @Preview
 @Composable
 private fun previewDetailsPokemon() {
-    DetailsPokemonScreen(uiState)
+   // DetailsPokemonScreen(uiState)
 }

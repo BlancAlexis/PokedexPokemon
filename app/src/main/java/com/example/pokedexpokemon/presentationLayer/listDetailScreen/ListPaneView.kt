@@ -8,6 +8,7 @@ import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaf
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.pokedexpokemon.presentationLayer.NavigationEvent
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.detaiPokemon.DetailsPokemonScreen
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.extraCardPokemon.ExtraCardScreen
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.listPokemon.ListPokemonScreen
@@ -17,12 +18,12 @@ fun ListDetailsHost(
      viewModel: ListDetailPokemonViewModel,
 ){
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
-    ListDetailLayout(uiState = uiState, onEvent = viewModel)
+    ListDetailLayout(uiState = uiState, navigationEvent = { viewModel })
 }
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun ListDetailLayout(
-    modifier: Modifier = Modifier, uiState: List<ListDetailsPokemonUiState>, onEvent: () -> Unit = {}
+    modifier: Modifier = Modifier, uiState: List<ListDetailsPokemonUiState>, navigationEvent: (NavigationEvent) -> Unit = {}
 ) {
     val navigator = rememberListDetailPaneScaffoldNavigator<Any>()
     NavigableListDetailPaneScaffold(modifier = modifier,
@@ -39,7 +40,7 @@ fun ListDetailLayout(
         detailPane = @Composable {
             val content = navigator.currentDestination?.content?.toString() ?: "Select an item"
             AnimatedPane {
-                DetailsPokemonScreen(uiState)
+                DetailsPokemonScreen()
             }
         },
         extraPane = @Composable {
