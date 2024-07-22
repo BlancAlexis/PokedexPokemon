@@ -6,11 +6,13 @@ data class BasePokemon(
     val roar: Roar,
     val gameIndices: List<GameIndex>,
     val height: Int,
+    val weight: Int,
     val id: Int,
     val moves: List<Move>,
     val name: String,
     val stats: List<Stat>,
-    val sprites: Sprites
+    val sprites: Sprites,
+    val type : List<String>,
 )
 
 data class Stat(
@@ -57,7 +59,9 @@ fun BasePokemonDTO.toDomain(): BasePokemon {
         moves = moves.map { Move(it.move.name, it.versionGroupDetailDTOS.first().levelLearnedAt) },
         name = name,
         stats = stats.map { Stat(it.stat.name, it.baseStat, it.effort) },
-        sprites = Sprites(sprites.other.showdown.backDefault, sprites.other.showdown.frontDefault)
+        weight = weight,
+        type = types.map { it.type.name }.toList(),
+        sprites = Sprites(sprites.other.showdown?.backDefault ?: "", sprites.other.showdown?.frontDefault ?: "")
     )
 }
 

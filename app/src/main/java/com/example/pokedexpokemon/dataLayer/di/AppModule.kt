@@ -10,7 +10,9 @@ import com.example.pokedexpokemon.domainLayer.repository.BasePokemonRepository
 import com.example.pokedexpokemon.domainLayer.repository.BasePokemonRepositoryImpl
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemon
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemonList
+import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailPokemonViewModel
 import okhttp3.OkHttpClient
+import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.context.loadKoinModules
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -48,6 +50,9 @@ val retrofitModule = module {
     factory<BasePokemonDataSource> { BasePokemonDataSourceImpl(get()) }
     factory<GetPokemonList> {GetPokemonList(get())}
     factory<GetPokemon> { GetPokemon(get()) }
+    // or constructor DSL
+    viewModelOf(::ListDetailPokemonViewModel)
+
 }
 
 interface PokedexService {

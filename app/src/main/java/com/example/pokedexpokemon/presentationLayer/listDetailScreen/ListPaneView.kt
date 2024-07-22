@@ -12,10 +12,13 @@ import com.example.pokedexpokemon.presentationLayer.NavigationEvent
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.detaiPokemon.DetailsPokemonScreen
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.extraCardPokemon.ExtraCardScreen
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.listPokemon.ListPokemonScreen
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ListDetailsHost(
-     viewModel: ListDetailPokemonViewModel,
+    viewModel: ListDetailPokemonViewModel = koinViewModel(),
+    navigationEvent: (NavigationEvent) -> Unit = {},
+    modifier: Modifier
 ){
     val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
     ListDetailLayout(uiState = uiState, navigationEvent = { viewModel })
@@ -23,24 +26,24 @@ fun ListDetailsHost(
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun ListDetailLayout(
-    modifier: Modifier = Modifier, uiState: List<ListDetailsPokemonUiState>, navigationEvent: (NavigationEvent) -> Unit = {}
+    modifier: Modifier = Modifier, uiState: ListListDetails, navigationEvent: (NavigationEvent) -> Unit = {}
 ) {
     val navigator = rememberListDetailPaneScaffoldNavigator<Any>()
     NavigableListDetailPaneScaffold(modifier = modifier,
         navigator = navigator,
         listPane = @Composable {
             AnimatedPane {
-                ListPokemonScreen(uiState = uiState, onNavigate = {
+                ListPokemonScreen(uiState = uiState, onNavigate = { index ->
                     navigator.navigateTo(
                         pane = ListDetailPaneScaffoldRole.Detail,
-                        content = "Item ")
+                        content = uiState.list[index])
                 })
             }
         },
         detailPane = @Composable {
-            val content = navigator.currentDestination?.content?.toString() ?: "Select an item"
+            val content = navigator.currentDestination?.content
             AnimatedPane {
-                DetailsPokemonScreen()
+                DetailsPokemonScreen(uiState = content as? ListDetailsPokemonUiState, onNavigate = {})
             }
         },
         extraPane = @Composable {

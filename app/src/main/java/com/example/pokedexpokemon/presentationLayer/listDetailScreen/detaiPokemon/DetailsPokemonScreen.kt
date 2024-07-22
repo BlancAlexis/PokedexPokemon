@@ -13,7 +13,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.ChipColors
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
@@ -23,7 +26,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,7 +39,7 @@ import com.example.pokedexpokemon.presentationLayer.PokedexProgressBar
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailsPokemonUiState
 
 @Composable
-fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState?= null, onNavigate: () -> Unit = {}) {
+fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState ?= null, onNavigate: () -> Unit = {}) {
     val context = LocalContext.current
     Column(
         modifier = Modifier
@@ -45,36 +50,40 @@ fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState?= null, onNavigate: 
     ) {
         Row(
             Modifier
-                .fillMaxSize(0.3f)
+                .wrapContentSize()
                 .background(Color.Cyan)
-                .size(55.dp)
+                .size(200.dp)
+                .padding(top = 40.dp, bottom = 20.dp),
+            horizontalArrangement = Arrangement.Center
         ) {
             val view = remember { ImageView(context) }
             DisposableEffect(context) {
-                Glide.with(context).asGif().load("uiState.sprite").into(view)
+                Glide.with(context).asGif().load(uiState?.sprites?.frontDefault).into(view)
                 onDispose {
                     Glide.with(context).clear(view)
                 }
             }
             AndroidView(factory = { view })
         }
-        Text(text = "Salamèche")
-        Row {
-            AssistChip(onClick = {
-//                navigator.navigateTo(
-//                    pane = ListDetailPaneScaffoldRole.Extra, content = "Option 1"
-//                )
-            }, label = {
-                Text(text = "Option 1")
-            })
-            Spacer(modifier = Modifier.width(16.dp))
-            AssistChip(onClick = {
-//                navigator.navigateTo(
-//                    pane = ListDetailPaneScaffoldRole.Extra, content = "Option 2"
-//                )
-            }, label = {
-                Text(text = "Option 2")
-            })
+        Text(text = uiState?.name.toString(), fontSize = 25.sp, fontWeight = FontWeight.Bold)
+        Row (
+            modifier = Modifier.fillMaxWidth(0.7f),
+            horizontalArrangement = Arrangement.SpaceAround
+        ){
+            uiState?.type?.forEachIndexed { i, type ->
+                AssistChip(colors = ChipColors(
+                    containerColor = type.color,
+                    labelColor = Color.Black,
+                    leadingIconContentColor = Color.Black,
+                    disabledLabelColor = Color.Black,
+                    disabledContainerColor = Color.Black,
+                    trailingIconContentColor = Color.Black,
+                    disabledLeadingIconContentColor = Color.Black,
+                    disabledTrailingIconContentColor = Color.Black
+                ),
+                    onClick = { /*TODO*/ },
+                    label = { Text(text = stringResource(id = type.name)) })
+            }
         }
         Row {
             Row(
@@ -83,82 +92,27 @@ fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState?= null, onNavigate: 
                     .fillMaxWidth()
                     .background(Color.Red)
             ) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .padding(start = 32.dp)
-                            .widthIn(min = 20.dp),
-                        text = "pokedexStatus.type",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 12.sp,
-                    )
-                    PokedexProgressBar(
-                        color = Color.Yellow, progress = 0.1f, label = "As"
-                    )
-                }
-                Row(
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .padding(start = 32.dp)
-                            .widthIn(min = 20.dp),
-                        text = "pokedexStatus.type",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 12.sp,
-                    )
-                    PokedexProgressBar(
-                        color = Color.Yellow, progress = 0.1f, label = "As"
-                    )
-                }
-                Row(
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .padding(start = 32.dp)
-                            .widthIn(min = 20.dp),
-                        text = "pokedexStatus.type",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 12.sp,
-                    )
-                    PokedexProgressBar(
-                        color = Color.Yellow, progress = 0.1f, label = "As"
-                    )
-                }
-                Spacer(modifier = Modifier.height(20.dp))
-                Row(
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .padding(start = 32.dp)
-                            .widthIn(min = 20.dp),
-                        text = "pokedexStatus.type",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 12.sp,
-                    )
-                    PokedexProgressBar(
-                        color = Color.Yellow, progress = 0.1f, label = "As"
-                    )
-                }
-                Row(
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .padding(start = 32.dp)
-                            .widthIn(min = 20.dp),
-                        text = "pokedexStatus.type",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 12.sp,
-                    )
-                    PokedexProgressBar(
-                        color = Color.Yellow, progress = 0.1f, label = "As"
-                    )
-                }
+                LinearProgressIndicator(
+                    progress = { 0.5f },
+                    color = Color.Yellow,
+                    strokeCap = StrokeCap.Round
+                )
+                LinearProgressIndicator(
+                    progress = { 0.5f },
+                    color = Color.Yellow
+                )
+                LinearProgressIndicator(
+                    progress = { 0.5f },
+                    color = Color.Yellow
+                )
+                LinearProgressIndicator(
+                    progress = { 0.5f },
+                    color = Color.Yellow
+                )
+                LinearProgressIndicator(
+                    progress = { 0.5f },
+                    color = Color.Yellow
+                )
             }
 
             Spacer(modifier = Modifier.width(8.dp))

@@ -17,6 +17,7 @@ data class BasePokemonDTO(
     @SerializedName("forms") val formDTOS: List<FormDTO>,
     @SerializedName("game_indices") val gameIndices: List<GameIndexDTO>,
     @SerializedName("height") val height: Int,
+    @SerializedName("weight") val weight: Int,
     //val heldItems: List<Any>, // Any because the field is empty in the JSON
     @SerializedName("id")  val id: Int,
     @SerializedName("is_default") val isDefault: Boolean,
@@ -24,56 +25,56 @@ data class BasePokemonDTO(
     @SerializedName("moves") val moves: List<MoveDTO>,
     @SerializedName("name") val name: String,
     @SerializedName("stats") val stats: List<Stat>,
-    @SerializedName("sprites") val sprites: SpritesDTO
+    @SerializedName("sprites") val sprites: SpritesDTO,
+    @SerializedName("types") val types: List<TypeSlot>
 )
 
 
 
 data class SpritesDTO(
-    val backDefault: String,
-    val backFemale: String?, // nullable because it can be null in the JSON
-    val backShiny: String,
-    val backShinyFemale: String?,
-    val frontDefault: String,
-    val frontFemale: String?,
-    val frontShiny: String,
-    val frontShinyFemale: String?,
-    val other: OtherSpritesDTO
+    @SerializedName("back_default") val backDefault: String?,
+    @SerializedName("back_female")val backFemale: String?, // nullable because it can be null in the JSON
+    @SerializedName("back_shiny")val backShiny: String?,
+    @SerializedName("back_shiny_female")val backShinyFemale: String?,
+    @SerializedName("front_default")val frontDefault: String?,
+    @SerializedName("front_female")val frontFemale: String?,
+    @SerializedName("front_shiny")val frontShiny: String?,
+    @SerializedName("front_shiny_female")val frontShinyFemale: String?,
+    @SerializedName("other")val other: OtherSpritesDTO
 )
 
 data class OtherSpritesDTO(
-    val dreamWorld: DreamWorldSpritesDTO,
-    val home: HomeSpritesDTO,
-    val `official-artwork`: OfficialArtworkSpritesDTO,
-    val showdown: ShowdownSpritesDTO
+    @SerializedName("dream_world")val dreamWorld: DreamWorldSpritesDTO?,
+    @SerializedName("home")val home: HomeSpritesDTO?,
+    @SerializedName("official-artwork")val `official-artwork`: OfficialArtworkSpritesDTO?,
+    @SerializedName("showdown")val showdown: ShowdownSpritesDTO?
 )
 
 data class DreamWorldSpritesDTO(
-    val frontDefault: String,
+    val frontDefault: String?,
     val frontFemale: String?
 )
 
 data class HomeSpritesDTO(
-    val frontDefault: String,
+    val frontDefault: String?,
     val frontFemale: String?,
-    val frontShiny: String,
+    val frontShiny: String?,
     val frontShinyFemale: String?
 )
 
 data class OfficialArtworkSpritesDTO(
-    val frontDefault: String,
-    val frontShiny: String
+    val frontDefault: String?,
+    val frontShiny: String?
 )
-
 data class ShowdownSpritesDTO(
-    val backDefault: String,
-    val backFemale: String?,
-    val backShiny: String,
-    val backShinyFemale: String?,
-    val frontDefault: String,
-    val frontFemale: String?,
-    val frontShiny: String,
-    val frontShinyFemale: String?
+    @SerializedName("back_default") val backDefault: String?,
+    @SerializedName("back_female") val backFemale: String?,
+    @SerializedName("back_shiny") val backShiny: String?,
+    @SerializedName("back_shiny_female") val backShinyFemale: String?,
+    @SerializedName("front_default") val frontDefault: String?,
+    @SerializedName("front_female") val frontFemale: String?,
+    @SerializedName("front_shiny") val frontShiny: String?,
+    @SerializedName("front_shiny_female") val frontShinyFemale: String?
 )
 data class Stat(
     val baseStat: Int,
@@ -141,4 +142,13 @@ data class MoveLearnMethodDTO(
 data class VersionGroupDTO(
     @SerializedName("name") val name: String,
     @SerializedName("url") val url: String
+)
+data class PokemonTypeDTO(
+    val name: String,
+    val url: String
+)
+
+data class TypeSlot(
+    val slot: Int,
+    val type: PokemonTypeDTO
 )

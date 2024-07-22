@@ -31,8 +31,7 @@ import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.pokedexpokemon.dataLayer.utils.Ressource
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemon
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemonList
-import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailLayout
-import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailsPokemonUiState
+import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailsHost
 import com.example.pokedexpokemon.presentationLayer.theme.PokedexPokemonTheme
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -93,7 +92,7 @@ class MainActivity : ComponentActivity() {
                             val navController = rememberNavController()
                             NavHost(navController = navController, startDestination = "listDetails"){
                                 composable(route = "listDetails"){
-                                    ListDetailLayout(
+                                    ListDetailsHost(
                                         navigationEvent = {
                                             when(it){
                                                 NavigationEvent.Disconnect -> TODO()
@@ -103,12 +102,6 @@ class MainActivity : ComponentActivity() {
                                             }
                                         },
                                         modifier = Modifier.padding(innerPadding),
-                                        uiState = listOf(
-                                            ListDetailsPokemonUiState(
-                                                name = "Absol",
-                                                id = 5
-                                            )
-                                        )
                                     )
                                 }
                             }

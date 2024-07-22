@@ -51,6 +51,8 @@ android {
 }
 
 dependencies {
+
+
     implementation("com.github.skydoves:landscapist-glide:2.3.3")
     implementation ("com.google.code.gson:gson:2.10.1")
     //Retrofit
@@ -60,6 +62,7 @@ dependencies {
     //Injection de dépendance koin
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.navigation)
+    implementation(libs.koin.androidx.compose)
 
 
     implementation(libs.androidx.compose.material3.adaptive.navigation.suite)

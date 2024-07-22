@@ -15,21 +15,20 @@ class BasePokemonDataSourceImpl(
     private val pokedexService: PokedexService
 ) : BasePokemonDataSource, KoinComponent {
     override suspend fun getListBasePokemon(): List<BasePokemonDTO> {
-        val list : List<String> = pokedexService.fetchPokemonList().results.map { extractPokemonId(it.url) }
-        return  list.map { getPokemon(it) }
+        return pokedexService.fetchPokemonList().results.map { extractPokemonId(it.url)?.let { getPokemon(it) }!! }
     }
 
     override suspend fun getPokemon(index : String): BasePokemonDTO {
         return pokedexService.fetchPokemonInfo(index)
     }
 
-    fun extractPokemonId(url: String): String {
+    private fun extractPokemonId(url: String): String? {
         val urlParts = url.split("/")
         for (part in urlParts.reversed()) {
             if (part.matches("\\d+".toRegex())) {
                 return part
             }
         }
-        return "1" // TODO gérer l'erreur
+        return null // TODO gérer l'erreur
     }
 }
