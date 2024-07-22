@@ -106,7 +106,6 @@ class MainActivity : ComponentActivity() {
                                         uiState = listOf(
                                             ListDetailsPokemonUiState(
                                                 name = "Absol",
-                                                type = listOf("Ténèbre", "Psy"),
                                                 id = 5
                                             )
                                         )
@@ -136,31 +135,7 @@ sealed interface NavigationEvent {
     object Disconnect : NavigationEvent
     data object PopStack: NavigationEvent
 }
-//sealed class PokemonType(
-//    val color: Int,
-//    val icon: Int,
-//    val name: String
-//) {
-//    class FIRE : PokemonType(Color.Orange, R.drawable.fire_icon, R.string.fire)
-//    class WATER : PokemonType(Color.Blue, R.drawable.water_icon, R.string.water)
-//    class GRASS : PokemonType(Color.Green, R.drawable.grass_icon, R.string.grass)
-//    class ELECTRIC : PokemonType(Color.Yellow, R.drawable.electric_icon, R.string.electric)
-//    class PSYCHIC : PokemonType(Color.Purple, R.drawable.psychic_icon, R.string.psychic)
-//    class ICE : PokemonType(Color.Cyan, R.drawable.ice_icon, R.string.ice)
-//    class DRAGON : PokemonType(Color.BlueViolet, R.drawable.dragon_icon, R.string.dragon)
-//    // Ajoutez d'autres types de Pokémon ici
-//    class GROUND : PokemonType(Color.Brown, R.drawable.ground_icon, R.string.ground)
-//    class ROCK : PokemonType(Color.Gray, R.drawable.rock_icon, R.string.rock)
-//    class FLYING : PokemonType(Color.SkyBlue, R.drawable.flying_icon, R.string.flying)
-//    class BUG : PokemonType(Color.Lime, R.drawable.bug_icon, R.string.bug)
-//    class POISON : PokemonType(Color.Magenta, R.drawable.poison_icon, R.string.poison)
-//    class FAIRY : PokemonType(Color.Pink, R.drawable.fairy_icon, R.string.fairy)
-//    class GHOST : PokemonType(Color.DarkGray, R.drawable.ghost_icon, R.string.ghost)
-//    class DARK : PokemonType(Color.Black, R.drawable.dark_icon, R.string.dark)
-//    class STEEL : PokemonType(Color.LightGray, R.drawable.steel_icon, R.string.steel)
-//    class NORMAL : PokemonType(Color.Beige, R.drawable.normal_icon, R.string.normal)
-//    class FIGHTING : PokemonType(Color.Red, R.drawable.fighting_icon, R.string.fighting)
-//}
+
 
 
 

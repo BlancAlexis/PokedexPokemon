@@ -1,3 +1,5 @@
+import com.example.pokedexpokemon.dataLayer.dto.BasePokemonDTO
+
 data class BasePokemon(
     val abilities: List<Ability>,
     val baseExperience: Int,
@@ -11,29 +13,18 @@ data class BasePokemon(
     val sprites: Sprites
 )
 
-data class Sprites(
-    val backDefault: String,
-    val frontDefault: String,
-)
-
 data class Stat(
-    val baseStat: Int, val effort: Int, val stat: InnerStat
+    val name: String, val baseStat: Int, val effort: Int
 )
 
-data class InnerStat(
-    val name: String, val url: String
-)
 
 data class Ability(
-    val ability: InnerAbility, val isHidden: Boolean, val slot: Int
+    val abilityName: String, val isHidden: Boolean
 )
 
-data class InnerAbility(
-    val name: String, val url: String
-)
 
 data class Roar(
-    val latest: String, val legacy: String
+    val urlLastestRoar: String
 )
 
 
@@ -42,22 +33,32 @@ data class GameIndex(
 )
 
 data class Version(
-    val name: String, val url: String
+    val name: String // Avoir un logo ici?
 )
 
 data class Move(
-    val move: InnerMove, val versionGroupDetailDTOS: List<VersionGroupDetail>
+    val moveName: String, val levelLearnedAt: Int
 )
 
-data class InnerMove(
-    val name: String, val url: String
-)
+// Move variant entre jeux
 
-data class VersionGroupDetail(
-    val levelLearnedAt: Int, val versionGroup: VersionGroup
+data class Sprites(
+    val backDefault: String,
+    val frontDefault: String,
 )
+fun BasePokemonDTO.toDomain(): BasePokemon {
+    return BasePokemon(
+        abilities = abilities.map { Ability(it.ability.name, it.isHidden) },
+        baseExperience = baseExperience,
+        roar = Roar(criesDTO.latest),
+        gameIndices = gameIndices.map { GameIndex(it.gameIndex, Version(it.version.name)) },
+        height = height,
+        id = id,
+        moves = moves.map { Move(it.move.name, it.versionGroupDetailDTOS.first().levelLearnedAt) },
+        name = name,
+        stats = stats.map { Stat(it.stat.name, it.baseStat, it.effort) },
+        sprites = Sprites(sprites.other.showdown.backDefault, sprites.other.showdown.frontDefault)
+    )
+}
 
-data class VersionGroup(
-    val name: String, val url: String
-)
 

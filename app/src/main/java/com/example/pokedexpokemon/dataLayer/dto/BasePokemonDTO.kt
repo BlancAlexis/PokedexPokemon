@@ -24,12 +24,12 @@ data class BasePokemonDTO(
     @SerializedName("moves") val moves: List<MoveDTO>,
     @SerializedName("name") val name: String,
     @SerializedName("stats") val stats: List<Stat>,
-    @SerializedName("sprites") val sprites: Sprites
+    @SerializedName("sprites") val sprites: SpritesDTO
 )
 
 
 
-data class Sprites(
+data class SpritesDTO(
     val backDefault: String,
     val backFemale: String?, // nullable because it can be null in the JSON
     val backShiny: String,
@@ -38,34 +38,34 @@ data class Sprites(
     val frontFemale: String?,
     val frontShiny: String,
     val frontShinyFemale: String?,
-    val other: OtherSprites
+    val other: OtherSpritesDTO
 )
 
-data class OtherSprites(
-    val dreamWorld: DreamWorldSprites,
-    val home: HomeSprites,
-    val `official-artwork`: OfficialArtworkSprites,
-    val showdown: ShowdownSprites
+data class OtherSpritesDTO(
+    val dreamWorld: DreamWorldSpritesDTO,
+    val home: HomeSpritesDTO,
+    val `official-artwork`: OfficialArtworkSpritesDTO,
+    val showdown: ShowdownSpritesDTO
 )
 
-data class DreamWorldSprites(
+data class DreamWorldSpritesDTO(
     val frontDefault: String,
     val frontFemale: String?
 )
 
-data class HomeSprites(
+data class HomeSpritesDTO(
     val frontDefault: String,
     val frontFemale: String?,
     val frontShiny: String,
     val frontShinyFemale: String?
 )
 
-data class OfficialArtworkSprites(
+data class OfficialArtworkSpritesDTO(
     val frontDefault: String,
     val frontShiny: String
 )
 
-data class ShowdownSprites(
+data class ShowdownSpritesDTO(
     val backDefault: String,
     val backFemale: String?,
     val backShiny: String,

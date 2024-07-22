@@ -3,13 +3,14 @@ package com.example.pokedexpokemon.presentationLayer.listDetailScreen
 import Ability
 import GameIndex
 import Move
+import Sprites
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pokedexpokemon.dataLayer.dto.Sprites
 import com.example.pokedexpokemon.dataLayer.dto.Stat
 import com.example.pokedexpokemon.dataLayer.utils.Ressource
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemon
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemonList
+import com.example.pokedexpokemon.presentationLayer.util.PokemonType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -40,19 +41,21 @@ class ListDetailPokemonViewModel (
 }
 
 data class ListDetailsPokemonUiState(
-    val sprites: Sprites?= null,
     val name : String?= null,
-    val type : List<String> = listOf(),
-
-    val talent : String ?= null,
     val weight : String ?= null,
+    val height: Int?= null,
+    val type : List<PokemonType> = listOf(),
     val abilities: List<Ability>?= null,
     val baseExperience: Int?= null,
-    val roar: String ?= null,
     val gameIndices: List<GameIndex>?= listOf(),
-    val height: Int?= null,
-    val id: Int,
+    val nationalIndices: Int? = null,
     val moves: List<Move> = listOf(),
+
+
+    val sprites: Sprites?= null,
+    val talent : String ?= null,
+    val roar: String ?= null,
+    val id: Int,
     val stats: List<Stat> = listOf()
 )
 
