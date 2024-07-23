@@ -1,7 +1,6 @@
 import com.example.pokedexpokemon.dataLayer.dto.BasePokemonDTO
 import com.example.pokedexpokemon.dataLayer.dto.SpritesDTO
 import com.example.pokedexpokemon.domainLayer.model.PokemonType
-import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailsPokemonUiState
 import com.example.pokedexpokemon.presentationLayer.util.toPokemonType
 
 data class BasePokemon(
@@ -67,7 +66,7 @@ fun BasePokemonDTO.toDomain(): BasePokemon {
         name = name,
         stats = stats.map { Stat(it.stat.name, it.baseStat, it.effort) },
         weight = weight,
-        type = types.map { PokemonType.valueOf(it.type.name) }.toList(),
+        type = types.map { PokemonType.valueOf(it.type.name.uppercase()) }.toList(),
         sprites = sprites.toDomain()
     )
 }

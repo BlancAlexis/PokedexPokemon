@@ -8,6 +8,8 @@ import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaf
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
+import com.example.pokedexpokemon.dataLayer.ListDetailsUiState
 import com.example.pokedexpokemon.presentationLayer.NavigationEvent
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.detaiPokemon.DetailsPokemonScreen
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.extraCardPokemon.ExtraCardScreen
@@ -26,7 +28,7 @@ fun ListDetailsHost(
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun ListDetailLayout(
-    modifier: Modifier = Modifier, uiState: ListListDetails, navigationEvent: (NavigationEvent) -> Unit = {}
+    modifier: Modifier = Modifier, uiState: ListDetailsUiState, navigationEvent: (NavigationEvent) -> Unit = {}
 ) {
     val navigator = rememberListDetailPaneScaffoldNavigator<Any>()
     NavigableListDetailPaneScaffold(modifier = modifier,

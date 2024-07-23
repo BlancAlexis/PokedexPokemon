@@ -35,11 +35,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.bumptech.glide.Glide
+import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
 import com.example.pokedexpokemon.presentationLayer.PokedexProgressBar
-import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailsPokemonUiState
 
 @Composable
-fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState ?= null, onNavigate: () -> Unit = {}) {
+fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState?= null, onNavigate: () -> Unit = {}) {
     val context = LocalContext.current
     Column(
         modifier = Modifier
