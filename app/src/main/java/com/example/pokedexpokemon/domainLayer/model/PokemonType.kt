@@ -1,4 +1,4 @@
-package com.example.pokedexpokemon.dataLayer.dto
+package com.example.pokedexpokemon.domainLayer.model
 
 enum class PokemonType {
     BUG,

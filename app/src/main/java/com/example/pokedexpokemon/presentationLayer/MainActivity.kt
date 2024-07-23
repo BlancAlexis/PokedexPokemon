@@ -28,105 +28,95 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.window.core.layout.WindowWidthSizeClass
-import com.example.pokedexpokemon.dataLayer.utils.Ressource
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemon
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemonList
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailsHost
 import com.example.pokedexpokemon.presentationLayer.theme.PokedexPokemonTheme
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
-    val getList by inject<GetPokemonList>()
-    val getPokemon by inject<GetPokemon>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
-        GlobalScope.launch {
-            when(val resullt = getList.invoke()){
-                is Ressource.Error -> { println("result.data ${resullt.error}")}
-                is Ressource.Loading -> {}
-                is Ressource.Success -> println("result.data ${resullt.data}")
-            }
-        }
         enableEdgeToEdge()
         setContent {
-
             PokedexPokemonTheme {
-
-                    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                        var selectedItemIndex by remember {
-                            mutableIntStateOf(0)
-                        }
-                        val windowWidthClass =
-                            currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
-                        NavigationSuiteScaffold(
-                            navigationSuiteItems = {
-                                Screen.entries.forEachIndexed { index, screen ->
-                                    item(
-                                        selected = index == selectedItemIndex,
-                                        onClick = {
-                                            selectedItemIndex = index
-                                        },
-                                        icon = {
-                                            Icon(
-                                                imageVector = screen.icon,
-                                                contentDescription = screen.title
-                                            )
-                                        },
-                                        label = {
-                                            Text(text = screen.title)
-                                        }
-                                    )
-                                }
-                            },
-                            layoutType = if (windowWidthClass == WindowWidthSizeClass.EXPANDED) {
-                                NavigationSuiteType.NavigationDrawer
-                            } else {
-                                NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(
-                                    currentWindowAdaptiveInfo()
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    var selectedItemIndex by remember {
+                        mutableIntStateOf(0)
+                    }
+                    val windowWidthClass =
+                        currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
+                    NavigationSuiteScaffold(
+                        navigationSuiteItems = {
+                            Screen.entries.forEachIndexed { index, screen ->
+                                item(
+                                    selected = index == selectedItemIndex,
+                                    onClick = {
+                                        selectedItemIndex = index
+                                    },
+                                    icon = {
+                                        Icon(
+                                            imageVector = screen.icon,
+                                            contentDescription = screen.title
+                                        )
+                                    },
+                                    label = {
+                                        Text(text = screen.title)
+                                    }
                                 )
                             }
-                        ) {
-                            val navController = rememberNavController()
-                            NavHost(navController = navController, startDestination = "listDetails"){
-                                composable(route = "listDetails"){
-                                    ListDetailsHost(
-                                        navigationEvent = {
-                                            when(it){
-                                                NavigationEvent.Disconnect -> TODO()
-                                                is NavigationEvent.Navigate -> TODO()
-                                                is NavigationEvent.NavigateTo -> TODO()
-                                                NavigationEvent.PopStack -> TODO()
-                                            }
-                                        },
-                                        modifier = Modifier.padding(innerPadding),
-                                    )
-                                }
+                        },
+                        layoutType = if (windowWidthClass == WindowWidthSizeClass.EXPANDED) {
+                            NavigationSuiteType.NavigationDrawer
+                        } else {
+                            NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(
+                                currentWindowAdaptiveInfo()
+                            )
+                        }
+                    ) {
+                        val navController = rememberNavController()
+                        NavHost(navController = navController, startDestination = "listDetails") {
+                            composable(route = Screen.HOME.toString()) {
+                                ListDetailsHost(
+                                    navigationEvent = {
+                                        when (it) {
+                                            NavigationEvent.Disconnect -> TODO()
+                                            is NavigationEvent.Navigate -> TODO()
+                                            is NavigationEvent.NavigateTo -> TODO()
+                                            NavigationEvent.PopStack -> TODO()
+                                        }
+                                    },
+                                    modifier = Modifier.padding(innerPadding),
+                                )
                             }
+                            composable(route = Screen.TEAM.toString()) {
+
+                            }
+                            composable(route = Screen.SETTINGS.toString()) {
+
+                            }
+                        }
                     }
 
                 }
-
-
             }
         }
     }
 }
 
-    enum class Screen(val title: String, val icon: ImageVector) {
-        HOME("Home", Icons.Default.Home),
-        SEARCH("Search", Icons.Default.Search),
-        SETTINGS("Settings", Icons.Default.Settings),
-    }
+enum class Screen(val title: String, val icon: ImageVector) {
+    HOME("Home", Icons.Default.Home),
+    TEAM("Search", Icons.Default.Search),
+    SETTINGS("Settings", Icons.Default.Settings),
+}
 
 sealed interface NavigationEvent {
     data class NavigateTo(val menuId: Int) : NavigationEvent
     data class Navigate(val string: String) : NavigationEvent
 
     object Disconnect : NavigationEvent
-    data object PopStack: NavigationEvent
+    data object PopStack : NavigationEvent
 }
 
 

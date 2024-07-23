@@ -1,4 +1,8 @@
 import com.example.pokedexpokemon.dataLayer.dto.BasePokemonDTO
+import com.example.pokedexpokemon.dataLayer.dto.SpritesDTO
+import com.example.pokedexpokemon.domainLayer.model.PokemonType
+import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailsPokemonUiState
+import com.example.pokedexpokemon.presentationLayer.util.toPokemonType
 
 data class BasePokemon(
     val abilities: List<Ability>,
@@ -12,8 +16,10 @@ data class BasePokemon(
     val name: String,
     val stats: List<Stat>,
     val sprites: Sprites,
-    val type : List<String>,
-)
+    val type : List<PokemonType>,
+){
+
+}
 
 data class Stat(
     val name: String, val baseStat: Int, val effort: Int
@@ -45,6 +51,7 @@ data class Move(
 // Move variant entre jeux
 
 data class Sprites(
+    val baseSprite : String,
     val backDefault: String,
     val frontDefault: String,
 )
@@ -60,9 +67,15 @@ fun BasePokemonDTO.toDomain(): BasePokemon {
         name = name,
         stats = stats.map { Stat(it.stat.name, it.baseStat, it.effort) },
         weight = weight,
-        type = types.map { it.type.name }.toList(),
-        sprites = Sprites(sprites.other.showdown?.backDefault ?: "", sprites.other.showdown?.frontDefault ?: "")
+        type = types.map { PokemonType.valueOf(it.type.name) }.toList(),
+        sprites = sprites.toDomain()
     )
 }
+
+fun SpritesDTO.toDomain() = Sprites(
+    baseSprite = this.other.officialArtwork?.frontDefault ?: "",
+    backDefault = this.other.showdown?.backDefault ?: "",
+    frontDefault = this.other.showdown?.frontDefault ?: "" // TODO gestion erreur
+)
 
 

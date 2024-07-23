@@ -8,6 +8,8 @@ import Sprites
 import Stat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
+import com.example.pokedexpokemon.dataLayer.ListDetailsUiState
 import com.example.pokedexpokemon.dataLayer.utils.Ressource
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemon
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemonList
@@ -20,10 +22,9 @@ import kotlinx.coroutines.launch
 
 
 class ListDetailPokemonViewModel (
-    private val getPokemon: GetPokemon,
     private val getPokemonList: GetPokemonList
 ) : ViewModel(){
-    private val _uiState = MutableStateFlow(ListListDetails())
+    private val _uiState = MutableStateFlow(ListDetailsUiState())
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -32,7 +33,6 @@ class ListDetailPokemonViewModel (
                 is Ressource.Error -> { println("result.data ${result.error}")}
                 is Ressource.Loading -> {}
                 is Ressource.Success -> {
-
                         val newData = result.data?.map { it.toUiState() } ?: emptyList()
                         _uiState.update {
                             it.copy(
@@ -44,62 +44,18 @@ class ListDetailPokemonViewModel (
         }
     }
 }
-
 private fun BasePokemon.toUiState(): ListDetailsPokemonUiState = ListDetailsPokemonUiState(
-        name = this.name.replaceFirstChar { c -> c.uppercase() },
-        weight = this.weight,
-        height = this.height,
-        baseExperience = this.baseExperience,
-        type = this.type.map { it.toPokemonType() },
-        abilities = this.abilities,
-        gameIndices = this.gameIndices,
-        nationalIndices = this.id,
-        sprites = this.sprites,
-        talent = this.abilities,
-        roar = this.roar.urlLastestRoar
-    )
-
-data class ListListDetails(
-    val list : List<ListDetailsPokemonUiState> = emptyList()
+    name = this.name.replaceFirstChar { char -> char.uppercase() },
+    weight = this.weight,
+    height = this.height,
+    baseExperience = this.baseExperience,
+    type = this.type.map { it.name.toPokemonType() }.toList(),
+    abilities = this.abilities,
+    gameIndices = this.gameIndices,
+    nationalIndices = this.id,
+    sprites = this.sprites,
+    talent = this.abilities,
+    roar = this.roar.urlLastestRoar
 )
 
-data class ListDetailsPokemonUiState(
-    val name : String?= null,
-    val weight : Int ?= null,
-    val height: Int?= null,
-    val type : List<PokemonType> = listOf(),
-    val abilities: List<Ability>?= null,
-    val baseExperience: Int?= null,
-    val gameIndices: List<GameIndex>?= listOf(),
-    val nationalIndices: Int? = null,
-    val moves: List<Move> = listOf(),
 
-
-    val sprites: Sprites?= null,
-    val talent : List<Ability> ?= null,
-    val roar: String ?= null,
-    val stats: List<Stat> = listOf()
-)
-
-/*
-data class ListScreenUiState(
-    val id: Int? = null,
-    val sprites: Sprites? = null,
-    val name: String? = null,
-    val type: List<String> = emptyList()
-)
-
-data class DetailScreenUiState(
-    val basicField : BasicPokemonField?= null,
-
-    val talent: String? = null,
-    val weight: String? = null,
-    val abilities: List<Ability>? = null,
-    val baseExperience: Int? = null,
-    val roar: String? = null,
-    val gameIndices: List<GameIndex>? = emptyList(),
-    val height: Int? = null,
-    val moves: List<Move> = emptyList(),
-    val stats: List<Stat> = emptyList()
-)
-typealias BasicPokemonField = ListScreenUiState*/

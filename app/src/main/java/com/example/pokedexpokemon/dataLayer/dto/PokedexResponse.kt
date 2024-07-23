@@ -7,10 +7,10 @@ data class PokedexResponse(
     @SerializedName(value = "count") val count: Int,
     @SerializedName(value = "next") val next: String?,
     @SerializedName(value = "previous") val previous: String?,
-    @SerializedName(value = "results") val results: List<jenaimarre>,
+    @SerializedName(value = "results") val results: List<PokemonObject>,
 )
 
-data class jenaimarre(
+data class PokemonObject(
     @SerializedName(value = "name") val name: String,
     @SerializedName(value = "url") val url: String,
 )

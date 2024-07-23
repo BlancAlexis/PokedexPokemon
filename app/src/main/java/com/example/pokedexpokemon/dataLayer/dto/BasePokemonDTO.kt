@@ -4,12 +4,6 @@ package com.example.pokedexpokemon.dataLayer.dto
 import com.google.gson.annotations.SerializedName
 
 
-import androidx.compose.runtime.Immutable
-
-
-import kotlin.random.Random
-
-
 data class BasePokemonDTO(
     @SerializedName("abilities") val abilities: List<AbilityDTO>,
     @SerializedName("base_experience") val baseExperience: Int,
@@ -46,7 +40,7 @@ data class SpritesDTO(
 data class OtherSpritesDTO(
     @SerializedName("dream_world")val dreamWorld: DreamWorldSpritesDTO?,
     @SerializedName("home")val home: HomeSpritesDTO?,
-    @SerializedName("official-artwork")val `official-artwork`: OfficialArtworkSpritesDTO?,
+    @SerializedName("official-artwork")val officialArtwork: OfficialArtworkSpritesDTO?,
     @SerializedName("showdown")val showdown: ShowdownSpritesDTO?
 )
 
