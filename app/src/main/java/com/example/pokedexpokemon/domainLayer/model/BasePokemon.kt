@@ -62,7 +62,7 @@ fun BasePokemonDTO.toDomain(): BasePokemon {
         gameIndices = gameIndices.map { GameIndex(it.gameIndex, Version(it.version.name)) },
         height = height,
         id = id,
-        moves = moves.map { Move(it.move.name, it.versionGroupDetailDTOS.first().levelLearnedAt) },
+        moves = moves.map { Move(it.move.name, it.versionGroupDetailDTOS.first().levelLearnedAt) }.toList(),
         name = name,
         stats = stats.map { Stat(it.stat.name, it.baseStat, it.effort) },
         weight = weight,

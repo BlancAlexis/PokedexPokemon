@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,7 +14,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.ChipColors
 import androidx.compose.material3.LinearProgressIndicator
@@ -39,7 +43,7 @@ import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
 import com.example.pokedexpokemon.presentationLayer.PokedexProgressBar
 
 @Composable
-fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState?= null, onNavigate: () -> Unit = {}) {
+fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState, onNavigate: () -> Unit = {}) {
     val context = LocalContext.current
     Column(
         modifier = Modifier
@@ -53,24 +57,22 @@ fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState?= null, onNavigate: 
                 .wrapContentSize()
                 .background(Color.Cyan)
                 .size(200.dp)
-                .padding(top = 40.dp, bottom = 20.dp),
-            horizontalArrangement = Arrangement.Center
+                .padding(top = 40.dp, bottom = 20.dp), horizontalArrangement = Arrangement.Center
         ) {
             val view = remember { ImageView(context) }
             DisposableEffect(context) {
-                Glide.with(context).asGif().load(uiState?.sprites?.frontDefault).into(view)
+                Glide.with(context).asGif().load(uiState.sprites?.frontDefault).into(view)
                 onDispose {
                     Glide.with(context).clear(view)
                 }
             }
             AndroidView(factory = { view })
         }
-        Text(text = uiState?.name.toString(), fontSize = 25.sp, fontWeight = FontWeight.Bold)
-        Row (
-            modifier = Modifier.fillMaxWidth(0.7f),
-            horizontalArrangement = Arrangement.SpaceAround
-        ){
-            uiState?.type?.forEachIndexed { i, type ->
+        Text(text = uiState.name.toString(), fontSize = 25.sp, fontWeight = FontWeight.Bold)
+        Row(
+            modifier = Modifier.fillMaxWidth(0.7f), horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            uiState.type.forEachIndexed { i, type ->
                 AssistChip(colors = ChipColors(
                     containerColor = type.color,
                     labelColor = Color.Black,
@@ -81,51 +83,37 @@ fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState?= null, onNavigate: 
                     disabledLeadingIconContentColor = Color.Black,
                     disabledTrailingIconContentColor = Color.Black
                 ),
-                    onClick = { /*TODO*/ },
+                    onClick = { onNavigate() },
                     label = { Text(text = stringResource(id = type.name)) })
             }
         }
-        Row {
-            Row(
-                modifier = Modifier
-                    .weight(0.6f)
-                    .fillMaxWidth()
-                    .background(Color.Red)
-            ) {
-                LinearProgressIndicator(
-                    progress = { 0.5f },
-                    color = Color.Yellow,
-                    strokeCap = StrokeCap.Round
-                )
-                LinearProgressIndicator(
-                    progress = { 0.5f },
-                    color = Color.Yellow
-                )
-                LinearProgressIndicator(
-                    progress = { 0.5f },
-                    color = Color.Yellow
-                )
-                LinearProgressIndicator(
-                    progress = { 0.5f },
-                    color = Color.Yellow
-                )
-                LinearProgressIndicator(
-                    progress = { 0.5f },
-                    color = Color.Yellow
-                )
-            }
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            Row(
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.4f)
+                .background(Color.Blue)
+        ) {
+            Column(
                 modifier = Modifier
                     .weight(0.4f)
                     .background(Color.Red)
             ) {
-                Text(text = "e")
 
             }
-
+            Column(
+                modifier = Modifier
+                    .weight(0.6f)
+                    .background(Color.Green)
+            ) {
+LazyColumn {
+    itemsIndexed(uiState.moves){ index , move->
+        Row {
+            Text(text = move.moveName)
+            Text(text = "lvl.${move.levelLearnedAt}")
+        }
+    }
+}
+            }
         }
     }
 }
@@ -133,5 +121,5 @@ fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState?= null, onNavigate: 
 @Preview
 @Composable
 private fun previewDetailsPokemon() {
-   // DetailsPokemonScreen(uiState)
+    // DetailsPokemonScreen(uiState)
 }

@@ -35,17 +35,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.bumptech.glide.Glide
-import com.example.pokedexpokemon.dataLayer.ListDetailsUiState
+import com.example.pokedexpokemon.dataLayer.ListDetailsState
 
 @Composable
 fun ListPokemonScreen(
-    uiState: ListDetailsUiState, onNavigate: (Int) -> Unit = {}
+    uiState: ListDetailsState.onFirstSalveLoad, onNavigate: (Int) -> Unit = {}
 ) {
     val context = LocalContext.current
     LazyColumn(
         modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(16.dp)
     ) {
-        itemsIndexed(uiState.list, key = { _, item -> item.nationalIndices!! }) { index, value ->
+        itemsIndexed(uiState.uiStates, key = { _, item -> item.nationalIndices }) { index, value ->
             Spacer(modifier = Modifier.height(20.dp))
             Card(
                 onClick = {
@@ -66,8 +66,7 @@ fun ListPokemonScreen(
                     ) {
                         val view = remember { ImageView(context) }
                         DisposableEffect(context) {
-                            Glide.with(context)
-                                .asGif()
+                            Glide.with(context).asGif()
                                 .load(value.sprites?.frontDefault ?: value.sprites?.backDefault)
                                 .into(view)
                             onDispose {
@@ -79,13 +78,22 @@ fun ListPokemonScreen(
                     Column(
                         modifier = Modifier.padding(start = 15.dp)
                     ) {
-                        Text(
-                            text = value.name.toString(),
-                            style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                        )
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceAround
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = value.name.toString(),
+                                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                            )
+                            Text(
+                                text = "#" + value.nationalIndices.toString(),
+                                style = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.Medium)
+                            )
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
                             value.type.forEachIndexed { i, type ->
                                 AssistChip(colors = ChipColors(

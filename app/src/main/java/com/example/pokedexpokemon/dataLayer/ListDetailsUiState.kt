@@ -10,12 +10,8 @@ import com.example.pokedexpokemon.presentationLayer.util.PokemonType
 sealed class ListDetailsState {
     object Loading : ListDetailsState()
     object Error : ListDetailsState()
-    data class onFirstSalveLoad( val list: ListDetailsUiState): ListDetailsState()
+    data class onFirstSalveLoad( val uiStates: List<ListDetailsPokemonUiState>): ListDetailsState()
 }
-
-data class ListDetailsUiState(
-    val list: List<ListDetailsPokemonUiState> = emptyList()
-)
 
 data class ListDetailsPokemonUiState(
     val name: String? = null,

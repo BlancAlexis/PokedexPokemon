@@ -31,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.ViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -38,8 +39,13 @@ import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemon
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemonList
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailsHost
+import com.example.pokedexpokemon.presentationLayer.settings.SettingsHost
+import com.example.pokedexpokemon.presentationLayer.teams.TeamViewHost
 import com.example.pokedexpokemon.presentationLayer.theme.PokedexPokemonTheme
 import org.koin.android.ext.android.inject
+class MainViewModel() : ViewModel(){
+
+}
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,8 +87,8 @@ class MainActivity : ComponentActivity() {
                                 var selectedItemIndex by remember {
                                     mutableIntStateOf(0)
                                 }
-                                val windowWidthClass =
-                                    currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
+                                val windowWidthClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
+                                val navController = rememberNavController()
                                 NavigationSuiteScaffold(
                                     navigationSuiteItems = {
                                         Screen.entries.forEachIndexed { index, screen ->
@@ -90,6 +96,7 @@ class MainActivity : ComponentActivity() {
                                                 selected = index == selectedItemIndex,
                                                 onClick = {
                                                     selectedItemIndex = index
+                                                    navController.navigate(Screen.entries[index].toString())
                                                 },
                                                 icon = {
                                                     Icon(
@@ -111,7 +118,6 @@ class MainActivity : ComponentActivity() {
                                         )
                                     }
                                 ) {
-                                    val navController = rememberNavController()
                                     NavHost(
                                         navController = navController,
                                         startDestination = Screen.HOME.toString()
@@ -130,10 +136,10 @@ class MainActivity : ComponentActivity() {
                                             )
                                         }
                                         composable(route = Screen.TEAM.toString()) {
-
+                                            TeamViewHost()
                                         }
                                         composable(route = Screen.SETTINGS.toString()) {
-
+                                            SettingsHost()
                                         }
                                     }
                                 }
@@ -147,7 +153,7 @@ class MainActivity : ComponentActivity() {
 
 enum class Screen(val title: String, val icon: ImageVector) {
     HOME("Home", Icons.Default.Home),
-    TEAM("Search", Icons.Default.Search),
+    TEAM("Team", Icons.Default.Search),
     SETTINGS("Settings", Icons.Default.Settings),
 }
 

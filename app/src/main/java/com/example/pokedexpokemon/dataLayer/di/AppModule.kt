@@ -11,6 +11,8 @@ import com.example.pokedexpokemon.domainLayer.repository.BasePokemonRepositoryIm
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemon
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemonList
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailPokemonViewModel
+import com.example.pokedexpokemon.presentationLayer.settings.SettingsViewModel
+import com.example.pokedexpokemon.presentationLayer.teams.TeamViewModel
 import okhttp3.OkHttpClient
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.context.loadKoinModules
@@ -28,8 +30,19 @@ private val loadFeature by lazy {
     loadKoinModules(
         listOf(
             retrofitModule,
+            settingsModule,
+            teamModule,
         )
     )
+}
+
+val settingsModule = module {
+    viewModelOf(::SettingsViewModel)
+}
+
+
+val teamModule = module {
+    viewModelOf(::TeamViewModel)
 }
 
 val retrofitModule = module {
@@ -50,7 +63,6 @@ val retrofitModule = module {
     factory<BasePokemonDataSource> { BasePokemonDataSourceImpl(get()) }
     factory<GetPokemonList> {GetPokemonList(get())}
     factory<GetPokemon> { GetPokemon(get()) }
-    // or constructor DSL
     viewModelOf(::ListDetailPokemonViewModel)
 
 }
