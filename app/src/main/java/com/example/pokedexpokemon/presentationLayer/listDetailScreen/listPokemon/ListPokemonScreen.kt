@@ -64,16 +64,16 @@ fun ListPokemonScreen(
                             .fillMaxHeight()
                             .size(55.dp)
                     ) {
-                        val view = remember { ImageView(context) }
-                        DisposableEffect(context) {
-                            Glide.with(context).asGif()
-                                .load(value.sprites?.frontDefault ?: value.sprites?.backDefault)
-                                .into(view)
-                            onDispose {
-                                Glide.with(context).clear(view)
-                            }
-                        }
-                        AndroidView(factory = { view })
+//                        val view = remember { ImageView(context) }
+//                        DisposableEffect(context) {
+//                            Glide.with(context).asGif()
+//                                .load(value.sprites?.frontDefault ?: value.sprites?.backDefault)
+//                                .into(view)
+//                            onDispose {
+//                                Glide.with(context).clear(view)
+//                            }
+//                        }
+//                        AndroidView(factory = { view })
                     }
                     Column(
                         modifier = Modifier.padding(start = 15.dp)

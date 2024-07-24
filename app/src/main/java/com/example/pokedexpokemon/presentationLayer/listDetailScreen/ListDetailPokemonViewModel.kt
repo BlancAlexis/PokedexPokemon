@@ -12,6 +12,7 @@ import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
 import com.example.pokedexpokemon.dataLayer.ListDetailsState
 import com.example.pokedexpokemon.dataLayer.utils.Ressource
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemon
+import com.example.pokedexpokemon.domainLayer.usecase.GetPokemonCardByNameUseCase
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemonList
 import com.example.pokedexpokemon.presentationLayer.util.PokemonType
 import com.example.pokedexpokemon.presentationLayer.util.toPokemonType
@@ -22,12 +23,18 @@ import kotlinx.coroutines.launch
 
 
 class ListDetailPokemonViewModel(
-    private val getPokemonList: GetPokemonList
+    private val getPokemonList: GetPokemonList,
+    private val getPokemonCardByNameUseCase: GetPokemonCardByNameUseCase
+
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<ListDetailsState>(ListDetailsState.Loading)
     val uiState = _uiState.asStateFlow()
 
     init {
+        viewModelScope.launch {
+            val a = mapOf("name" to "Charizard")
+            println("azaz ${getPokemonCardByNameUseCase.invoke(a).data}")
+    }
         viewModelScope.launch {
             when (val result = getPokemonList.invoke()) {
                 is Ressource.Error -> {

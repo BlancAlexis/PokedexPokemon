@@ -59,14 +59,14 @@ fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState, onNavigate: () -> U
                 .size(200.dp)
                 .padding(top = 40.dp, bottom = 20.dp), horizontalArrangement = Arrangement.Center
         ) {
-            val view = remember { ImageView(context) }
-            DisposableEffect(context) {
-                Glide.with(context).asGif().load(uiState.sprites?.frontDefault).into(view)
-                onDispose {
-                    Glide.with(context).clear(view)
-                }
-            }
-            AndroidView(factory = { view })
+//            val view = remember { ImageView(context) }
+//            DisposableEffect(context) {
+//                Glide.with(context).asGif().load(uiState.sprites?.frontDefault).into(view)
+//                onDispose {
+//                    Glide.with(context).clear(view)
+//                }
+//            }
+//            AndroidView(factory = { view })
         }
         Text(text = uiState.name.toString(), fontSize = 25.sp, fontWeight = FontWeight.Bold)
         Row(

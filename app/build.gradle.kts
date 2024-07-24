@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -19,6 +22,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
     }
 
     buildTypes {
@@ -48,6 +52,12 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    val properties = Properties().apply {
+        load(FileInputStream(File(project.rootDir, "local.properties")))
+    }
+    val apiKey = properties["CARD_POKEMON_API_KEY"] as String
+
 }
 
 dependencies {

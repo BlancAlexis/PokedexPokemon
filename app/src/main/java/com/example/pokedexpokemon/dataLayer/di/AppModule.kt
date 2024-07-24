@@ -2,15 +2,21 @@ package com.example.pokedexpokemon.dataLayer.di
 
 import com.example.pokedexpokemon.dataLayer.datasource.BasePokemonDataSource
 import com.example.pokedexpokemon.dataLayer.datasource.BasePokemonDataSourceImpl
+import com.example.pokedexpokemon.dataLayer.datasource.CardPokemonDataSource
+import com.example.pokedexpokemon.dataLayer.datasource.CardPokemonDataSourceImpl
 import com.example.pokedexpokemon.dataLayer.dto.BasePokemonDTO
 import com.example.pokedexpokemon.dataLayer.dto.PokedexResponse
+import com.example.pokedexpokemon.dataLayer.dto.ResponseCardApi
 import com.example.pokedexpokemon.dataLayer.utils.NetworkInterceptor
-import com.example.pokedexpokemon.dataLayer.utils.Ressource
 import com.example.pokedexpokemon.domainLayer.repository.BasePokemonRepository
 import com.example.pokedexpokemon.domainLayer.repository.BasePokemonRepositoryImpl
+import com.example.pokedexpokemon.domainLayer.repository.CardPokemonRepository
+import com.example.pokedexpokemon.domainLayer.repository.CardPokemonRepositoryImpl
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemon
+import com.example.pokedexpokemon.domainLayer.usecase.GetPokemonCardByNameUseCase
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemonList
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailPokemonViewModel
+import com.example.pokedexpokemon.presentationLayer.listDetailScreen.extraCardPokemon.CardPokemonViewModel
 import com.example.pokedexpokemon.presentationLayer.settings.SettingsViewModel
 import com.example.pokedexpokemon.presentationLayer.teams.TeamViewModel
 import okhttp3.OkHttpClient
@@ -20,8 +26,10 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.QueryMap
 
 fun injectFeature() = loadFeature
 
@@ -29,6 +37,8 @@ fun injectFeature() = loadFeature
 private val loadFeature by lazy {
     loadKoinModules(
         listOf(
+            retrofit1Module,
+
             retrofitModule,
             settingsModule,
             teamModule,
@@ -47,23 +57,34 @@ val teamModule = module {
 
 val retrofitModule = module {
     single<PokedexService> {
-        val okHttpClient = OkHttpClient.Builder()
-            .addInterceptor(NetworkInterceptor())
-            .build()
+        val okHttpClient = OkHttpClient.Builder().addInterceptor(NetworkInterceptor()).build()
 
-        Retrofit.Builder()
-            .baseUrl("https://pokeapi.co/api/v2/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpClient)
-            .build()
+        Retrofit.Builder().baseUrl("https://pokeapi.co/api/v2/")
+            .addConverterFactory(GsonConverterFactory.create()).client(okHttpClient).build()
             .create(PokedexService::class.java)
     }
 
     factory<BasePokemonRepository> { BasePokemonRepositoryImpl(get()) }
     factory<BasePokemonDataSource> { BasePokemonDataSourceImpl(get()) }
-    factory<GetPokemonList> {GetPokemonList(get())}
+    factory<GetPokemonList> { GetPokemonList(get()) }
     factory<GetPokemon> { GetPokemon(get()) }
     viewModelOf(::ListDetailPokemonViewModel)
+
+}
+
+val retrofit1Module = module {
+    single<PokemonCardService> {
+        val okHttpClient = OkHttpClient.Builder().addInterceptor(NetworkInterceptor()).build()
+
+        Retrofit.Builder().baseUrl("https://api.pokemontcg.io/v2/")
+            .addConverterFactory(GsonConverterFactory.create()).client(okHttpClient).build()
+            .create(PokemonCardService::class.java)
+    }
+
+    factory<CardPokemonRepository> { CardPokemonRepositoryImpl(get()) }
+    factory<CardPokemonDataSource> { CardPokemonDataSourceImpl(get()) }
+    factory<GetPokemonCardByNameUseCase> { GetPokemonCardByNameUseCase(get()) }
+    viewModelOf(::CardPokemonViewModel)
 
 }
 
@@ -77,4 +98,13 @@ interface PokedexService {
 
     @GET("pokemon/{name}")
     suspend fun fetchPokemonInfo(@Path("name") name: String): BasePokemonDTO
+}
+
+interface PokemonCardService {
+    // @Header(HashMap<>)
+    @GET("cards")
+    suspend fun getPokemonCardByName(
+        @QueryMap options: Map<String, String>,
+        @Header("X-Api-Key") apiKey: String = "40c6daae-b572-4a40-ab9d-e7c60ad4e523"
+    ): ResponseCardApi
 }

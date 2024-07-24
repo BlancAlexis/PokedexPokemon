@@ -21,6 +21,7 @@ import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
 import com.example.pokedexpokemon.dataLayer.ListDetailsState
 import com.example.pokedexpokemon.presentationLayer.NavigationEvent
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.detaiPokemon.DetailsPokemonScreen
+import com.example.pokedexpokemon.presentationLayer.listDetailScreen.extraCardPokemon.ExtraCardHost
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.extraCardPokemon.ExtraCardScreen
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.listPokemon.ListPokemonScreen
 import org.koin.androidx.compose.koinViewModel
@@ -74,7 +75,7 @@ fun ListDetailLayout(
             extraPane = @Composable {
                // val content = navigator.currentDestination?.content?.toString() ?: "Select an option"
                 AnimatedPane {
-                    ExtraCardScreen()
+                    ExtraCardHost()
                 }
             })
     }
