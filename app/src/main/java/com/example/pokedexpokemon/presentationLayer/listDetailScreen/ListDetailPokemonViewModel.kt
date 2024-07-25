@@ -6,6 +6,8 @@ import GameIndex
 import Move
 import Sprites
 import Stat
+import android.media.AudioAttributes
+import android.media.MediaPlayer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
@@ -26,6 +28,8 @@ class ListDetailPokemonViewModel(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow<ListDetailsState>(ListDetailsState.Loading)
     val uiState = _uiState.asStateFlow()
+
+
 
     init {
         viewModelScope.launch {

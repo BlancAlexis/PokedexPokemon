@@ -1,6 +1,10 @@
 package com.example.pokedexpokemon.presentationLayer.listDetailScreen.listPokemon
 
+import android.graphics.drawable.Drawable
+import android.media.AudioAttributes
+import android.media.MediaPlayer
 import android.widget.ImageView
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,6 +24,7 @@ import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ChipColors
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
 import androidx.compose.runtime.Composable
@@ -29,14 +34,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import coil.compose.rememberAsyncImagePainter
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
+import com.example.pokedexpokemon.R
 import com.example.pokedexpokemon.dataLayer.ListDetailsState
 
 @Composable
@@ -59,7 +70,11 @@ fun ListPokemonScreen(
                     .background(
                         shape = RoundedCornerShape(16.dp),
                         brush = Brush.linearGradient(
-                            colors =  if(value.type.size>1){value.type.map { it.color }} else {listOf(Color.Red, Color.Blue)}
+                            colors = if (value.type.size > 1) {
+                                value.type.map { it.color }
+                            } else {
+                                listOf(value.type.first().color, value.type.first().color)
+                            }
                         )
                     ),
                 colors = CardDefaults.cardColors(containerColor = Color.Transparent)
@@ -74,16 +89,12 @@ fun ListPokemonScreen(
                             .fillMaxHeight()
                             .size(55.dp)
                     ) {
-                        val view = remember { ImageView(context) }
-                        DisposableEffect(context) {
-                            Glide.with(context).asGif()
-                                .load(value.sprites?.frontDefault ?: value.sprites?.backDefault)
-                                .into(view)
-                            onDispose {
-                                Glide.with(context).clear(view)
-                            }
-                        }
-                        AndroidView(factory = { view })
+                        Image(
+                            painter = rememberAsyncImagePainter(model = value.sprites?.baseSprite),
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(),
+                            alignment = Alignment.Center
+                        )
                     }
                     Column(
                         modifier = Modifier.padding(start = 15.dp)
@@ -103,10 +114,13 @@ fun ListPokemonScreen(
                         }
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceEvenly
+                            horizontalArrangement = Arrangement.Start
                         ) {
                             value.type.forEachIndexed { i, type ->
-                                AssistChip(colors = ChipColors(
+                                AssistChip(
+                                    leadingIcon = { Icon(painter = painterResource(id = R.drawable.pika_icone_petit), tint = Color.Black, contentDescription = "")},
+                                    modifier = Modifier.padding(end = 15.dp),
+                                    colors = ChipColors(
                                     containerColor = type.color,
                                     labelColor = Color.Black,
                                     leadingIconContentColor = Color.Black,

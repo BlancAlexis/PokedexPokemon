@@ -51,6 +51,8 @@ android {
 }
 
 dependencies {
+     implementation("io.coil-kt:coil-compose:2.0.0")
+    implementation("io.coil-kt:coil-gif:2.0.0")
 
 
     implementation("com.github.skydoves:landscapist-glide:2.3.3")
