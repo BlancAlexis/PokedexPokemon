@@ -5,9 +5,14 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
 import com.example.pokedexpokemon.dataLayer.ListDetailsState
 import com.example.pokedexpokemon.dataLayer.utils.Ressource
+import com.example.pokedexpokemon.domainLayer.repository.BasePokemonRepository
+import com.example.pokedexpokemon.domainLayer.repository.BookPagingSource
+import com.example.pokedexpokemon.domainLayer.usecase.GetPokemon
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemonList
 import com.example.pokedexpokemon.presentationLayer.util.toPokemonType
 import kotlinx.coroutines.flow.MutableStateFlow

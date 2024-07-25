@@ -31,6 +31,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.QueryMap
 
 fun injectFeature() = loadFeature
 
@@ -94,8 +95,7 @@ interface PokedexService {
 
     @GET("pokemon")
     suspend fun fetchPokemonList(
-        @Query("limit") limit: Int = 20,
-        @Query("offset") offset: Int = 0,
+        @QueryMap param : Map<String,String>
     ): PokedexResponse
 
     @GET("pokemon/{name}")
