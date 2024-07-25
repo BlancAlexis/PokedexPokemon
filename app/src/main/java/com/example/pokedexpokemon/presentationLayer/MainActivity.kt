@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
@@ -83,6 +84,9 @@ class MainActivity : ComponentActivity() {
                     enableEdgeToEdge()
                     setContent {
                         PokedexPokemonTheme {
+                            Surface(
+                                modifier = Modifier.fillMaxSize()
+                            ) {
                             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                                 var selectedItemIndex by remember {
                                     mutableIntStateOf(0)
@@ -148,6 +152,7 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 }
+            }
             }
 }
 
