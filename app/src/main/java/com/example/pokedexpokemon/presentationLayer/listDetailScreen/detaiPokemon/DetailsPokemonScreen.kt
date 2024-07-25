@@ -1,6 +1,7 @@
 package com.example.pokedexpokemon.presentationLayer.listDetailScreen.detaiPokemon
 
 import android.widget.ImageView
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -38,6 +40,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import coil.ImageLoader
+import coil.compose.rememberAsyncImagePainter
+import coil.decode.ImageDecoderDecoder
+import coil.request.ImageRequest
 import com.bumptech.glide.Glide
 import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
 import com.example.pokedexpokemon.presentationLayer.PokedexProgressBar
@@ -59,14 +65,25 @@ fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState, onNavigate: () -> U
                 .size(200.dp)
                 .padding(top = 40.dp, bottom = 20.dp), horizontalArrangement = Arrangement.Center
         ) {
-            val view = remember { ImageView(context) }
-            DisposableEffect(context) {
-                Glide.with(context).asGif().load(uiState.sprites?.frontDefault).into(view)
-                onDispose {
-                    Glide.with(context).clear(view)
+            val imageLoader = ImageLoader.Builder(context)
+                .components {
+                    add(ImageDecoderDecoder.Factory())
+
                 }
-            }
-            AndroidView(factory = { view })
+                .build()
+
+            val painter: Painter = rememberAsyncImagePainter(
+                model = ImageRequest.Builder(context)
+                    .data(uiState.sprites?.frontDefault)
+                    .build(),
+                imageLoader = imageLoader
+            )
+            Image(
+                painter = painter,
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                alignment = Alignment.Center
+            )
         }
         Text(text = uiState.name.toString(), fontSize = 25.sp, fontWeight = FontWeight.Bold)
         Row(

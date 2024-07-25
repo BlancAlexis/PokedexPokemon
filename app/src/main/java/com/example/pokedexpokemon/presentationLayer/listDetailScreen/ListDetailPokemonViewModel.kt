@@ -30,7 +30,19 @@ class ListDetailPokemonViewModel(
     val uiState = _uiState.asStateFlow()
 
 
-
+    fun playPokemonRoar(roarUrl: String){
+        val mediaPlayer = MediaPlayer().apply {
+            setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .build()
+            )
+            setDataSource(roarUrl)
+            prepare()
+            start()
+        }
+    }
     init {
         viewModelScope.launch {
             when (val result = getPokemonList.invoke()) {
@@ -68,6 +80,15 @@ class ListDetailPokemonViewModel(
         talent = this.abilities,
         roar = this.roar.urlLastestRoar,
         moves = this.moves.distinctBy { move -> move.levelLearnedAt > 0 }.sortedBy { move -> move.levelLearnedAt })
+
+    fun onEvent(event : ListDetailsPokemonEvent) {
+        when(event){
+            is ListDetailsPokemonEvent.playRoar -> playPokemonRoar(event.roarUrl)
+        }
+    }
 }
 
+sealed interface ListDetailsPokemonEvent{
+    data class playRoar(val roarUrl : String) : ListDetailsPokemonEvent
+}
 

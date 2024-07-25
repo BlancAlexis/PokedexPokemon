@@ -32,12 +32,12 @@ fun ListDetailsHost(
     modifier: Modifier
 ){
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
-    ListDetailLayout(state = state, navigationEvent = { viewModel })
+    ListDetailLayout(state = state, navigationEvent = { viewModel }, viewModelEvent = viewModel::onEvent)
 }
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun ListDetailLayout(
-    modifier: Modifier = Modifier, state: ListDetailsState, navigationEvent: (NavigationEvent) -> Unit = {}
+    modifier: Modifier = Modifier, state: ListDetailsState, navigationEvent: (NavigationEvent) -> Unit = {}, viewModelEvent: (ListDetailsPokemonEvent) -> Unit = {}
 ) {
         AnimatedVisibility(visible = state is ListDetailsState.Loading) {
         Column(
@@ -59,7 +59,8 @@ fun ListDetailLayout(
                         navigator.navigateTo(
                             pane = ListDetailPaneScaffoldRole.Detail,
                             content = uiState.uiStates[index])
-                    })
+                    },
+                        viewModelEvent = viewModelEvent)
                 }
             },
             detailPane = @Composable {
