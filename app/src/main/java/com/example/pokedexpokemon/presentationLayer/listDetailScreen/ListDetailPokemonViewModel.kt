@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
 import com.example.pokedexpokemon.dataLayer.ListDetailsState
 import com.example.pokedexpokemon.dataLayer.utils.Ressource
@@ -44,14 +46,8 @@ class ListDetailPokemonViewModel(
     init {
 
         viewModelScope.launch {
-            when (val result = getPokemonList.invoke()) {
-                is Ressource.Error -> {
-                    println("result.data ${result.error}")
-                }
-
-                is Ressource.Loading -> {}
-                is Ressource.Success -> {
-                    val newData = result.data?.map { it.toUiState() } ?: emptyList()
+            getPokemonList.invoke().collect{ result ->
+                    val newData = result.map { map -> map.toUiState() }
                     _uiState.update {
                         if (newData.isNotEmpty()) {
                             return@update ListDetailsState.onFirstSalveLoad(newData)
@@ -59,7 +55,6 @@ class ListDetailPokemonViewModel(
                             return@update it
                         }
                     }
-                }
             }
         }
     }

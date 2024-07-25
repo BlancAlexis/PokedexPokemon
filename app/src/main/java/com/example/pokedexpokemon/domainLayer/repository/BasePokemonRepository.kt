@@ -14,13 +14,15 @@ import org.koin.core.component.KoinComponent
 interface BasePokemonRepository {
     suspend fun getListBasePokemon(): List<BasePokemon>
     suspend fun getPokemon(index: String): BasePokemon
+    suspend fun getListBasePokemon(): Flow<PagingData<BasePokemon>>
+    suspend fun getPokemon(index : String) : BasePokemon
 }
 
 class BasePokemonRepositoryImpl(
     private val basePokemonDataSource: BasePokemonDataSource
 ) : BasePokemonRepository, KoinComponent {
-    override suspend fun getListBasePokemon(nextPageNumber: Int, loadSize: Int): Flow<PagingData<BasePokemon>> {
-         return Pager(PagingConfig(pageSize = 20)) {
+    override suspend fun getListBasePokemon(): Flow<PagingData<BasePokemon>> {
+         return Pager(PagingConfig(pageSize = 20, prefetchDistance = 2)) {
             BookPagingSource(basePokemonDataSource)
         }.flow.map {
             it.map {
