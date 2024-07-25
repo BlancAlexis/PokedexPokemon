@@ -78,13 +78,70 @@ fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState, onNavigate: () -> U
                     .build(),
                 imageLoader = imageLoader
             )
-            Image(
-                painter = painter,
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
-                alignment = Alignment.Center
+            val painter2: Painter = rememberAsyncImagePainter(
+                model = ImageRequest.Builder(context)
+                    .data(uiState.sprites?.backDefault)
+                    .build(),
+                imageLoader = imageLoader
             )
+            val a =listOf(painter,painter2)
+            val pagerState = rememberPagerState(pageCount = { a.size })
+            LaunchedEffect(pagerState) {
+                snapshotFlow { pagerState.currentPage }.collect { page ->
+                }
+            }
+            HorizontalPager(state = pagerState) { page ->
+                Box(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .graphicsLayer {
+                            val pageOffset = (
+                                    (pagerState.currentPage - page) + pagerState
+                                        .currentPageOffsetFraction
+                                    ).absoluteValue
+
+                            alpha = lerp(
+                                start = 0.5f,
+                                stop = 1f,
+                                fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                            )
+                        },
+                ) {
+                    Image(
+                        modifier = Modifier.fillMaxSize(),
+                        painter = a[page],
+                        contentDescription = ""
+                    )
+                    Text(
+                        text = "uiState.listMaintenance[page].name",
+                        fontSize = 25.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White,
+                        modifier = Modifier.padding(start = 25.dp, top = 200.dp)
+                    )
+                }
+            }
+            Row(
+                Modifier
+                    .wrapContentHeight()
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                repeat(pagerState.pageCount) { iteration ->
+                    val color =
+                        if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
+                    Box(
+                        modifier = Modifier
+                            .padding(bottom = 20.dp, top = 5.dp, start = 3.dp, end = 3.dp)
+                            .clip(CircleShape)
+                            .background(color)
+                            .size(6.dp)
+                    )
+                }
+            }
         }
+
+
         Text(text = uiState.name.toString(), fontSize = 25.sp, fontWeight = FontWeight.Bold)
         Row(
             modifier = Modifier.fillMaxWidth(0.7f), horizontalArrangement = Arrangement.SpaceAround

@@ -79,7 +79,8 @@ class ListDetailPokemonViewModel(
         sprites = this.sprites,
         talent = this.abilities,
         roar = this.roar.urlLastestRoar,
-        moves = this.moves.distinctBy { move -> move.levelLearnedAt > 0 }.sortedBy { move -> move.levelLearnedAt })
+        moves = this.moves.filter { it.levelLearnedAt != 0 }.sortedBy { it.levelLearnedAt }
+    )
 
     fun onEvent(event : ListDetailsPokemonEvent) {
         when(event){

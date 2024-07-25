@@ -140,7 +140,7 @@ fun ListPokemonScreen(
                         ) {
                             value.type.forEachIndexed { i, type ->
                                 AssistChip(
-                                    leadingIcon = { Icon(painter = painterResource(id = R.drawable.pika_icone_petit), tint = Color.Black, contentDescription = "")},
+                                    leadingIcon = { Icon(painter = painterResource(id = type.icon), tint = Color.Black, contentDescription = "", modifier = Modifier.size(25.dp))},
                                     modifier = Modifier.padding(end = 15.dp),
                                     colors = ChipColors(
                                     containerColor = type.color,
