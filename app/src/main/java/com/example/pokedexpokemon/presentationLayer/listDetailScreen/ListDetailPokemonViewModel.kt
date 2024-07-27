@@ -54,11 +54,9 @@ class ListDetailPokemonViewModel(
                 is Ressource.Success -> {
                     val newData = result.data?.map { it.toUiState() } ?: emptyList()
                     _uiState.update {
-                        // Check if data is valid or perform other operations (be careful here)
                         if (newData.isNotEmpty()) {
                             return@update ListDetailsState.onFirstSalveLoad(newData)
                         } else {
-                            // Handle empty data case (optional)
                             return@update it
                         }
                     }

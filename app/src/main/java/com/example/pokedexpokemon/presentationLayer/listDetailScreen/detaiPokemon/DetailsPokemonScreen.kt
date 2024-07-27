@@ -19,12 +19,18 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ChipColors
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -36,6 +42,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.graphicsLayer
@@ -170,6 +177,36 @@ fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState, onNavigate: () -> U
                     onClick = { onNavigate() },
                     label = { Text(text = stringResource(id = type.name)) })
             }
+        }
+        Row {
+            Card(
+                colors = CardDefaults.cardColors(containerColor = Color.Gray),
+                shape = RoundedCornerShape(5.dp,0.dp ,0.dp,5.dp),
+                elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp)
+            ) {
+                    Box (
+                        Modifier.fillMaxWidth(0.2f)
+                    ){
+                        Column {
+                           // Text(text = "poids", fontSize = 14.sp, modifier = Modifier.align(Alignment.TopCenter))
+                            HorizontalDivider(modifier = Modifier
+                                .wrapContentWidth()
+                                .height(1.dp), color = Color.Blue)
+                        }
+
+                        Spacer(modifier = Modifier.fillMaxHeight(0.08f))
+                        Text(text = uiState.height.toString(), fontSize = 25.sp, modifier = Modifier.align(Alignment.BottomCenter))
+                    }
+
+            }
+            Card(
+                colors = CardDefaults.cardColors(containerColor = Color.Black),
+                shape = RoundedCornerShape(0.dp, 5.dp,5.dp,0.dp)
+            ) {
+                Text(text = uiState.weight.toString())
+
+            }
+
         }
         Row(
             modifier = Modifier
