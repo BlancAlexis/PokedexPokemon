@@ -6,6 +6,8 @@ import GameIndex
 import Move
 import Sprites
 import Stat
+import android.media.AudioAttributes
+import android.media.MediaPlayer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
@@ -30,6 +32,19 @@ class ListDetailPokemonViewModel(
     private val _uiState = MutableStateFlow<ListDetailsState>(ListDetailsState.Loading)
     val uiState = _uiState.asStateFlow()
 
+    fun playPokemonRoar(roarUrl: String){
+        val mediaPlayer = MediaPlayer().apply {
+            setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .build()
+            )
+            setDataSource(roarUrl)
+            prepare()
+            start()
+        }
+    }
     init {
         viewModelScope.launch {
             val a = mapOf("name" to "Charizard")
@@ -45,11 +60,9 @@ class ListDetailPokemonViewModel(
                 is Ressource.Success -> {
                     val newData = result.data?.map { it.toUiState() } ?: emptyList()
                     _uiState.update {
-                        // Check if data is valid or perform other operations (be careful here)
                         if (newData.isNotEmpty()) {
                             return@update ListDetailsState.onFirstSalveLoad(newData)
                         } else {
-                            // Handle empty data case (optional)
                             return@update it
                         }
                     }
@@ -70,7 +83,17 @@ class ListDetailPokemonViewModel(
         sprites = this.sprites,
         talent = this.abilities,
         roar = this.roar.urlLastestRoar,
-        moves = this.moves.distinctBy { move -> move.levelLearnedAt > 0 }.sortedBy { move -> move.levelLearnedAt })
+        moves = this.moves.filter { it.levelLearnedAt != 0 }.sortedBy { it.levelLearnedAt }
+    )
+
+    fun onEvent(event : ListDetailsPokemonEvent) {
+        when(event){
+            is ListDetailsPokemonEvent.playRoar -> playPokemonRoar(event.roarUrl)
+        }
+    }
 }
 
+sealed interface ListDetailsPokemonEvent{
+    data class playRoar(val roarUrl : String) : ListDetailsPokemonEvent
+}
 

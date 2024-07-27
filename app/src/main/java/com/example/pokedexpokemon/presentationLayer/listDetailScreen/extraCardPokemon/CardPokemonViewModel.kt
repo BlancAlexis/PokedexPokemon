@@ -7,6 +7,7 @@ import com.example.pokedexpokemon.dataLayer.dto.PokemonCard
 import com.example.pokedexpokemon.dataLayer.utils.Ressource
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemonCardByNameUseCase
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.detaiPokemon.ListCardPokemon
+import com.example.pokedexpokemon.presentationLayer.listDetailScreen.detaiPokemon.PokemonCardList
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.detaiPokemon.PokemonCardState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,7 +31,7 @@ val newData = result.data?.map { it.toUiState() } ?: emptyList()
                         _uiState.update {
                             // Check if data is valid or perform other operations (be careful here)
                             if (newData.isNotEmpty()) {
-                                return@update PokemonCardState.onFirstSalveLoad(newData)
+                                return@update PokemonCardState.onFirstSalveLoad(PokemonCardList(newData) )
                             } else {
                                 // Handle empty data case (optional)
                                 return@update it

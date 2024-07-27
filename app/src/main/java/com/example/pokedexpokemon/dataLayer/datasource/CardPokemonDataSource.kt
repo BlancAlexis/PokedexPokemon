@@ -27,9 +27,9 @@ fun PokemonCardDTO.toDomain() = PokemonCard(
     hp = hp,
   //  set = setDTO.,
     types = types,
-    images = imagesDTO.large,
+    images = imagesDTO.small,
     number = number,
-    rarity = rarity,
+    rarity = rarity?: "",
     subtypes = subtypes,
     cardPrice = CardPrice(
         "",

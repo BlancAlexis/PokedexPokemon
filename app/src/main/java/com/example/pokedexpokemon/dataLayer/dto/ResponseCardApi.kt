@@ -21,7 +21,7 @@ data class PokemonCardDTO(
     @SerializedName("set") val setDTO: SetDTO,
     @SerializedName("number") val number: String,
     @SerializedName("artist") val artist: String,
-    @SerializedName("rarity") val rarity: String,
+    @SerializedName("rarity") val rarity: String?,
     @SerializedName("legalities") val legalitiesDTO: LegalitiesDTO,
     @SerializedName("images") val imagesDTO: ImagesDTO,
     @SerializedName("cardmarket") val tcgplayer: CardmarketDTO

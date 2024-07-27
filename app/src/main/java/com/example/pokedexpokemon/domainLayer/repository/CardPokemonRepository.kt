@@ -14,11 +14,8 @@ class CardPokemonRepositoryImpl(
 ) : CardPokemonRepository {
 
     override suspend fun getPokemonByName(option: Map<String,String>): List<PokemonCard> {
-        println(" repository ${cardPokemonDataSource.getPokemonByName(option).map {
-            it.toDomain()
-        }}")
         return cardPokemonDataSource.getPokemonByName(option).map {
             it.toDomain()
-        }.toList()
+        }
     }
 }

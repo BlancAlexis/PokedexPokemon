@@ -72,7 +72,7 @@ fun BasePokemonDTO.toDomain(): BasePokemon {
 }
 
 fun SpritesDTO.toDomain() = Sprites(
-    baseSprite = this.other.officialArtwork?.frontDefault ?: "",
+    baseSprite = this.frontDefault ?: "",
     backDefault = this.other.showdown?.backDefault ?: "",
     frontDefault = this.other.showdown?.frontDefault ?: "" // TODO gestion erreur
 )
