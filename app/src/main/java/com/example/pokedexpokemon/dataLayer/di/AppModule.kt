@@ -9,6 +9,7 @@ import com.example.pokedexpokemon.dataLayer.dto.BasePokemonDTO
 import com.example.pokedexpokemon.dataLayer.dto.PokedexResponse
 import com.example.pokedexpokemon.dataLayer.dto.ResponseCardApi
 import com.example.pokedexpokemon.dataLayer.paging.CardPagingSource
+import com.example.pokedexpokemon.dataLayer.paging.PokemonPagingSource
 import com.example.pokedexpokemon.dataLayer.utils.NetworkInterceptor
 import com.example.pokedexpokemon.domainLayer.repository.BasePokemonRepository
 import com.example.pokedexpokemon.domainLayer.repository.BasePokemonRepositoryImpl
@@ -66,10 +67,11 @@ val retrofitModule = module {
             .create(PokedexService::class.java)
     }
 
-    factory<BasePokemonRepository> { BasePokemonRepositoryImpl(get()) }
+    factory<BasePokemonRepository> { BasePokemonRepositoryImpl(get(), get()) }
     factory<BasePokemonDataSource> { BasePokemonDataSourceImpl(get()) }
     factory<GetPokemonList> { GetPokemonList(get()) }
     factory<GetPokemon> { GetPokemon(get()) }
+    factory<PokemonPagingSource> { PokemonPagingSource(get()) }
     viewModelOf(::ListDetailPokemonViewModel)
 
 }
@@ -95,7 +97,8 @@ interface PokedexService {
 
     @GET("pokemon")
     suspend fun fetchPokemonList(
-        @QueryMap param : Map<String,String>
+        @Query("offset") offset : Int,
+        @Query("limit") limit : Int = 20
     ): PokedexResponse
 
     @GET("pokemon/{name}")

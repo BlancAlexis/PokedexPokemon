@@ -1,22 +1,23 @@
 package com.example.pokedexpokemon.dataLayer.datasource
 
+import android.util.Log
 import com.example.pokedexpokemon.dataLayer.di.PokedexService
 import com.example.pokedexpokemon.dataLayer.dto.BasePokemonDTO
 import com.example.pokedexpokemon.dataLayer.dto.PokedexResponse
 import org.koin.core.component.KoinComponent
 
 interface BasePokemonDataSource {
-    suspend fun getListBasePokemon(mapOf: Map<String, String>): PokedexResponse
+    suspend fun getListBasePokemon(offset : Int): PokedexResponse
     suspend fun getPokemon(index: String): BasePokemonDTO
     fun extractPokemonId(url : String) : String?
-
 }
 
 class BasePokemonDataSourceImpl(
     private val pokedexService: PokedexService
-) : BasePokemonDataSource, KoinComponent {
-    override suspend fun getListBasePokemon(mapOf: Map<String, String>): PokedexResponse {
-        return pokedexService.fetchPokemonList(mapOf)
+) : BasePokemonDataSource {
+    override suspend fun getListBasePokemon(offset : Int): PokedexResponse {
+        Log.d("BasePokemonDataSourceImpl", "getListBasePokemon called with offset: $offset")
+        return pokedexService.fetchPokemonList(offset)
     }
 
     override suspend fun getPokemon(index: String): BasePokemonDTO {

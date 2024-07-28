@@ -4,31 +4,28 @@ import BasePokemon
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.PagingSource
-import androidx.paging.PagingState
-import androidx.paging.map
 import com.example.pokedexpokemon.dataLayer.datasource.BasePokemonDataSource
+import com.example.pokedexpokemon.dataLayer.paging.PokemonPagingSource
 import com.example.pokedexpokemon.domainLayer.card_mapper.PokemonMapper.toDomain
-import org.koin.core.component.KoinComponent
+import kotlinx.coroutines.flow.Flow
 
 interface BasePokemonRepository {
-    suspend fun getListBasePokemon(): List<BasePokemon>
-    suspend fun getPokemon(index: String): BasePokemon
     suspend fun getListBasePokemon(): Flow<PagingData<BasePokemon>>
-    suspend fun getPokemon(index : String) : BasePokemon
+    suspend fun getPokemon(index: String): BasePokemon
 }
 
 class BasePokemonRepositoryImpl(
+    private val pokemonPagingSource: PokemonPagingSource,
     private val basePokemonDataSource: BasePokemonDataSource
-) : BasePokemonRepository, KoinComponent {
+) : BasePokemonRepository {
     override suspend fun getListBasePokemon(): Flow<PagingData<BasePokemon>> {
-         return Pager(PagingConfig(pageSize = 20, prefetchDistance = 2)) {
-            BookPagingSource(basePokemonDataSource)
-        }.flow.map {
-            it.map {
-                it.toDomain()
+        println("base repo")
+        return Pager(
+            config = PagingConfig(pageSize = 30, prefetchDistance = 2),
+            pagingSourceFactory = {
+                pokemonPagingSource
             }
-         } // TODO Trouver autre chose?
+        ).flow
     }
 
     override suspend fun getPokemon(index: String): BasePokemon {
@@ -37,34 +34,3 @@ class BasePokemonRepositoryImpl(
     }
 }
 
-class BookPagingSource(
-    private val dataSource: BasePokemonDataSource
-) : PagingSource<Int, BasePokemonDTO>() {
-
-    override suspend fun load(params: LoadParams<Int>):  LoadResult<Int, BasePokemonDTO> {
-        return try {
-            val nextPageNumber = params.key ?: 1
-            val response = dataSource.getListBasePokemon(mapOf("limit" to "$nextPageNumber", "offset" to "$params.loadSize"))
-            val result = response.results.mapNotNull {
-                    dataSource.extractPokemonId(it.url)?.let { id ->
-                        try {
-                            dataSource.getPokemon(id)
-                        } catch (e: Exception) {
-                            null
-                        }
-                    }
-                }
-            LoadResult.Page(
-                data = result,
-                prevKey = if (nextPageNumber == 1) null else nextPageNumber - 1,
-                nextKey = if (response.results.isEmpty()) null else response.count + 1 // probablement pas le count
-            )
-        } catch (e: Exception) {
-            LoadResult.Error(e)
-        }
-    }
-
-    override fun getRefreshKey(state: PagingState<Int, BasePokemonDTO>): Int =
-        ((state.anchorPosition ?: 0) - state.config.initialLoadSize / 2)
-            .coerceAtLeast(0)
-    }

@@ -63,12 +63,12 @@ android {
 dependencies {
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)
-    implementation("io.coil-kt:coil-compose:2.0.0")
-    implementation("io.coil-kt:coil-gif:2.0.0")
+    implementation(libs.coil.compose)
+    implementation(libs.coil.gif)
 
 
-    implementation("com.github.skydoves:landscapist-glide:2.3.3")
-    implementation("com.google.code.gson:gson:2.10.1")
+    implementation(libs.landscapist.glide)
+    implementation(libs.gson)
     //Retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
