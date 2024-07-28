@@ -27,9 +27,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModel
@@ -37,14 +34,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.window.core.layout.WindowWidthSizeClass
-import com.example.pokedexpokemon.domainLayer.usecase.GetPokemon
-import com.example.pokedexpokemon.domainLayer.usecase.GetPokemonList
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailsHost
 import com.example.pokedexpokemon.presentationLayer.settings.SettingsHost
 import com.example.pokedexpokemon.presentationLayer.teams.TeamViewHost
 import com.example.pokedexpokemon.presentationLayer.theme.PokedexPokemonTheme
-import org.koin.android.ext.android.inject
-class MainViewModel() : ViewModel(){
+
+class MainViewModel() : ViewModel() {
 
 }
 
@@ -81,17 +76,18 @@ class MainActivity : ComponentActivity() {
                     zoomX.start()
                     zoomY.start()
                 }
-                    enableEdgeToEdge()
-                    setContent {
-                        PokedexPokemonTheme {
-                            Surface(
-                                modifier = Modifier.fillMaxSize()
-                            ) {
+                enableEdgeToEdge()
+                setContent {
+                    PokedexPokemonTheme {
+                        Surface(
+                            modifier = Modifier.fillMaxSize()
+                        ) {
                             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                                 var selectedItemIndex by remember {
                                     mutableIntStateOf(0)
                                 }
-                                val windowWidthClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
+                                val windowWidthClass =
+                                    currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
                                 val navController = rememberNavController()
                                 NavigationSuiteScaffold(
                                     navigationSuiteItems = {
@@ -153,7 +149,7 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
-            }
+    }
 }
 
 enum class Screen(val title: String, val icon: ImageVector) {

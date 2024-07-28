@@ -1,9 +1,10 @@
 package com.example.pokedexpokemon.presentationLayer.listDetailScreen.detaiPokemon
 
-import android.widget.ImageView
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,25 +14,30 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ChipColors
-import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -39,15 +45,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.util.lerp
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
-import com.bumptech.glide.Glide
 import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
-import com.example.pokedexpokemon.presentationLayer.PokedexProgressBar
+import kotlin.math.absoluteValue
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState, onNavigate: () -> Unit = {}) {
     val context = LocalContext.current
@@ -161,6 +167,42 @@ fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState, onNavigate: () -> U
                     label = { Text(text = stringResource(id = type.name)) })
             }
         }
+        Row {
+            Card(
+                colors = CardDefaults.cardColors(containerColor = Color.Gray),
+                shape = RoundedCornerShape(5.dp, 0.dp, 0.dp, 5.dp),
+                elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp)
+            ) {
+                Box(
+                    Modifier.fillMaxWidth(0.2f)
+                ) {
+                    Column {
+                        // Text(text = "poids", fontSize = 14.sp, modifier = Modifier.align(Alignment.TopCenter))
+                        HorizontalDivider(
+                            modifier = Modifier
+                                .wrapContentWidth()
+                                .height(1.dp), color = Color.Blue
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.fillMaxHeight(0.08f))
+                    Text(
+                        text = uiState.height.toString(),
+                        fontSize = 25.sp,
+                        modifier = Modifier.align(Alignment.BottomCenter)
+                    )
+                }
+
+            }
+            Card(
+                colors = CardDefaults.cardColors(containerColor = Color.Black),
+                shape = RoundedCornerShape(0.dp, 5.dp, 5.dp, 0.dp)
+            ) {
+                Text(text = uiState.weight.toString())
+
+            }
+
+        }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -179,14 +221,14 @@ fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState, onNavigate: () -> U
                     .weight(0.6f)
                     .background(Color.Green)
             ) {
-LazyColumn {
-    itemsIndexed(uiState.moves){ index , move->
-        Row {
-            Text(text = move.moveName)
-            Text(text = "lvl.${move.levelLearnedAt}")
-        }
-    }
-}
+                LazyColumn {
+                    itemsIndexed(uiState.moves) { index, move ->
+                        Row {
+                            Text(text = move.moveName)
+                            Text(text = "lvl.${move.levelLearnedAt}")
+                        }
+                    }
+                }
             }
         }
     }

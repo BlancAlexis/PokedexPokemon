@@ -1,18 +1,11 @@
 package com.example.pokedexpokemon.presentationLayer.listDetailScreen.listPokemon
 
-import android.graphics.drawable.Drawable
-import android.media.AudioAttributes
-import android.media.MediaPlayer
-import android.os.Build.VERSION.SDK_INT
-import android.widget.ImageView
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,17 +20,11 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ChipColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -45,22 +32,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
-import coil.ImageLoader
-import coil.compose.rememberAsyncImagePainter
-import coil.decode.GifDecoder
-import coil.decode.ImageDecoderDecoder
-import coil.request.ImageRequest
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
-import com.example.pokedexpokemon.R
 import com.example.pokedexpokemon.dataLayer.ListDetailsState
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailsPokemonEvent
 
 @Composable
 fun ListPokemonScreen(
-    uiState: ListDetailsState.onFirstSalveLoad, onNavigate: (Int) -> Unit = {},viewModelEvent: (ListDetailsPokemonEvent) -> Unit = {}
+    uiState: ListDetailsState.onFirstSalveLoad,
+    onNavigate: (Int) -> Unit = {},
+    viewModelEvent: (ListDetailsPokemonEvent) -> Unit = {}
 ) {
     val context = LocalContext.current
     LazyColumn(
@@ -93,31 +72,31 @@ fun ListPokemonScreen(
                     horizontalArrangement = Arrangement.Start,
                     modifier = Modifier.padding(10.dp)
                 ) {
-                    Row(
-                        Modifier
-                            .fillMaxHeight()
-                            .size(55.dp)
-                    ) {
-                        val imageLoader = ImageLoader.Builder(context)
-                            .components {
-                                add(ImageDecoderDecoder.Factory())
+                    /*      Row(
+                              Modifier
+                                  .fillMaxHeight()
+                                  .size(55.dp)
+                          ) {
+                              val imageLoader = ImageLoader.Builder(context)
+                                  .components {
+                                      add(ImageDecoderDecoder.Factory())
 
-                            }
-                            .build()
+                                  }
+                                  .build()
 
-                        val painter: Painter = rememberAsyncImagePainter(
-                            model = ImageRequest.Builder(context)
-                                .data(value.sprites?.frontDefault)
-                                .build(),
-                            imageLoader = imageLoader
-                        )
-                        Image(
-                            painter = painter,
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxSize(),
-                            alignment = Alignment.Center
-                        )
-                    }
+                              val painter: Painter = rememberAsyncImagePainter(
+                                  model = ImageRequest.Builder(context)
+                                      .data(value.sprites?.frontDefault)
+                                      .build(),
+                                  imageLoader = imageLoader
+                              )
+                              Image(
+                                  painter = painter,
+                                  contentDescription = null,
+                                  modifier = Modifier.fillMaxSize(),
+                                  alignment = Alignment.Center
+                              )
+                          }*/
                     Column(
                         modifier = Modifier.padding(start = 15.dp)
                     ) {
@@ -140,18 +119,25 @@ fun ListPokemonScreen(
                         ) {
                             value.type.forEachIndexed { i, type ->
                                 AssistChip(
-                                    leadingIcon = { Icon(painter = painterResource(id = type.icon), tint = Color.Black, contentDescription = "", modifier = Modifier.size(25.dp))},
+                                    leadingIcon = {
+                                        Icon(
+                                            painter = painterResource(id = type.icon),
+                                            tint = Color.Black,
+                                            contentDescription = "",
+                                            modifier = Modifier.size(25.dp)
+                                        )
+                                    },
                                     modifier = Modifier.padding(end = 15.dp),
                                     colors = ChipColors(
-                                    containerColor = type.color,
-                                    labelColor = Color.Black,
-                                    leadingIconContentColor = Color.Black,
-                                    disabledLabelColor = Color.Black,
-                                    disabledContainerColor = Color.Black,
-                                    trailingIconContentColor = Color.Black,
-                                    disabledLeadingIconContentColor = Color.Black,
-                                    disabledTrailingIconContentColor = Color.Black
-                                ),
+                                        containerColor = type.color,
+                                        labelColor = Color.Black,
+                                        leadingIconContentColor = Color.Black,
+                                        disabledLabelColor = Color.Black,
+                                        disabledContainerColor = Color.Black,
+                                        trailingIconContentColor = Color.Black,
+                                        disabledLeadingIconContentColor = Color.Black,
+                                        disabledTrailingIconContentColor = Color.Black
+                                    ),
                                     onClick = { /*TODO*/ },
                                     label = { Text(text = stringResource(id = type.name)) })
                             }
