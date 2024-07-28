@@ -1,8 +1,11 @@
 package com.example.pokedexpokemon.presentationLayer.listDetailScreen.detaiPokemon
 
+import android.content.Context
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,6 +38,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -66,32 +70,25 @@ fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState, onNavigate: () -> U
     ) {
         Row(
             Modifier
-                .wrapContentSize()
+                .fillMaxHeight(0.3f)
+                .border(
+                    border = BorderStroke(2.dp, Color.Black),
+                    shape = RoundedCornerShape(1.dp, 1.dp, 120.dp, 120.dp)
+                )
                 .background(Color.Cyan)
-                .size(200.dp)
-                .padding(top = 40.dp, bottom = 20.dp), horizontalArrangement = Arrangement.Center
+                .padding(top = 40.dp, bottom = 20.dp),
+            horizontalArrangement = Arrangement.Center,
         ) {
-            val imageLoader = ImageLoader.Builder(context)
+        val imageLoader = ImageLoader.Builder(context)
                 .components {
                     add(ImageDecoderDecoder.Factory())
 
                 }
                 .build()
-
-            val painter: Painter = rememberAsyncImagePainter(
-                model = ImageRequest.Builder(context)
-                    .data(uiState.sprites?.frontDefault)
-                    .build(),
-                imageLoader = imageLoader
-            )
-            val painter2: Painter = rememberAsyncImagePainter(
-                model = ImageRequest.Builder(context)
-                    .data(uiState.sprites?.backDefault)
-                    .build(),
-                imageLoader = imageLoader
-            )
-            val a =listOf(painter,painter2)
-            val pagerState = rememberPagerState(pageCount = { a.size })
+            val frontPainter = createPokemonPainter(uiState.sprites?.frontDefault, imageLoader, context)
+            val backPainter = createPokemonPainter(uiState.sprites?.backDefault, imageLoader, context)
+            val painters = listOf(frontPainter, backPainter)
+            val pagerState = rememberPagerState(pageCount = {painters.size})
             LaunchedEffect(pagerState) {
                 snapshotFlow { pagerState.currentPage }.collect { page ->
                 }
@@ -115,40 +112,15 @@ fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState, onNavigate: () -> U
                 ) {
                     Image(
                         modifier = Modifier.fillMaxSize(),
-                        painter = a[page],
+                        painter = painters[page],
                         contentDescription = ""
-                    )
-                    Text(
-                        text = "uiState.listMaintenance[page].name",
-                        fontSize = 25.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White,
-                        modifier = Modifier.padding(start = 25.dp, top = 200.dp)
-                    )
-                }
-            }
-            Row(
-                Modifier
-                    .wrapContentHeight()
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                repeat(pagerState.pageCount) { iteration ->
-                    val color =
-                        if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
-                    Box(
-                        modifier = Modifier
-                            .padding(bottom = 20.dp, top = 5.dp, start = 3.dp, end = 3.dp)
-                            .clip(CircleShape)
-                            .background(color)
-                            .size(6.dp)
                     )
                 }
             }
         }
 
 
-        Text(text = uiState.name.toString(), fontSize = 25.sp, fontWeight = FontWeight.Bold)
+        Text(text = uiState.name.toString(), fontSize = 40.sp, fontWeight = FontWeight.Bold)
         Row(
             modifier = Modifier.fillMaxWidth(0.7f), horizontalArrangement = Arrangement.SpaceAround
         ) {
@@ -223,15 +195,32 @@ fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState, onNavigate: () -> U
             ) {
                 LazyColumn {
                     itemsIndexed(uiState.moves) { index, move ->
-                        Row {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
                             Text(text = move.moveName)
                             Text(text = "lvl.${move.levelLearnedAt}")
                         }
+                        HorizontalDivider(color = Color.Black, modifier = Modifier.fillMaxWidth(0.6f))
+                    }
                     }
                 }
             }
         }
     }
+}
+
+@Composable
+fun createPokemonPainter(imageUrl: String?, imageLoader: ImageLoader, context: Context): Painter {return rememberAsyncImagePainter(
+    model = ImageRequest.Builder(context)
+        .data(imageUrl)
+        .build(),
+    imageLoader = imageLoader
+)
 }
 
 @Preview
