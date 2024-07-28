@@ -3,12 +3,12 @@ package com.example.pokedexpokemon.dataLayer.di
 import com.example.pokedexpokemon.BuildConfig
 import com.example.pokedexpokemon.dataLayer.datasource.BasePokemonDataSource
 import com.example.pokedexpokemon.dataLayer.datasource.BasePokemonDataSourceImpl
-import com.example.pokedexpokemon.dataLayer.datasource.CardPagingSource
 import com.example.pokedexpokemon.dataLayer.datasource.CardPokemonDataSource
 import com.example.pokedexpokemon.dataLayer.datasource.CardPokemonDataSourceImpl
 import com.example.pokedexpokemon.dataLayer.dto.BasePokemonDTO
 import com.example.pokedexpokemon.dataLayer.dto.PokedexResponse
 import com.example.pokedexpokemon.dataLayer.dto.ResponseCardApi
+import com.example.pokedexpokemon.dataLayer.paging.CardPagingSource
 import com.example.pokedexpokemon.dataLayer.utils.NetworkInterceptor
 import com.example.pokedexpokemon.domainLayer.repository.BasePokemonRepository
 import com.example.pokedexpokemon.domainLayer.repository.BasePokemonRepositoryImpl
@@ -31,7 +31,6 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path
 import retrofit2.http.Query
-import retrofit2.http.QueryMap
 
 fun injectFeature() = loadFeature
 
@@ -108,7 +107,6 @@ interface PokemonCardService {
     suspend fun getPokemonCardByName(
         @Query("page") pageNumber: Int,
         @Query("pageSize") pageSize: Int = 20,
-
         @Query("name") name: String,
         @Header("X-Api-Key") apiKey: String = BuildConfig.CARD_POKEMON_API_KEY
     ): ResponseCardApi

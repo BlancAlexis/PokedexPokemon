@@ -74,6 +74,7 @@ sealed class UIText {
             }
         }
     }
+
     @Composable
     fun isNotEmpty(): Boolean {
         return when (this) {

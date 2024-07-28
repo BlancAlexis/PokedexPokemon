@@ -2,7 +2,6 @@ package com.example.pokedexpokemon.domainLayer.usecase
 
 import androidx.paging.PagingData
 import com.example.pokedexpokemon.dataLayer.dto.PokemonCard
-import com.example.pokedexpokemon.dataLayer.utils.Ressource
 import com.example.pokedexpokemon.domainLayer.repository.CardPokemonRepository
 import kotlinx.coroutines.flow.Flow
 

@@ -60,7 +60,6 @@ data class HolofoilDTO(
 )
 
 
-
 data class PokemonCard(
     val name: String,
     val supertype: String,
@@ -82,7 +81,7 @@ data class Legalities(
 )
 
 data class Images(
-    val logoSeries : String,
+    val logoSeries: String,
     val cardLarge: String,
 )
 
