@@ -1,6 +1,7 @@
 package com.example.pokedexpokemon.presentationLayer.listDetailScreen.extraCardPokemon
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +11,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -33,9 +35,17 @@ import org.koin.androidx.compose.koinViewModel
 fun ExtraCardHost(
     viewModel: CardPokemonViewModel = koinViewModel()
 ) {
-    val moviePagingItems: LazyPagingItems<CardPokemonUiState> =
-        viewModel.uiState.collectAsLazyPagingItems()
-    ExtraCardScreen(uiState = moviePagingItems)
+    val pokemonCardPagingItems: LazyPagingItems<CardPokemonUiState> = viewModel.uiState.collectAsLazyPagingItems()
+    if(pokemonCardPagingItems.itemCount == 0){
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            CircularProgressIndicator()
+        }
+   }
+    ExtraCardScreen(uiState = pokemonCardPagingItems)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
