@@ -1,7 +1,6 @@
 package com.example.pokedexpokemon.presentationLayer.listDetailScreen
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Arrangement
@@ -21,7 +20,7 @@ import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
 import com.example.pokedexpokemon.dataLayer.ListDetailsState
 import com.example.pokedexpokemon.presentationLayer.NavigationEvent
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.detaiPokemon.DetailsPokemonScreen
-import com.example.pokedexpokemon.presentationLayer.listDetailScreen.extraCardPokemon.ExtraCardScreen
+import com.example.pokedexpokemon.presentationLayer.listDetailScreen.extraCardPokemon.ExtraCardHost
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.listPokemon.ListPokemonScreen
 import org.koin.androidx.compose.koinViewModel
 
@@ -30,37 +29,52 @@ fun ListDetailsHost(
     viewModel: ListDetailPokemonViewModel = koinViewModel(),
     navigationEvent: (NavigationEvent) -> Unit = {},
     modifier: Modifier
-){
+) {
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
-    ListDetailLayout(state = state, navigationEvent = { viewModel }, viewModelEvent = viewModel::onEvent)
+    ListDetailLayout(
+        state = state,
+        navigationEvent = { viewModel },
+        viewModelEvent = viewModel::onEvent
+    )
 }
+
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun ListDetailLayout(
-    modifier: Modifier = Modifier, state: ListDetailsState, navigationEvent: (NavigationEvent) -> Unit = {}, viewModelEvent: (ListDetailsPokemonEvent) -> Unit = {}
+    modifier: Modifier = Modifier,
+    state: ListDetailsState,
+    navigationEvent: (NavigationEvent) -> Unit = {},
+    viewModelEvent: (ListDetailsPokemonEvent) -> Unit = {}
 ) {
-        AnimatedVisibility(visible = state is ListDetailsState.Loading) {
+    AnimatedVisibility(visible = state is ListDetailsState.Loading) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
-        ){
+        ) {
             CircularProgressIndicator()
         }
     }
-    AnimatedVisibility(visible = state is ListDetailsState.onFirstSalveLoad, enter = slideInHorizontally(), exit = slideOutHorizontally()) {
+    AnimatedVisibility(
+        visible = state is ListDetailsState.onFirstSalveLoad,
+        enter = slideInHorizontally(),
+        exit = slideOutHorizontally()
+    ) {
         val uiState = state as ListDetailsState.onFirstSalveLoad
         val navigator = rememberListDetailPaneScaffoldNavigator<Any>()
         NavigableListDetailPaneScaffold(modifier = modifier,
             navigator = navigator,
             listPane = @Composable {
                 AnimatedPane {
-                    ListPokemonScreen(uiState = uiState, onNavigate = { index ->
-                        navigator.navigateTo(
-                            pane = ListDetailPaneScaffoldRole.Detail,
-                            content = uiState.uiStates[index])
-                    },
-                        viewModelEvent = viewModelEvent)
+                    ListPokemonScreen(
+                        uiState = uiState, onNavigate = { index ->
+                            navigator.navigateTo(
+                                pane = ListDetailPaneScaffoldRole.Detail,
+                                content = uiState.uiStates[index]
+                            )
+                        },
+                        viewModelEvent = viewModelEvent
+                    )
                 }
             },
             detailPane = @Composable {
@@ -68,14 +82,15 @@ fun ListDetailLayout(
                 AnimatedPane {
                     DetailsPokemonScreen(uiState = content ?: state.uiStates[0], onNavigate = {
                         navigator.navigateTo(
-                            pane = ListDetailPaneScaffoldRole.Extra)
+                            pane = ListDetailPaneScaffoldRole.Extra
+                        )
                     })
                 }
             },
             extraPane = @Composable {
-               // val content = navigator.currentDestination?.content?.toString() ?: "Select an option"
+                // val content = navigator.currentDestination?.content?.toString() ?: "Select an option"
                 AnimatedPane {
-                    ExtraCardScreen()
+                    ExtraCardHost()
                 }
             })
     }

@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -19,6 +22,11 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        val properties = Properties().apply {
+            load(FileInputStream(File(project.rootDir, "local.properties")))
+        }
+        val apiKey = properties["CARD_POKEMON_API_KEY"] as String
+        buildConfigField("String", "CARD_POKEMON_API_KEY", "\"$apiKey\"")
     }
 
     buildTypes {
@@ -38,6 +46,7 @@ android {
         jvmTarget = "1.8"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
     composeOptions {
@@ -48,15 +57,18 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
 }
 
 dependencies {
-     implementation("io.coil-kt:coil-compose:2.0.0")
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
+    implementation("io.coil-kt:coil-compose:2.0.0")
     implementation("io.coil-kt:coil-gif:2.0.0")
 
 
     implementation("com.github.skydoves:landscapist-glide:2.3.3")
-    implementation ("com.google.code.gson:gson:2.10.1")
+    implementation("com.google.code.gson:gson:2.10.1")
     //Retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.gson)

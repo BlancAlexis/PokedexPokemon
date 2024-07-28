@@ -6,18 +6,18 @@
         android:propertyName="rotation"
         android:valueType="floatType"
         android:valueFrom="0.0"
-        android:valueTo="30.0"/>
+        android:valueTo="30.0" />
 
     <propertyValuesHolder
         android:propertyName="scaleY"
         android:valueType="floatType"
         android:valueFrom="0.3"
-        android:valueTo="1.0"/>
+        android:valueTo="1.0" />
 
     <propertyValuesHolder
         android:propertyName="scaleX"
         android:valueType="floatType"
         android:valueFrom="0.3"
-        android:valueTo="1.0"/>
+        android:valueTo="1.0" />
 
 </objectAnimator>

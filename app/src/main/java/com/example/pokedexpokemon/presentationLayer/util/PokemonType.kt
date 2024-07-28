@@ -49,5 +49,7 @@ fun String.toPokemonType(): PokemonType =
         "STEEL" -> PokemonType.STEEL()
         "NORMAL" -> PokemonType.NORMAL()
         "FIGHTING" -> PokemonType.FIGHTING()
-        else -> { PokemonType.FIRE()  }
+        else -> {
+            PokemonType.FIRE()
+        }
     }

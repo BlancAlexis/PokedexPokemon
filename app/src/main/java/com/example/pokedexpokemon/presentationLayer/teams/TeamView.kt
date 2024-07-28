@@ -7,7 +7,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.ViewModel
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -19,10 +18,14 @@ fun TeamViewHost(
 }
 
 @Composable
-fun TeamView (
+fun TeamView(
 
-){
-    Column(Modifier.fillMaxSize().background(Color.Red)) {
+) {
+    Column(
+        Modifier
+            .fillMaxSize()
+            .background(Color.Red)
+    ) {
         Text(text = "Team")
     }
 }
