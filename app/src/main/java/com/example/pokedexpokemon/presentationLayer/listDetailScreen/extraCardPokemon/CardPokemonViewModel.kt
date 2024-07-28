@@ -22,8 +22,8 @@ class CardPokemonViewModel(
     val uiState = _uiState.asStateFlow()
 
 
-    private suspend fun getCard() {
-        getPokemonCardByNameUseCase.invoke()
+    private suspend fun getCard(name: String) {
+        getPokemonCardByNameUseCase.invoke(name)
             .distinctUntilChanged()
             .cachedIn(viewModelScope)
             .collect {
@@ -32,14 +32,18 @@ class CardPokemonViewModel(
     }
 
     init {
-        viewModelScope.launch {
-            getCard()
-        }
+
     }
 
     fun PokemonCard.toUiState() = CardPokemonUiState(
         image = images
     )
+
+    fun getPokemonByName(name: String) {
+        viewModelScope.launch {
+            getCard(name)
+        }
+    }
 
 }
 

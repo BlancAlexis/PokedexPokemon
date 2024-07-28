@@ -72,14 +72,14 @@ data class ShowdownSpritesDTO(
 )
 
 data class Stat(
-    val baseStat: Int,
-    val effort: Int,
-    val stat: InnerStat
+    @SerializedName("base_stat")val baseStat: Int,
+    @SerializedName("effort")val effort: Int,
+    @SerializedName("stat")val stat: InnerStat
 )
 
 data class InnerStat(
-    val name: String,
-    val url: String
+    @SerializedName("name")val name: String,
+    @SerializedName("url")val url: String
 )
 
 data class AbilityDTO(

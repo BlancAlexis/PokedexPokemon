@@ -1,11 +1,13 @@
 package com.example.pokedexpokemon.presentationLayer.listDetailScreen.listPokemon
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -32,6 +35,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.ImageLoader
+import coil.compose.rememberAsyncImagePainter
+import coil.decode.ImageDecoderDecoder
+import coil.request.ImageRequest
 import com.example.pokedexpokemon.dataLayer.ListDetailsState
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailsPokemonEvent
 
@@ -72,7 +79,7 @@ fun ListPokemonScreen(
                     horizontalArrangement = Arrangement.Start,
                     modifier = Modifier.padding(10.dp)
                 ) {
-                    /*      Row(
+                          Row(
                               Modifier
                                   .fillMaxHeight()
                                   .size(55.dp)
@@ -96,7 +103,7 @@ fun ListPokemonScreen(
                                   modifier = Modifier.fillMaxSize(),
                                   alignment = Alignment.Center
                               )
-                          }*/
+                          }
                     Column(
                         modifier = Modifier.padding(start = 15.dp)
                     ) {

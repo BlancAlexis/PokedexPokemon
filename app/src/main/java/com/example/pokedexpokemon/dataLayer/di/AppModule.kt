@@ -107,7 +107,7 @@ interface PokemonCardService {
     suspend fun getPokemonCardByName(
         @Query("page") pageNumber: Int,
         @Query("pageSize") pageSize: Int = 20,
-        @Query("name") name: String,
+        @Query("q") name: String,
         @Header("X-Api-Key") apiKey: String = BuildConfig.CARD_POKEMON_API_KEY
     ): ResponseCardApi
 }

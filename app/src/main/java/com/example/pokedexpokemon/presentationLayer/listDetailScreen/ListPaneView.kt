@@ -83,17 +83,18 @@ fun ListDetailLayout(
             detailPane = @Composable {
                 val content = navigator.currentDestination?.content as? ListDetailsPokemonUiState
                 AnimatedPane {
-                    DetailsPokemonScreen(uiState = content ?: state.uiStates[0], onNavigate = {
+                    DetailsPokemonScreen(uiState = content ?: null , onNavigate = { name ->
                         navigator.navigateTo(
-                            pane = ListDetailPaneScaffoldRole.Extra
+                            pane = ListDetailPaneScaffoldRole.Extra,
+                            content = name
                         )
                     })
                 }
             },
             extraPane = @Composable {
-                // val content = navigator.currentDestination?.content?.toString() ?: "Select an option"
+                 val content = navigator.currentDestination?.content?.toString() ?: ""
                 AnimatedPane {
-                    ExtraCardHost()
+                    ExtraCardHost(name = content)
                 }
             })
     }

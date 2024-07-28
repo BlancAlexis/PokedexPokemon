@@ -11,12 +11,14 @@ class CardPagingSource(
     private val remoteDataSource: CardPokemonDataSource,
 ) : PagingSource<Int, PokemonCard>() {
 
+    lateinit var name : String
+
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PokemonCard> { // je conv pas la ?
         return try {
             val currentPage = params.key ?: 1
             val apiResponse = remoteDataSource.getPokemonByName(
                 pageNumber = currentPage,
-                name = "charizard",
+                name = name,
             )
             LoadResult.Page(
                 data = apiResponse.data.map { it.toDomain() },
