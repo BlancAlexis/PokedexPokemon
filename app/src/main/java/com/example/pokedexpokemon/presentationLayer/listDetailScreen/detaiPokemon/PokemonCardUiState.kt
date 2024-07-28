@@ -1,7 +1,5 @@
 package com.example.pokedexpokemon.presentationLayer.listDetailScreen.detaiPokemon
 
-import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
-
 sealed class PokemonCardState {
     object Loading : PokemonCardState()
     object Error : PokemonCardState()
@@ -9,9 +7,9 @@ sealed class PokemonCardState {
 }
 
 data class PokemonCardList(
-    val list : List<ListCardPokemon>
+    val list : List<CardPokemonUiState>
 )
-data class ListCardPokemon(
+data class CardPokemonUiState(
     val image : String
 )
 /*

@@ -16,9 +16,11 @@ retrofit = "2.11.0"
 adaptiveNavigationSuite = "1.0.0-alpha07"
 material3-adaptive = "1.0.0-beta04"
 navigationCompose = "2.7.7"
+pagingRuntime = "3.3.1"
 
 [libraries]
-
+androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pagingRuntime" }
+androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "pagingRuntime" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }

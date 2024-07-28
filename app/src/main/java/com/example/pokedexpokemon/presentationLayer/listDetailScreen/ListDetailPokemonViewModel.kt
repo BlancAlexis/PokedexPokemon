@@ -46,10 +46,7 @@ class ListDetailPokemonViewModel(
         }
     }
     init {
-        viewModelScope.launch {
-            val a = mapOf("name" to "Charizard")
-            println("azaz ${getPokemonCardByNameUseCase.invoke(a).data}")
-    }
+
         viewModelScope.launch {
             when (val result = getPokemonList.invoke()) {
                 is Ressource.Error -> {

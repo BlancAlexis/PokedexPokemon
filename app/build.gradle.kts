@@ -22,7 +22,11 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-
+        val properties = Properties().apply {
+            load(FileInputStream(File(project.rootDir, "local.properties")))
+        }
+        val apiKey = properties["CARD_POKEMON_API_KEY"] as String
+        buildConfigField("String", "CARD_POKEMON_API_KEY", "\"$apiKey\"")
     }
 
     buildTypes {
@@ -42,6 +46,7 @@ android {
         jvmTarget = "1.8"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
     composeOptions {
@@ -53,14 +58,11 @@ android {
         }
     }
 
-    val properties = Properties().apply {
-        load(FileInputStream(File(project.rootDir, "local.properties")))
-    }
-    val apiKey = properties["CARD_POKEMON_API_KEY"] as String
-
 }
 
 dependencies {
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
      implementation("io.coil-kt:coil-compose:2.0.0")
     implementation("io.coil-kt:coil-gif:2.0.0")
 

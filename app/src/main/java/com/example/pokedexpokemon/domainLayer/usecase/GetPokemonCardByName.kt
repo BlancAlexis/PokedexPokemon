@@ -1,19 +1,15 @@
 package com.example.pokedexpokemon.domainLayer.usecase
 
+import androidx.paging.PagingData
 import com.example.pokedexpokemon.dataLayer.dto.PokemonCard
 import com.example.pokedexpokemon.dataLayer.utils.Ressource
 import com.example.pokedexpokemon.domainLayer.repository.CardPokemonRepository
+import kotlinx.coroutines.flow.Flow
 
 class GetPokemonCardByNameUseCase(private val pokemonRepository: CardPokemonRepository) {
 
-    suspend operator fun invoke(option: Map<String,String>): Ressource<List<PokemonCard>> {
-        return try{
-            Ressource.Success(pokemonRepository.getPokemonByName(option+("pageSize" to "$pageSize")))
-        }
-        catch (e : Exception){
-            Ressource.Error(e)
-        }
+    suspend operator fun invoke(): Flow<PagingData<PokemonCard>> {
+        return pokemonRepository.getPokemonByName()
     }
 
-    final val  pageSize : Int  = 20
 }

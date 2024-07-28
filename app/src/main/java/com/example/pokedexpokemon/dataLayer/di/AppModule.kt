@@ -1,7 +1,9 @@
 package com.example.pokedexpokemon.dataLayer.di
 
+import com.example.pokedexpokemon.BuildConfig
 import com.example.pokedexpokemon.dataLayer.datasource.BasePokemonDataSource
 import com.example.pokedexpokemon.dataLayer.datasource.BasePokemonDataSourceImpl
+import com.example.pokedexpokemon.dataLayer.datasource.CardPagingSource
 import com.example.pokedexpokemon.dataLayer.datasource.CardPokemonDataSource
 import com.example.pokedexpokemon.dataLayer.datasource.CardPokemonDataSourceImpl
 import com.example.pokedexpokemon.dataLayer.dto.BasePokemonDTO
@@ -84,6 +86,7 @@ val retrofit1Module = module {
     factory<CardPokemonRepository> { CardPokemonRepositoryImpl(get()) }
     factory<CardPokemonDataSource> { CardPokemonDataSourceImpl(get()) }
     factory<GetPokemonCardByNameUseCase> { GetPokemonCardByNameUseCase(get()) }
+    factory<CardPagingSource> { CardPagingSource(get()) }
     viewModelOf(::CardPokemonViewModel)
 
 }
@@ -101,10 +104,12 @@ interface PokedexService {
 }
 
 interface PokemonCardService {
-    // @Header(HashMap<>)
     @GET("cards")
     suspend fun getPokemonCardByName(
-        @QueryMap options: Map<String, String>,
-        @Header("X-Api-Key") apiKey: String = "40c6daae-b572-4a40-ab9d-e7c60ad4e523"
+        @Query("page") pageNumber: Int,
+        @Query("pageSize") pageSize: Int = 20,
+
+        @Query("name") name: String,
+        @Header("X-Api-Key") apiKey: String = BuildConfig.CARD_POKEMON_API_KEY
     ): ResponseCardApi
 }
