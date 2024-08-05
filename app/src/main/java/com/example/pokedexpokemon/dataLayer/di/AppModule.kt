@@ -1,5 +1,6 @@
 package com.example.pokedexpokemon.dataLayer.di
 
+import androidx.room.Room
 import com.example.pokedexpokemon.BuildConfig
 import com.example.pokedexpokemon.dataLayer.datasource.BasePokemonDataSource
 import com.example.pokedexpokemon.dataLayer.datasource.BasePokemonDataSourceImpl
@@ -9,6 +10,7 @@ import com.example.pokedexpokemon.dataLayer.dto.BasePokemonDTO
 import com.example.pokedexpokemon.dataLayer.dto.PokedexResponse
 import com.example.pokedexpokemon.dataLayer.dto.ResponseCardApi
 import com.example.pokedexpokemon.dataLayer.paging.CardPagingSource
+import com.example.pokedexpokemon.dataLayer.room.Database
 import com.example.pokedexpokemon.dataLayer.utils.NetworkInterceptor
 import com.example.pokedexpokemon.domainLayer.repository.BasePokemonRepository
 import com.example.pokedexpokemon.domainLayer.repository.BasePokemonRepositoryImpl
@@ -39,7 +41,7 @@ private val loadFeature by lazy {
     loadKoinModules(
         listOf(
             retrofit1Module,
-
+            databaseModule,
             retrofitModule,
             settingsModule,
             teamModule,
@@ -88,6 +90,20 @@ val retrofit1Module = module {
     factory<CardPagingSource> { CardPagingSource(get()) }
     viewModelOf(::CardPokemonViewModel)
 
+}
+
+
+val databaseModule = module {
+    single {
+        Room.databaseBuilder(
+            get(),
+            Database::class.java,
+            "Database_PokedexPokemon"
+        ).build()
+    }
+    single {
+        get<Database>().getPokemonDAO()
+    }
 }
 
 interface PokedexService {
