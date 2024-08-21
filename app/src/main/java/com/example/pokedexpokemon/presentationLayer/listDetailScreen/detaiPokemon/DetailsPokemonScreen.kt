@@ -13,6 +13,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -66,272 +67,276 @@ import coil.compose.rememberAsyncImagePainter
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
-import com.example.pokedexpokemon.presentationLayer.util.PokemonType
+import com.example.pokedexpokemon.presentationLayer.util.SealedPokemonType
 import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState?, onNavigate: (String) -> Unit = {}) {
     val context = LocalContext.current
-    if(uiState == null) {
+    if (uiState == null) {
         CircularProgressIndicator()
-    }else{
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        Row(
-            Modifier
-                .shadow(10.dp, shape = RoundedCornerShape(1.dp, 1.dp, 120.dp, 120.dp))
-                .background(brush = Brush.sweepGradient(
-                    colors = if (uiState.type.size > 1) {
-                        uiState.type.map { it.color }
-                    } else {
-                        listOf(uiState.type.first().color, uiState.type.first().color)
-                    }
-                ), shape = RoundedCornerShape(1.dp, 1.dp, 120.dp, 120.dp))
-                .fillMaxHeight(0.3f)
-                .border(
-                    border = BorderStroke(2.dp, Color.Black),
-                    shape = RoundedCornerShape(1.dp, 1.dp, 120.dp, 120.dp)
-                )
-                .clickable { }
-                .padding(top = 40.dp, bottom = 20.dp),
-            horizontalArrangement = Arrangement.Center,
-        ) {
-            val imageLoader = ImageLoader.Builder(context)
-                .components {
-                    add(ImageDecoderDecoder.Factory())
-
-                }
-                .build()
-            val frontPainter =
-                createPokemonPainter(uiState.sprites?.frontDefault, imageLoader, context)
-            val backPainter =
-                createPokemonPainter(uiState.sprites?.backDefault, imageLoader, context)
-            val painters = listOf(frontPainter, backPainter)
-            val pagerState = rememberPagerState(pageCount = { painters.size })
-            LaunchedEffect(pagerState) {
-                snapshotFlow { pagerState.currentPage }.collect { page ->
-                }
-            }
-            Box() {
-                HorizontalPager(state = pagerState) { page ->
-                    Box(
-                        modifier = Modifier
-                            .wrapContentSize()
-                            .graphicsLayer {
-                                val pageOffset = (
-                                        (pagerState.currentPage - page) + pagerState
-                                            .currentPageOffsetFraction
-                                        ).absoluteValue
-
-                                alpha = lerp(
-                                    start = 0.5f,
-                                    stop = 1f,
-                                    fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                                )
-                            },
-                    ) {
-
-                        Image(
-                            modifier = Modifier.fillMaxSize(),
-                            painter = painters[page],
-                            contentDescription = ""
-                        )
-                    }
-                }
-
-
-                Column(
-                    modifier = Modifier
-                        .offset(x = (30).dp, y = 40.dp)
-                        .padding(2.dp)
-                        .align(Alignment.TopStart),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "taille",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = uiState.height.toString(),
-                        fontSize = 25.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = "poids",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = uiState.weight.toString(),
-                        fontSize = 25.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-
-                }
-            }
-        }
-        Text(text = uiState.name.toString(), fontSize = 40.sp, fontWeight = FontWeight.Bold)
-        Row(
-            modifier = Modifier.fillMaxWidth(0.7f),
-            horizontalArrangement = Arrangement.SpaceAround
-        ) {
-            uiState.type.forEachIndexed { i, type ->
-                AssistChip(colors = AssistChipDefaults.assistChipColors(
-                    containerColor = type.color
-                ),
-                    onClick = { onNavigate(uiState.name?.lowercase() ?: "") },
-                    label = { Text(text = stringResource(id = type.name)) })
-            }
-        }
-        Card(
-            colors = CardDefaults.cardColors(containerColor = Color.Gray),
+    } else {
+        Column(
             modifier = Modifier
-                .padding(horizontal = 3.dp)
-
-                .shadow(10.dp, shape = RoundedCornerShape(30.dp, 30.dp, 0.dp, 0.dp))
                 .fillMaxSize()
-                .border(
-                    border = BorderStroke(2.dp, Color.Black),
-                    shape = RoundedCornerShape(30.dp, 30.dp, 0.dp, 0.dp)
-                )
-
-                .clickable { }
+                .background(Color.White),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(
-                modifier = Modifier
-                    .height(5.dp)
-                    .background(Color.Black)
-            )
-            Text(
-                text = "Abilities",
-                textDecoration = TextDecoration.Underline,
-                fontWeight = FontWeight.Bold,
-                fontSize = 25.sp,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
+
             Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.CenterVertically
+                Modifier
+                    .shadow(10.dp, shape = RoundedCornerShape(1.dp, 1.dp, 120.dp, 120.dp))
+                    .background(brush = Brush.sweepGradient(
+                        colors = if (uiState.type.size > 1) {
+                            uiState.type.map { it.color }
+                        } else {
+                            listOf(uiState.type.first().color, uiState.type.first().color)
+                        }
+                    ), shape = RoundedCornerShape(1.dp, 1.dp, 120.dp, 120.dp))
+                    .fillMaxHeight(0.3f)
+                    .border(
+                        border = BorderStroke(2.dp, Color.Black),
+                        shape = RoundedCornerShape(1.dp, 1.dp, 120.dp, 120.dp)
+                    )
+                    .clickable { }
+                    .padding(top = 40.dp, bottom = 20.dp),
+                horizontalArrangement = Arrangement.Center,
             ) {
-                uiState.abilities?.forEach {
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
+                val imageLoader = ImageLoader.Builder(context)
+                    .components {
+                        add(ImageDecoderDecoder.Factory())
+
+                    }
+                    .build()
+                val frontPainter =
+                    createPokemonPainter(uiState.sprites?.frontDefault, imageLoader, context)
+                val backPainter =
+                    createPokemonPainter(uiState.sprites?.backDefault, imageLoader, context)
+                val painters = listOf(frontPainter, backPainter)
+                val pagerState = rememberPagerState(pageCount = { painters.size })
+                LaunchedEffect(pagerState) {
+                    snapshotFlow { pagerState.currentPage }.collect { page ->
+                    }
+                }
+                Box() {
+                    HorizontalPager(state = pagerState) { page ->
+                        Box(
+                            modifier = Modifier
+                                .wrapContentSize()
+                                .graphicsLayer {
+                                    val pageOffset = (
+                                            (pagerState.currentPage - page) + pagerState
+                                                .currentPageOffsetFraction
+                                            ).absoluteValue
+
+                                    alpha = lerp(
+                                        start = 0.5f,
+                                        stop = 1f,
+                                        fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                                    )
+                                },
+                        ) {
+
+                            Image(
+                                modifier = Modifier.fillMaxSize(),
+                                painter = painters[page],
+                                contentDescription = ""
+                            )
+                        }
+                    }
+
+
+                    Column(
+                        modifier = Modifier
+                            .offset(x = (30).dp, y = 40.dp)
+                            .padding(2.dp)
+                            .align(Alignment.TopStart),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = it.abilityName.capitalize(Locale.current),
+                            text = "taille",
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold
                         )
-                        if (it.isHidden) {
-                            IconButton(onClick = { }) {
-                                Icon(imageVector = Icons.Filled.Star, contentDescription = "")
+                        Text(
+                            text = uiState.height.toString(),
+                            fontSize = 25.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = "poids",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = uiState.weight.toString(),
+                            fontSize = 25.sp,
+                            fontWeight = FontWeight.Bold
+                        )
 
-                            }
-                        }
                     }
                 }
             }
-            Spacer(modifier = Modifier.padding(vertical = 10.dp))
-            HorizontalDivider(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .fillMaxWidth(0.5f)
-                    .border(1.dp, Color.Black)
-            )
+            Text(text = uiState.name.toString(), fontSize = 40.sp, fontWeight = FontWeight.Bold)
             Row(
-                modifier = Modifier
-                    .padding(vertical = 10.dp)
-                    .fillMaxHeight(0.6f)
+                modifier = Modifier.fillMaxWidth(0.7f),
+                horizontalArrangement = Arrangement.SpaceAround
             ) {
+                uiState.type.forEachIndexed { i, type ->
+                    AssistChip(colors = AssistChipDefaults.assistChipColors(
+                        containerColor = type.color
+                    ),
+                        onClick = { onNavigate(uiState.name?.lowercase() ?: "") },
+                        label = { Text(text = stringResource(id = type.name)) })
+                }
+            }
+            Card(
+                shape = RoundedCornerShape(30.dp, 30.dp, 0.dp, 0.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.Gray),
+                modifier = Modifier
+                    .padding(horizontal = 3.dp)
+                    .shadow(10.dp, shape = RoundedCornerShape(30.dp, 30.dp, 0.dp, 0.dp))
+                    .fillMaxSize()
+                    .border(
+                        border = BorderStroke(2.dp, Color.Black),
+                        shape = RoundedCornerShape(30.dp, 30.dp, 0.dp, 0.dp)
+                    )
+            ) {
+                Spacer(
+                    modifier = Modifier
+                        .height(5.dp)
+                        .background(Color.Black)
+                )
+                Text(
+                    text = "Abilities",
+                    textDecoration = TextDecoration.Underline,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 25.sp,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
                 Row(
                     modifier = Modifier
-                        .weight(6f)
-                        .fillMaxHeight(),
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .padding(horizontal = 5.dp, vertical = 20.dp),
-                        verticalArrangement = Arrangement.SpaceAround,
-                        horizontalAlignment = Alignment.Start
-
-                    ) {
-                        Text(text = "stats")
-                        uiState.stats.forEach {
-                            Text(text = it.name)
-                            LinearProgressIndicator(
-                                progress = { it.baseStat / 100f },
+                    uiState.abilities?.forEach {
+                        Row(
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = it.abilityName.capitalize(Locale.current),
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold
                             )
-                            Spacer(modifier = Modifier.weight(1f))
-                        }
-                    }
-                }
-                Row(modifier = Modifier.weight(4f)) {
-                    LazyColumn(
-                        modifier = Modifier.wrapContentSize()
-                    ) {
-                        item {
-                            Text(text = "attaques")
+                            if (it.isHidden) {
+                                IconButton(onClick = { }) {
+                                    Icon(imageVector = Icons.Filled.Star, contentDescription = "")
 
-                        }
-                        itemsIndexed(
-                            uiState.moves,
-                            key = { _, move -> move.moveName }) { index, move ->
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                modifier = Modifier.fillMaxSize()
-                            ) {
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(5.dp),
-                                ) {
-                                    Text(
-                                        text = "${move.moveName} lvl.${move.levelLearnedAt}",
-                                        fontWeight = FontWeight.Medium
-                                    )
-                                    Text(text = "")
                                 }
-                                HorizontalDivider(
-                                    color = Color.Black,
-                                    modifier = Modifier.fillMaxWidth(0.6f)
-                                )
                             }
                         }
                     }
                 }
-            }
+                Spacer(modifier = Modifier.padding(vertical = 10.dp))
+                HorizontalDivider(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .fillMaxWidth(0.5f)
+                        .border(1.dp, Color.Black)
+                )
+                Row(
+                    modifier = Modifier
+                        .padding(vertical = 5.dp)
+                        .fillMaxHeight(0.6f)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .weight(6f)
+                            .fillMaxHeight(),
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .padding(horizontal = 5.dp),
+                            verticalArrangement = Arrangement.SpaceAround,
+                            horizontalAlignment = Alignment.Start
 
-            uiState.gameIndices?.size?.let {
-                LazyRow(modifier = Modifier.background(Color.Cyan)) {
-                    items(it) { index ->
-                        Column {
-                            Text(text = uiState.gameIndices[index].version.name)
-                            Text(text = uiState.gameIndices[index].gameIndex.toString())
+                        ) {
+                            Text(text = "Statistique", modifier = Modifier.align(Alignment.CenterHorizontally))
+                            uiState.stats.forEach {
+                                Text(text = it.name)
+                                LinearProgressIndicator(
+                                    progress = { it.baseStat / 100f },
+                                )
+                                Spacer(modifier = Modifier.weight(1f))
+                            }
                         }
+                    }
+                    Row(modifier = Modifier.weight(4f)) {
+                        LazyColumn(
+                            modifier = Modifier
+                                .wrapContentSize()
+                                .background(Color.DarkGray, RoundedCornerShape(10.dp)),
+                            contentPadding = PaddingValues(10.dp)
 
+                        ) {
+                            item {
+                                Text(text = "Attaques")
+                            }
+                            itemsIndexed(
+                                uiState.moves,
+                                key = { _, move -> move.moveName }) { index, move ->
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier.fillMaxSize()
+                                ) {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(5.dp),
+                                    ) {
+                                        Text(
+                                            text = "${move.moveName} lvl.${move.levelLearnedAt}",
+                                            fontWeight = FontWeight.Medium
+                                        )
+                                        Text(text = "")
+                                    }
+                                    HorizontalDivider(
+                                        color = Color.Black,
+                                        modifier = Modifier.fillMaxWidth(0.6f)
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+
+                uiState.gameIndices?.size?.let {
+                    LazyRow(modifier = Modifier.background(Color.Cyan)) {
+                        items(it) { index ->
+                            Column {
+                                Text(text = uiState.gameIndices[index].version.name)
+                                Text(text = uiState.gameIndices[index].gameIndex.toString())
+                            }
+
+                        }
+                    }
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Button(
+                        onClick = { onNavigate(uiState.name?.lowercase() ?: "") },
+                        shape = RoundedCornerShape(10.dp)
+                    ) {
+                        Text(text = "Carte")
                     }
                 }
             }
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                Button(
-                    onClick = { onNavigate(uiState.name?.lowercase() ?: "") },
-                    shape = RoundedCornerShape(10.dp)
-                ) {
-                    Text(text = "Carte")
-                }
-            }
-        }
         }
     }
 }
@@ -352,7 +357,7 @@ private fun previewDetailsPokemon() {
     DetailsPokemonScreen(
         ListDetailsPokemonUiState(
             name = "Bulbasaur",
-            type = listOf(PokemonType.POISON(), PokemonType.GRASS()),
+            type = listOf(SealedPokemonType.POISON(), SealedPokemonType.GRASS()),
             abilities = listOf(Ability("Chlorophyll", false), Ability("Chlorophyll", false)),
             moves = listOf(),
             height = 7,

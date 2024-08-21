@@ -8,6 +8,7 @@ import androidx.paging.map
 import com.example.pokedexpokemon.domainLayer.model.PokemonCard
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemonCardByNameUseCase
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.detaiPokemon.CardPokemonUiState
+import com.example.pokedexpokemon.presentationLayer.util.toPokemonType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -36,7 +37,14 @@ class CardPokemonViewModel(
     }
 
     fun PokemonCard.toUiState() = CardPokemonUiState(
-        image = images
+        image = images,
+        name = name,
+        subtypes = subtypes.map { it.toPokemonType() },
+        types = types,
+        number = number,
+        artist = artist,
+        rarity = rarity,
+        cardPrice = cardPrice
     )
 
     fun getPokemonByName(name: String) {

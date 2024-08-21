@@ -23,14 +23,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
@@ -40,12 +44,12 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ExtraCardHost(
-    viewModel: CardPokemonViewModel = koinViewModel(),
-    name: String
+    viewModel: CardPokemonViewModel = koinViewModel(), name: String
 ) {
     viewModel.getPokemonByName(name)
-    val pokemonCardPagingItems: LazyPagingItems<CardPokemonUiState> = viewModel.uiState.collectAsLazyPagingItems()
-    if(pokemonCardPagingItems.itemCount == 0){
+    val pokemonCardPagingItems: LazyPagingItems<CardPokemonUiState> =
+        viewModel.uiState.collectAsLazyPagingItems()
+    if (pokemonCardPagingItems.itemCount == 0) {
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -53,7 +57,7 @@ fun ExtraCardHost(
         ) {
             CircularProgressIndicator()
         }
-   }
+    }
     ExtraCardScreen(uiState = pokemonCardPagingItems)
 }
 
@@ -61,61 +65,73 @@ fun ExtraCardHost(
 @Composable
 fun ExtraCardScreen(uiState: LazyPagingItems<CardPokemonUiState>) {
     val context = LocalContext.current
-    var isSheetOpen by remember {
+    var isSheetOpen by rememberSaveable {
         mutableStateOf(false)
     }
+    var selectedCard by rememberSaveable { mutableStateOf<CardPokemonUiState?>(null) }
     Column(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            contentPadding = PaddingValues(vertical = 20.dp)
+            columns = GridCells.Fixed(2), contentPadding = PaddingValues(vertical = 20.dp)
         ) {
             items(uiState.itemCount) { index ->
                 Card(
                     modifier = Modifier
                         .padding(vertical = 20.dp)
                         .wrapContentSize()
-                        .clickable { isSheetOpen = true },
-                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp)
+                        .clickable {
+                            isSheetOpen = true
+                            selectedCard = uiState[index]
+                        }, elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp)
                 ) {
+                    val a = ImageRequest.Builder(context).data(uiState[index]?.image).build()
                     AsyncImage(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
-                        model = ImageRequest.Builder(context)
-                            .data(uiState[index]?.image)
-                            .build(), contentDescription = ""
+                        model = a,
+                        contentDescription = ""
                     )
-
-                    println("image")
                 }
             }
         }
         if (isSheetOpen) {
             ModalBottomSheet(onDismissRequest = { isSheetOpen = false }) {
-                Column {
-                    Image(
-
-                    )
-                    Text(text = "titre")
-                    Row(
-                        modifier = Modifier.fillMaxWidth(0.7f),
-                        horizontalArrangement = Arrangement.SpaceAround
-                    ) {
-                        uiState.itemSnapshotList.items.forEachIndexed { i, type ->
-                            AssistChip(colors = AssistChipDefaults.assistChipColors(
-                                containerColor = Color.Blue
-                            ),
-                                onClick = { onNavigate(uiState.name?.lowercase() ?: "") },
-                                label = { Text(text = stringResource(id = type.name)) })
-                        }
-                    }
-                    Text(text = "auteur", modifier = Modifier.align(Alignment.End))
+                selectedCard?.let { a ->
+                    detailsSheet(a)
                 }
-
             }
         }
-
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun detailsSheet(uiState: CardPokemonUiState) {
+    val context = LocalContext.current
+    Column (
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth()
+    ){
+        AsyncImage(
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            model = ImageRequest.Builder(context).data(uiState.image).build(),
+            contentDescription = ""
+        )
+        Text(text = uiState.name, fontSize = 20.sp)
+        Row(
+            modifier = Modifier.fillMaxWidth(0.7f), horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            uiState.subtypes.forEachIndexed { i, type ->
+                AssistChip(colors = AssistChipDefaults.assistChipColors(
+                    containerColor = type.color
+                ), onClick = { }, label = { Text(text = stringResource(id = type.name)) })
+            }
+        }
+        Text(text = uiState.artist, modifier = Modifier.align(Alignment.End))
+        Text(text = uiState.rarity, modifier = Modifier.align(Alignment.End))
+        Text(text = uiState.number, modifier = Modifier.align(Alignment.End))
+        Text(text = uiState.cardPrice.prices.high.toString(), modifier = Modifier.align(Alignment.End))
+        Text(text = uiState.cardPrice.prices.directLow.toString(), modifier = Modifier.align(Alignment.End))
+    }
+}

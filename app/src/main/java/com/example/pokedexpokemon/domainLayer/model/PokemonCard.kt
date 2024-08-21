@@ -11,18 +11,6 @@ data class PokemonCard(
     val rarity: String,
     val images: String,
     val cardPrice: CardPrice
-) {
-
-}
-
-data class Legalities(
-    val unlimited: String,
-    val expanded: String
-)
-
-data class Images(
-    val logoSeries: String,
-    val cardLarge: String,
 )
 
 data class CardPrice(

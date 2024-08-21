@@ -23,7 +23,7 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -34,23 +34,25 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.window.core.layout.WindowWidthSizeClass
+import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailPokemonViewModel
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailsHost
 import com.example.pokedexpokemon.presentationLayer.settings.SettingsHost
 import com.example.pokedexpokemon.presentationLayer.teams.TeamViewHost
 import com.example.pokedexpokemon.presentationLayer.theme.PokedexPokemonTheme
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class MainViewModel() : ViewModel() {
+class MainActivity: ComponentActivity(), KoinComponent {
 
-}
-
-class MainActivity : ComponentActivity() {
+    private val viewModel: ListDetailPokemonViewModel by inject()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         installSplashScreen()
             .apply {
                 setKeepOnScreenCondition {
-                    //Check auto co puis mais ok
-                    false
+                    viewModel._isLoading.value
                 }
                 setOnExitAnimationListener { screen ->
                     val zoomX = ObjectAnimator.ofFloat(
@@ -83,7 +85,7 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.fillMaxSize()
                         ) {
                             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                                var selectedItemIndex by remember {
+                                var selectedItemIndex by rememberSaveable {
                                     mutableIntStateOf(0)
                                 }
                                 val windowWidthClass =
@@ -124,6 +126,7 @@ class MainActivity : ComponentActivity() {
                                     ) {
                                         composable(route = Screen.HOME.toString()) {
                                             ListDetailsHost(
+                                                viewModel = viewModel,
                                                 navigationEvent = {
                                                     when (it) {
                                                         NavigationEvent.Disconnect -> TODO()

@@ -5,7 +5,7 @@ import GameIndex
 import Move
 import Sprites
 import Stat
-import com.example.pokedexpokemon.presentationLayer.util.PokemonType
+import com.example.pokedexpokemon.presentationLayer.util.SealedPokemonType
 
 sealed class ListDetailsState {
     object Loading : ListDetailsState()
@@ -17,7 +17,7 @@ data class ListDetailsPokemonUiState(
     val name: String? = null,
     val weight: Int? = null,
     val height: Int? = null,
-    val type: List<PokemonType> = listOf(),
+    val type: List<SealedPokemonType> = listOf(),
     val abilities: List<Ability>? = null,
     val baseExperience: Int? = null,
     val gameIndices: List<GameIndex>? = listOf(),

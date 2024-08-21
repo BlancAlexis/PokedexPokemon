@@ -28,7 +28,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ListDetailsHost(
-    viewModel: ListDetailPokemonViewModel = koinViewModel(),
+    viewModel: ListDetailPokemonViewModel,
     navigationEvent: (NavigationEvent) -> Unit = {},
     modifier: Modifier
 ) {
@@ -81,9 +81,9 @@ fun ListDetailLayout(
                 }
             },
             detailPane = @Composable {
-                val content = navigator.currentDestination?.content as? ListDetailsPokemonUiState
+                val content = if(navigator.currentDestination?.content == null){ uiState.uiStates[0] } else { navigator.currentDestination?.content as? ListDetailsPokemonUiState}
                 AnimatedPane {
-                    DetailsPokemonScreen(uiState = content ?: null , onNavigate = { name ->
+                    DetailsPokemonScreen(uiState = content  , onNavigate = { name ->
                         navigator.navigateTo(
                             pane = ListDetailPaneScaffoldRole.Extra,
                             content = name

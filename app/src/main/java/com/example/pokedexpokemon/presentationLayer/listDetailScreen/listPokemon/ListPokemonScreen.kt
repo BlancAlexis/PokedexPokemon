@@ -4,6 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -42,6 +44,7 @@ import coil.request.ImageRequest
 import com.example.pokedexpokemon.dataLayer.ListDetailsState
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailsPokemonEvent
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ListPokemonScreen(
     uiState: ListDetailsState.onFirstSalveLoad,
@@ -120,21 +123,21 @@ fun ListPokemonScreen(
                                 style = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.Medium)
                             )
                         }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Start
+                        FlowRow(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp),
                         ) {
-                            value.type.forEachIndexed { i, type ->
+                            value.type.forEach {type ->
                                 AssistChip(
                                     leadingIcon = {
                                         Icon(
                                             painter = painterResource(id = type.icon),
                                             tint = Color.Black,
-                                            contentDescription = "",
+                                            contentDescription = null,
                                             modifier = Modifier.size(25.dp)
                                         )
                                     },
-                                    modifier = Modifier.padding(end = 15.dp),
                                     colors = ChipColors(
                                         containerColor = type.color,
                                         labelColor = Color.Black,
@@ -146,7 +149,8 @@ fun ListPokemonScreen(
                                         disabledTrailingIconContentColor = Color.Black
                                     ),
                                     onClick = { /*TODO*/ },
-                                    label = { Text(text = stringResource(id = type.name)) })
+                                    label = { Text(text = stringResource(id = type.name)) }
+                                )
                             }
                         }
 
