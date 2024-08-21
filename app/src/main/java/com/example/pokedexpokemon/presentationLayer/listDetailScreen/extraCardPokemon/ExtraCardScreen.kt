@@ -23,13 +23,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -61,7 +62,7 @@ fun ExtraCardHost(
 @Composable
 fun ExtraCardScreen(uiState: LazyPagingItems<CardPokemonUiState>) {
     val context = LocalContext.current
-    var isSheetOpen by remember {
+    var isSheetOpen by rememberSaveable {
         mutableStateOf(false)
     }
     Column(
@@ -80,21 +81,29 @@ fun ExtraCardScreen(uiState: LazyPagingItems<CardPokemonUiState>) {
                         .clickable { isSheetOpen = true },
                     elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp)
                 ) {
+                    val a = ImageRequest.Builder(context)
+                            .data(uiState[index]?.image)
+                            .build()
                     AsyncImage(
                         modifier = Modifier.align(Alignment.CenterHorizontally),
-                        model = ImageRequest.Builder(context)
-                            .data(uiState[index]?.image)
-                            .build(), contentDescription = ""
+                        model = a, contentDescription = ""
                     )
-
-                    println("image")
                 }
             }
         }
         if (isSheetOpen) {
-            ModalBottomSheet(onDismissRequest = { isSheetOpen = false }) {
-                Column {
-                    Image(
+            //detailsSheet()
+
+        }
+    }
+}
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    private fun detailsSheet(uiState: CardPokemonUiState, picture : ImageRequest ) {
+       /* ModalBottomSheet(onDismissRequest = { isSheetOpen = false }) {
+            Column {
+                 Image(
 
                     )
                     Text(text = "titre")
@@ -102,12 +111,12 @@ fun ExtraCardScreen(uiState: LazyPagingItems<CardPokemonUiState>) {
                         modifier = Modifier.fillMaxWidth(0.7f),
                         horizontalArrangement = Arrangement.SpaceAround
                     ) {
-                        uiState.itemSnapshotList.items.forEachIndexed { i, type ->
+                        uiState.subtypes.forEachIndexed { i, type ->
                             AssistChip(colors = AssistChipDefaults.assistChipColors(
                                 containerColor = Color.Blue
                             ),
-                                onClick = { onNavigate(uiState.name?.lowercase() ?: "") },
-                                label = { Text(text = stringResource(id = type.name)) })
+                                onClick = {  },
+                                label = { Text(text = stringResource(id = type.)) })
                         }
                     }
                     Text(text = "auteur", modifier = Modifier.align(Alignment.End))
@@ -115,7 +124,6 @@ fun ExtraCardScreen(uiState: LazyPagingItems<CardPokemonUiState>) {
 
             }
         }
+    }*/
 
     }
-}
-

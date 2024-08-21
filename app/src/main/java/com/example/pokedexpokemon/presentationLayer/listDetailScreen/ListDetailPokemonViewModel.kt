@@ -3,6 +3,7 @@ package com.example.pokedexpokemon.presentationLayer.listDetailScreen
 import BasePokemon
 import android.media.AudioAttributes
 import android.media.MediaPlayer
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
@@ -22,6 +23,7 @@ class ListDetailPokemonViewModel(
     private val _uiState = MutableStateFlow<ListDetailsState>(ListDetailsState.Loading)
     val uiState = _uiState.asStateFlow()
 
+     val _isLoading = mutableStateOf(true)
     fun playPokemonRoar(roarUrl: String) {
         val mediaPlayer = MediaPlayer().apply {
             setAudioAttributes(
@@ -46,6 +48,7 @@ class ListDetailPokemonViewModel(
 
                 is Ressource.Loading -> {}
                 is Ressource.Success -> {
+                    _isLoading.value = false
                     val newData = result.data?.map { it.toUiState() } ?: emptyList()
                     _uiState.update {
                         if (newData.isNotEmpty()) {

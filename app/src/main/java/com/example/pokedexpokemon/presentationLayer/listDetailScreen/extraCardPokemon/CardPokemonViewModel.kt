@@ -36,7 +36,14 @@ class CardPokemonViewModel(
     }
 
     fun PokemonCard.toUiState() = CardPokemonUiState(
-        image = images
+        image = images,
+        name = name,
+        subtypes = subtypes,
+        types = types,
+        number = number,
+        artist = artist,
+        rarity = rarity,
+        cardPrice = cardPrice
     )
 
     fun getPokemonByName(name: String) {

@@ -13,6 +13,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -192,6 +193,7 @@ fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState?, onNavigate: (Strin
             }
         }
         Card(
+            shape = RoundedCornerShape(30.dp, 30.dp, 0.dp, 0.dp),
             colors = CardDefaults.cardColors(containerColor = Color.Gray),
             modifier = Modifier
                 .padding(horizontal = 3.dp)
@@ -202,8 +204,6 @@ fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState?, onNavigate: (Strin
                     border = BorderStroke(2.dp, Color.Black),
                     shape = RoundedCornerShape(30.dp, 30.dp, 0.dp, 0.dp)
                 )
-
-                .clickable { }
         ) {
             Spacer(
                 modifier = Modifier
@@ -278,7 +278,9 @@ fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState?, onNavigate: (Strin
                 }
                 Row(modifier = Modifier.weight(4f)) {
                     LazyColumn(
-                        modifier = Modifier.wrapContentSize()
+                        modifier = Modifier.wrapContentSize().background(Color.DarkGray, RoundedCornerShape(10.dp)),
+                        contentPadding = PaddingValues(10.dp)
+
                     ) {
                         item {
                             Text(text = "attaques")
