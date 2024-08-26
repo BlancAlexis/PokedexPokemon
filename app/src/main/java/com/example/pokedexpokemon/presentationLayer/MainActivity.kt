@@ -18,14 +18,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -39,6 +42,7 @@ import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetails
 import com.example.pokedexpokemon.presentationLayer.settings.SettingsHost
 import com.example.pokedexpokemon.presentationLayer.teams.TeamViewHost
 import com.example.pokedexpokemon.presentationLayer.theme.PokedexPokemonTheme
+import com.example.pokedexpokemon.presentationLayer.util.AppBackground
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -84,7 +88,7 @@ class MainActivity: ComponentActivity(), KoinComponent {
                         Surface(
                             modifier = Modifier.fillMaxSize()
                         ) {
-                            Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                            Scaffold( containerColor = Color.Transparent, topBar = { AppBackground() }) { innerPadding ->
                                 var selectedItemIndex by rememberSaveable {
                                     mutableIntStateOf(0)
                                 }
@@ -112,6 +116,7 @@ class MainActivity: ComponentActivity(), KoinComponent {
                                             )
                                         }
                                     },
+                                    navigationSuiteColors = NavigationSuiteDefaults.colors(navigationRailContentColor = Color.Red, navigationBarContainerColor = Color.Red, ),
                                     layoutType = if (windowWidthClass == WindowWidthSizeClass.EXPANDED) {
                                         NavigationSuiteType.NavigationDrawer
                                     } else {
@@ -135,7 +140,7 @@ class MainActivity: ComponentActivity(), KoinComponent {
                                                         NavigationEvent.PopStack -> TODO()
                                                     }
                                                 },
-                                                modifier = Modifier.padding(innerPadding),
+                                                modifier = Modifier.padding(top = innerPadding.calculateTopPadding(), bottom = innerPadding.calculateBottomPadding()),
                                             )
                                         }
                                         composable(route = Screen.TEAM.toString()) {

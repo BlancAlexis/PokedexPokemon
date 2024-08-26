@@ -16,6 +16,7 @@ import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaf
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
@@ -51,7 +52,7 @@ fun ListDetailLayout(
 ) {
     AnimatedVisibility(visible = state is ListDetailsState.Loading) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = modifier.then(Modifier.fillMaxSize()),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -65,12 +66,13 @@ fun ListDetailLayout(
     ) {
         val uiState = state as ListDetailsState.onFirstSalveLoad
         val navigator = rememberListDetailPaneScaffoldNavigator<Any>()
-        NavigableListDetailPaneScaffold(modifier = Modifier.padding(top = 20.dp),
+        NavigableListDetailPaneScaffold(
             navigator = navigator,
             listPane = @Composable {
                 AnimatedPane {
                     ListPokemonScreen(
-                        uiState = uiState, onNavigate = { index ->
+                        uiState = uiState,
+                        onNavigate = { index ->
                             navigator.navigateTo(
                                 pane = ListDetailPaneScaffoldRole.Detail,
                                 content = uiState.uiStates[index]
@@ -83,7 +85,9 @@ fun ListDetailLayout(
             detailPane = @Composable {
                 val content = if(navigator.currentDestination?.content == null){ uiState.uiStates[0] } else { navigator.currentDestination?.content as? ListDetailsPokemonUiState}
                 AnimatedPane {
-                    DetailsPokemonScreen(uiState = content  , onNavigate = { name ->
+                    DetailsPokemonScreen(
+                        modifier = modifier,
+                        uiState = content  , onNavigate = { name ->
                         navigator.navigateTo(
                             pane = ListDetailPaneScaffoldRole.Extra,
                             content = name
