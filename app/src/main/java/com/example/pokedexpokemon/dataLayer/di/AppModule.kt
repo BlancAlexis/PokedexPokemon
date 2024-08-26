@@ -102,7 +102,7 @@ val databaseModule = module {
         ).build()
     }
     single {
-        get<Database>().getPokemonDAO()
+        get<Database>().getDeckDAO()
     }
 }
 
