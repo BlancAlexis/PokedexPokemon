@@ -6,6 +6,13 @@ import com.example.pokedexpokemon.dataLayer.datasource.BasePokemonDataSource
 import com.example.pokedexpokemon.dataLayer.datasource.BasePokemonDataSourceImpl
 import com.example.pokedexpokemon.dataLayer.datasource.CardPokemonDataSource
 import com.example.pokedexpokemon.dataLayer.datasource.CardPokemonDataSourceImpl
+import com.example.pokedexpokemon.dataLayer.datasource.DeckPokemonDataSource
+import com.example.pokedexpokemon.dataLayer.datasource.DeckPokemonDataSourceImpl
+import com.example.pokedexpokemon.dataLayer.datasource.DeckPokemonRepository
+import com.example.pokedexpokemon.dataLayer.datasource.DeckPokemonRepositoryImpl
+import com.example.pokedexpokemon.dataLayer.datasource.DeleteDeckPokemonUseCase
+import com.example.pokedexpokemon.dataLayer.datasource.GetAllDeckPokemonUseCase
+import com.example.pokedexpokemon.dataLayer.datasource.InsertDeckPokemonUseCase
 import com.example.pokedexpokemon.dataLayer.dto.BasePokemonDTO
 import com.example.pokedexpokemon.dataLayer.dto.PokedexResponse
 import com.example.pokedexpokemon.dataLayer.dto.ResponseCardApi
@@ -104,6 +111,12 @@ val databaseModule = module {
     single {
         get<Database>().getDeckDAO()
     }
+
+    factory<GetAllDeckPokemonUseCase> { GetAllDeckPokemonUseCase(get()) }
+    factory<InsertDeckPokemonUseCase> { InsertDeckPokemonUseCase(get()) }
+    factory<DeleteDeckPokemonUseCase> { DeleteDeckPokemonUseCase(get()) }
+    factory<DeckPokemonRepository> { DeckPokemonRepositoryImpl(get()) }
+    factory<DeckPokemonDataSource> { DeckPokemonDataSourceImpl(get()) }
 }
 
 interface PokedexService {

@@ -1,8 +1,10 @@
 package com.example.pokedexpokemon.presentationLayer.listDetailScreen.extraCardPokemon
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -12,12 +14,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -108,6 +117,7 @@ fun ExtraCardScreen(uiState: LazyPagingItems<CardPokemonUiState>) {
 @Composable
 private fun detailsSheet(uiState: CardPokemonUiState) {
     val context = LocalContext.current
+    var a by rememberSaveable { mutableStateOf(false) }
     Column (
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -118,7 +128,38 @@ private fun detailsSheet(uiState: CardPokemonUiState) {
             model = ImageRequest.Builder(context).data(uiState.image).build(),
             contentDescription = ""
         )
-        Text(text = uiState.name, fontSize = 20.sp)
+        Row(
+            modifier = Modifier.fillMaxWidth(0.7f),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(text = uiState.name, fontSize = 20.sp)
+            Box(
+                modifier = Modifier.fillMaxWidth()
+                    .wrapContentSize(Alignment.TopEnd)
+            ) {
+                IconButton(onClick = { a = !a }) {
+                    Icon(
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = "More"
+                    )
+                }
+
+                DropdownMenu(
+                    expanded = a,
+                    onDismissRequest = { a = false }
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("Load") },
+                        onClick = { Toast.makeText(context, "Load", Toast.LENGTH_SHORT).show() }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("Save") },
+                        onClick = { Toast.makeText(context, "Save", Toast.LENGTH_SHORT).show() }
+                    )
+
+                }
+            }
+        }
         Row(
             modifier = Modifier.fillMaxWidth(0.7f), horizontalArrangement = Arrangement.SpaceAround
         ) {

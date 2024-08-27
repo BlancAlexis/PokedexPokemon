@@ -7,7 +7,7 @@ import com.example.pokedexpokemon.dataLayer.entity.CardEntity
 import com.example.pokedexpokemon.dataLayer.entity.DeckCardCrossRefEntity
 import com.example.pokedexpokemon.dataLayer.entity.DeckEntity
 
-data class DeckWithPokemonCard(
+data class DeckWithPokemonCardMapper(
     @Embedded val deck: DeckEntity,
     @Relation(
         parentColumn = "deckId",
@@ -15,4 +15,16 @@ data class DeckWithPokemonCard(
         associateBy = Junction(DeckCardCrossRefEntity::class)
     )
     val cards: List<CardEntity>
+)
+
+data class Deck(
+    val id: Int?= null,
+    val name: String,
+    val cards: List<Card>
+)
+
+data class Card(
+    val id: Int?= null,
+    val name: String,
+    val rarity: String,
 )

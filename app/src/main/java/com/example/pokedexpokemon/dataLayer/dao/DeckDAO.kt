@@ -1,13 +1,15 @@
 package com.example.pokedexpokemon.dataLayer.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import com.example.pokedexpokemon.dataLayer.entity.CardEntity
 import com.example.pokedexpokemon.dataLayer.entity.DeckEntity
-import com.example.pokedexpokemon.dataLayer.room.DeckWithPokemonCard
+import com.example.pokedexpokemon.dataLayer.room.DeckWithPokemonCardMapper
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DeckDAO {
@@ -17,11 +19,30 @@ interface DeckDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCard(card: CardEntity)
 
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    suspend fun insertDeckCardCrossRef(deckCardCrossRef: DeckWithPokemonCard)
+    @Delete()
+    suspend fun deleteDeck(deck: DeckEntity)
+
+    @Delete()
+    suspend fun deleteCard(card: CardEntity)
+
+    @Transaction
+    suspend fun deleteDeckCardCrossRef(deckCardCrossRef: DeckWithPokemonCardMapper) {
+        deckCardCrossRef.cards.forEach { card ->
+            deleteCard(card)
+        }
+        deleteDeck(deckCardCrossRef.deck)
+    }
+
+    @Transaction
+    suspend fun insertDeckCardCrossRef(deckCardCrossRef: DeckWithPokemonCardMapper) {
+        deckCardCrossRef.cards.forEach { card ->
+            insertCard(card)
+        }
+        insertDeck(deckCardCrossRef.deck)
+    }
 
     @Transaction
     @Query("SELECT * FROM deckEntity")
-    suspend fun getDeckWithCards(): DeckWithPokemonCard
+    fun getDeckWithCards(): Flow<List<DeckWithPokemonCardMapper>>
 
 }

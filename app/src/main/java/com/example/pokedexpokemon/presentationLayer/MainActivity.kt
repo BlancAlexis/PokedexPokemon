@@ -29,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.ViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -39,7 +38,6 @@ import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetails
 import com.example.pokedexpokemon.presentationLayer.settings.SettingsHost
 import com.example.pokedexpokemon.presentationLayer.teams.TeamViewHost
 import com.example.pokedexpokemon.presentationLayer.theme.PokedexPokemonTheme
-import org.koin.androidx.compose.koinViewModel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -139,7 +137,9 @@ class MainActivity: ComponentActivity(), KoinComponent {
                                             )
                                         }
                                         composable(route = Screen.TEAM.toString()) {
-                                            TeamViewHost()
+                                            TeamViewHost(
+                                                modifier = Modifier.padding(innerPadding)
+                                            )
                                         }
                                         composable(route = Screen.SETTINGS.toString()) {
                                             SettingsHost()
