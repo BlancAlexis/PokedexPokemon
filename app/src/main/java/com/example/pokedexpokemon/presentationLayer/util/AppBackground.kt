@@ -1,5 +1,9 @@
 package com.example.pokedexpokemon.presentationLayer.util
 
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,6 +27,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,8 +38,11 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawStyle
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.pokedexpokemon.R
 
 @Preview
 @Composable
@@ -49,7 +57,9 @@ fun AppBackground() {
                 .fillMaxWidth()
                 .background(color = Color.Red)
         ) {
-            Canvas(modifier = Modifier.size(85.dp).offset(y = (10.dp))) {
+            Canvas(modifier = Modifier
+                .size(85.dp)
+                .offset(y = (10.dp))) {
                 val canvasWidth = size.width
                 val canvasHeight = size.height
 
@@ -127,18 +137,62 @@ fun AppBackground() {
 
 
 
-@Preview
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
-private fun d() {
-    LazyRow(modifier = Modifier
-        .offset(x = -30f.dp,)
-        .requiredWidth(900.dp)
-        .rotate(30f)
-        .border(1.dp, Color.Red)
-    ){
-        items(1000){
-            Icon(imageVector = Icons.Default.Add, contentDescription = "", modifier = Modifier.size(50.dp))
+ fun d() {
 
+     val array = listOf(
+         R.drawable.fire,
+         R.drawable.water,
+         R.drawable.grass,
+         R.drawable.poison,
+         R.drawable.psychic,
+         R.drawable.grass,
+         R.drawable.ground,
+         R.drawable.ghost,
+         R.drawable.bug,
+         R.drawable.dark,
+         R.drawable.dragon,
+         R.drawable.normal,
+         R.drawable.fairy,
+         R.drawable.rock,
+         R.drawable.electric,
+         R.drawable.ice,
+         R.drawable.steel,
+         R.drawable.fighting,
+         R.drawable.flying,
+     )
+    val width = LocalConfiguration.current.screenWidthDp.dp
+    Column (
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxSize()
+    ){
+
+        val infiniteTransition = rememberInfiniteTransition()
+        val offset by infiniteTransition.animateFloat(
+            initialValue = 0f,
+            targetValue
+            = 1f, // Ajustez cette valeur pour contrôler la longueur du défilement
+            animationSpec = infiniteRepeatable(
+                animation = tween(durationMillis = 5000) // Ajustez la durée de l'animation
+            )
+        )
+
+        LazyRow(
+            modifier = Modifier
+                .requiredWidth(width * 1.25f)
+                .rotate(30f)
+                .border(1.dp, Color.Red)
+                .offset(x = offset.dp)
+        ) {
+            items(20) {
+                Icon(
+                    painter = painterResource(id = array.random()),
+                    contentDescription = "",
+                    modifier = Modifier.size(50.dp)
+                )
+            }
         }
     }
     LazyRow(modifier = Modifier
