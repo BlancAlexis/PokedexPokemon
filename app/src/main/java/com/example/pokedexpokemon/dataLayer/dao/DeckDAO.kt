@@ -7,7 +7,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.example.pokedexpokemon.dataLayer.entity.CardEntity
 import com.example.pokedexpokemon.dataLayer.entity.DeckEntity
-import com.example.pokedexpokemon.dataLayer.room.DeckWithPokemonCard
+import com.example.pokedexpokemon.dataLayer.room.DeckWithPokemonCardMapper
 
 @Dao
 interface DeckDAO {
@@ -22,6 +22,6 @@ interface DeckDAO {
 
     @Transaction
     @Query("SELECT * FROM deckEntity")
-    suspend fun getDeckWithCards(): DeckWithPokemonCard
+    suspend fun getDeckWithCards(): DeckWithPokemonCardMapper
 
 }
