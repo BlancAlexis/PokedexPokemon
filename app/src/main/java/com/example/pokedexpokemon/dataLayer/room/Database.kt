@@ -5,11 +5,10 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.pokedexpokemon.dataLayer.dao.DeckDAO
 import com.example.pokedexpokemon.dataLayer.entity.CardEntity
-import com.example.pokedexpokemon.dataLayer.entity.DeckCardCrossRefEntity
 import com.example.pokedexpokemon.dataLayer.entity.DeckEntity
 
 @Database(
-    entities = [CardEntity::class, DeckEntity::class, DeckCardCrossRefEntity::class],
+    entities = [CardEntity::class, DeckEntity::class],
     version = 1,
     exportSchema = false
 )

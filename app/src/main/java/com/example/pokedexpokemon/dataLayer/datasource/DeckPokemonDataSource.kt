@@ -37,7 +37,8 @@ class DeckPokemonDataSourceImpl(
 
     suspend override fun insertDeckPokemonUseCase(deck: DeckWithPokemonCardMapper)  {
          withContext(dispatcher) {
-            deckPokemonDao.insertDeckCardCrossRef(deck)
+             deckPokemonDao.insertDeckWithCards(deck.deck, deck.cards)
+          //  deckPokemonDao.insertDeck(deck)
         }
     }
 
@@ -138,7 +139,8 @@ object mapper{
     )
 fun Card.toEntity() = CardEntity(
     name = name,
-    image = rarity
+    image = rarity,
+    deckId = 0 //TODO
 )
 fun CardEntity.toDomain() = Card(
     name = name,
