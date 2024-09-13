@@ -6,6 +6,7 @@ import Move
 import Sprites
 import Stat
 import com.example.pokedexpokemon.presentationLayer.util.SealedPokemonType
+import java.io.Serializable
 
 sealed class ListDetailsState {
     object Loading : ListDetailsState()
@@ -29,4 +30,4 @@ data class ListDetailsPokemonUiState(
     val talent: List<Ability>? = null,
     val roar: String? = null,
     val stats: List<Stat> = listOf()
-)
+) : Serializable

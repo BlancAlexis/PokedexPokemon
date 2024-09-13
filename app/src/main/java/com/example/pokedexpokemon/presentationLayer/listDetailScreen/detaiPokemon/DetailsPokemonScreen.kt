@@ -72,15 +72,15 @@ import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState?, onNavigate: (String) -> Unit = {}) {
+fun DetailsPokemonScreen(modifier : Modifier = Modifier,uiState: ListDetailsPokemonUiState?, onNavigate: (String) -> Unit = {}) {
     val context = LocalContext.current
     if (uiState == null) {
         CircularProgressIndicator()
     } else {
         Column(
-            modifier = Modifier
+            modifier = modifier.then(Modifier
                 .fillMaxSize()
-                .background(Color.White),
+                .background(Color.White)),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -150,7 +150,7 @@ fun DetailsPokemonScreen(uiState: ListDetailsPokemonUiState?, onNavigate: (Strin
 
                     Column(
                         modifier = Modifier
-                            .offset(x = (30).dp, y = 40.dp)
+                            .offset(x = (30).dp)
                             .padding(2.dp)
                             .align(Alignment.TopStart),
                         horizontalAlignment = Alignment.CenterHorizontally
@@ -355,7 +355,7 @@ fun createPokemonPainter(imageUrl: String?, imageLoader: ImageLoader, context: C
 @Composable
 private fun previewDetailsPokemon() {
     DetailsPokemonScreen(
-        ListDetailsPokemonUiState(
+       uiState =  ListDetailsPokemonUiState(
             name = "Bulbasaur",
             type = listOf(SealedPokemonType.POISON(), SealedPokemonType.GRASS()),
             abilities = listOf(Ability("Chlorophyll", false), Ability("Chlorophyll", false)),

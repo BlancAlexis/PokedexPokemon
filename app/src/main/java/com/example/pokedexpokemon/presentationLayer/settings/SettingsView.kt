@@ -1,10 +1,7 @@
 package com.example.pokedexpokemon.presentationLayer.settings
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import com.example.pokedexpokemon.presentationLayer.util.SettingsBackground
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -19,7 +16,5 @@ fun SettingsHost(
 fun SettingsView(
 
 ) {
-    Column(Modifier.fillMaxSize()) {
-        Text(text = "Settings")
+SettingsBackground()
     }
-}

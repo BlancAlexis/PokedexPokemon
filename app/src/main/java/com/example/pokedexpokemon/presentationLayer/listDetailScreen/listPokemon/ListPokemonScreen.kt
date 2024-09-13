@@ -53,7 +53,7 @@ fun ListPokemonScreen(
 ) {
     val context = LocalContext.current
     LazyColumn(
-        modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(16.dp)
+        modifier = Modifier.fillMaxSize().background(Color.Black), contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
         itemsIndexed(uiState.uiStates, key = { _, item -> item.nationalIndices }) { index, value ->
             Spacer(modifier = Modifier.height(20.dp))

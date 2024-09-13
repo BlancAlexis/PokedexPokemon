@@ -2,6 +2,7 @@ package com.example.pokedexpokemon.presentationLayer.listDetailScreen.detaiPokem
 
 import com.example.pokedexpokemon.domainLayer.model.CardPrice
 import com.example.pokedexpokemon.presentationLayer.util.SealedPokemonType
+import java.io.Serializable
 
 data class CardPokemonUiState(
     val image: String,
@@ -12,4 +13,4 @@ data class CardPokemonUiState(
     val artist: String,
     val rarity: String,
     val cardPrice: CardPrice
-)
+) : Serializable
