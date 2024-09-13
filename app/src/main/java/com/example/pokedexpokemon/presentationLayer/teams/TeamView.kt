@@ -112,7 +112,7 @@ private fun DeckCard(deck: DeckUiState) {
                 ),
             shape = RoundedCornerShape(4.dp),
             colors = CardDefaults.cardColors(containerColor = Color.Blue)) {
-            Column {
+            Column(modifier = Modifier.padding(10.dp)) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
@@ -124,13 +124,11 @@ private fun DeckCard(deck: DeckUiState) {
                         textDecoration = TextDecoration.Underline,
                         fontWeight = FontWeight.Bold
                     )
-                    IconButton(
-                        modifier = Modifier
-                            .alpha(0.2f)
-                            .rotate(rotationState),
-                        onClick = {
-                            expandedState = !expandedState
-                        }) {
+                    IconButton(modifier = Modifier
+                        .alpha(0.2f)
+                        .rotate(rotationState), onClick = {
+                        expandedState = !expandedState
+                    }) {
                         Icon(
                             imageVector = Icons.Default.ArrowDropDown,
                             contentDescription = "Drop-Down Arrow"
@@ -138,60 +136,53 @@ private fun DeckCard(deck: DeckUiState) {
                     }
                 }
                 if (expandedState) {
-                    if (deck.cards.isEmpty()) {
-                        Text(text = "Aucun pokemon dans ce deck")
-                    }
-                    else {
-                        Row(
+
+                    Row(
+                        modifier = Modifier
+                            .padding(horizontal = 12.dp)
+                            .background(Color.Magenta)
+                            .fillMaxWidth()
+                    ) {
+                        LazyRow(
                             modifier = Modifier
-                                .padding(horizontal = 12.dp)
-                                .background(Color.Magenta)
                                 .fillMaxWidth()
+                                .background(Color.Green),
                         ) {
-                            LazyRow(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .background(Color.Green),
-                            ) {
-                                itemsIndexed(deck.cards) { index, card ->
-                                    AsyncImage(
-                                        model = ImageRequest.Builder(LocalContext.current)
-                                            .data("https://images.pokemontcg.io/ex9/4.png")
-                                            .placeholder(R.drawable.ice).build(),
-                                        contentDescription = "",
-                                        modifier = Modifier.size(70.dp)
-                                    )
-                                }
+                            itemsIndexed(100.downTo(0).toList()) { index, card ->
+                                AsyncImage(
+                                    model = ImageRequest.Builder(LocalContext.current)
+                                        .data("https://images.pokemontcg.io/ex9/4.png")
+                                        .placeholder(R.drawable.ice).build(),
+                                    contentDescription = "",
+                                    modifier = Modifier.size(70.dp)
+                                )
                             }
                         }
                     }
+
                 }
             }
         }
     }
 }
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun <T> SwipeToDeleteContainer(
-    item: T,
-    onDelete: (T) -> Unit,
-    animationDuration: Int = 500,
-    content: @Composable (T) -> Unit
+    item: T, onDelete: (T) -> Unit, animationDuration: Int = 500, content: @Composable (T) -> Unit
 ) {
     var isRemoved by remember {
         mutableStateOf(false)
     }
-    val state = rememberSwipeToDismissBoxState(
-        confirmValueChange = { value ->
-            if (value == SwipeToDismissBoxValue.StartToEnd) {
-                isRemoved = true
-                true
-            } else {
-                false
-            }
+    val state = rememberSwipeToDismissBoxState(confirmValueChange = { value ->
+        if (value == SwipeToDismissBoxValue.StartToEnd) {
+            isRemoved = true
+            true
+        } else {
+            false
         }
-    )
+    })
 
     LaunchedEffect(key1 = isRemoved) {
         if (isRemoved) {
@@ -201,19 +192,14 @@ fun <T> SwipeToDeleteContainer(
     }
 
     AnimatedVisibility(
-        visible = !isRemoved,
-        exit = shrinkVertically(
-            animationSpec = tween(durationMillis = animationDuration),
-            shrinkTowards = Alignment.Top
+        visible = !isRemoved, exit = shrinkVertically(
+            animationSpec = tween(durationMillis = animationDuration), shrinkTowards = Alignment.Top
         ) + fadeOut()
     ) {
         SwipeToDismissBox(
-            state = state,
-            backgroundContent = {
+            state = state, backgroundContent = {
                 DeleteBackground(swipeDismissState = state)
-            },
-            enableDismissFromEndToStart = true,
-            enableDismissFromStartToEnd = false
+            }, enableDismissFromEndToStart = true, enableDismissFromStartToEnd = false
         ) {
             content(item)
         }
@@ -237,9 +223,7 @@ fun DeleteBackground(
         contentAlignment = Alignment.CenterEnd
     ) {
         Icon(
-            imageVector = Icons.Default.Delete,
-            contentDescription = null,
-            tint = Color.White
+            imageVector = Icons.Default.Delete, contentDescription = null, tint = Color.White
         )
     }
 }
