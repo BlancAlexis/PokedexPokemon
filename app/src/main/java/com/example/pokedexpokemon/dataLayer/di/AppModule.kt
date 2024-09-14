@@ -26,9 +26,15 @@ import com.example.pokedexpokemon.domainLayer.repository.CardPokemonRepositoryIm
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemon
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemonCardByNameUseCase
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemonList
+import com.example.pokedexpokemon.presentationLayer.GetDeckUseCase
+import com.example.pokedexpokemon.presentationLayer.SaveDeckUseCase
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailPokemonViewModel
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.extraCardPokemon.CardPokemonViewModel
+import com.example.pokedexpokemon.presentationLayer.listDetailScreen.extraCardPokemon.CreateDeckUseCase
+import com.example.pokedexpokemon.presentationLayer.listDetailScreen.extraCardPokemon.DeleteCardUseCase
+import com.example.pokedexpokemon.presentationLayer.listDetailScreen.extraCardPokemon.SaveCardUseCase
 import com.example.pokedexpokemon.presentationLayer.settings.SettingsViewModel
+import com.example.pokedexpokemon.presentationLayer.DeckDialogViewModel
 import com.example.pokedexpokemon.presentationLayer.teams.TeamViewModel
 import okhttp3.OkHttpClient
 import org.koin.androidx.viewmodel.dsl.viewModelOf
@@ -78,7 +84,10 @@ val retrofitModule = module {
     factory<BasePokemonDataSource> { BasePokemonDataSourceImpl(get()) }
     factory<GetPokemonList> { GetPokemonList(get()) }
     factory<GetPokemon> { GetPokemon(get()) }
+    factory { GetDeckUseCase(get()) }
+    factory { SaveDeckUseCase(get()) }
     viewModelOf(::ListDetailPokemonViewModel)
+    viewModelOf(::DeckDialogViewModel)
 
 }
 
@@ -117,6 +126,9 @@ val databaseModule = module {
     factory<DeleteDeckPokemonUseCase> { DeleteDeckPokemonUseCase(get()) }
     factory<DeckPokemonRepository> { DeckPokemonRepositoryImpl(get()) }
     factory<DeckPokemonDataSource> { DeckPokemonDataSourceImpl(get()) }
+    factory { CreateDeckUseCase(get()) }
+    factory { DeleteCardUseCase(get()) }
+    factory { SaveCardUseCase(get()) }
 }
 
 interface PokedexService {

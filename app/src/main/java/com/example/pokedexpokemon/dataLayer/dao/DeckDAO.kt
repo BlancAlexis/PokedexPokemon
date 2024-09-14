@@ -12,27 +12,31 @@ import com.example.pokedexpokemon.dataLayer.room.DeckWithPokemonCardMapper
 import kotlinx.coroutines.flow.Flow
 @Dao
 interface DeckDAO {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertDeck(deck: DeckEntity)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCard(card: CardEntity)
+    @Insert
+    suspend fun insertDeck(deck: DeckEntity): Long
 
     @Delete
     suspend fun deleteDeck(deck: DeckEntity)
-
-    @Delete
-    suspend fun deleteCard(card: CardEntity)
+    @Insert
+    suspend fun insertCard(card: CardEntity): Long
 
     @Transaction
     suspend fun insertDeckWithCards(deck: DeckEntity, cards: List<CardEntity>) {
-        insertDeck(deck)
+        val deckId = insertDeck(deck)
         cards.forEach { card ->
-            insertCard(card.copy(deckId = deck.deckId))
+            insertCard(card.copy(deckId = deckId))
         }
     }
 
-    @Transaction
-    @Query("SELECT * FROM deckEntity")fun getDeckWithCards(): Flow<List<DeckWithPokemonCardMapper>>
+    @Query("DELETE FROM deckEntity WHERE deckId = :deckId")
+    suspend fun deleteDeckById(deckId: Long)
 
+    @Transaction
+    @Query("SELECT * FROM deckEntity WHERE deckId= :deckId")
+    fun getDeckWithCardsById(deckId: Long): Flow<DeckWithPokemonCardMapper>
+
+    @Transaction
+    @Query("SELECT * FROM deckEntity ")
+    fun getDeckWithCards(): Flow<List<DeckWithPokemonCardMapper>>
 }
+

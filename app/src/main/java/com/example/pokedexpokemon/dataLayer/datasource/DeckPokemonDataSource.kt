@@ -19,7 +19,7 @@ import org.koin.core.component.KoinComponent
 
 interface DeckPokemonDataSource {
      suspend fun getAllDeckPokemonUseCase(): Flow<List<DeckWithPokemonCardMapper>>
-    suspend fun insertDeckPokemonUseCase(deck: DeckWithPokemonCardMapper)
+    suspend fun insertDeckUseCase(deck: DeckWithPokemonCardMapper)
     suspend fun removeDeckPokemonUseCase(index: String)
     fun addCardToDeckPokemonUseCase(index: String)
     fun removeCardFromDeckPokemonUseCase(index: String)
@@ -35,7 +35,7 @@ class DeckPokemonDataSourceImpl(
         }
     }
 
-    suspend override fun insertDeckPokemonUseCase(deck: DeckWithPokemonCardMapper)  {
+    suspend override fun insertDeckUseCase(deck: DeckWithPokemonCardMapper)  {
          withContext(dispatcher) {
              deckPokemonDao.insertDeckWithCards(deck.deck, deck.cards)
           //  deckPokemonDao.insertDeck(deck)
@@ -59,7 +59,7 @@ interface DeckPokemonRepository {
     suspend fun getAllDeckPokemonUseCase(): Flow<List<Deck>>
     suspend fun insertDeckPokemonUseCase(deck: Deck)
     suspend fun removeDeckPokemonUseCase(index: String)
-     fun addCardToDeckPokemonUseCase(index: String)
+     fun addCardToDeckPokemonUseCase(card: Card)
      fun removeCardFromDeckPokemonUseCase(index: String)
 }
 
@@ -71,14 +71,14 @@ class DeckPokemonRepositoryImpl(
     }
 
     override suspend fun insertDeckPokemonUseCase(deck: Deck)  {
-         deckPokemonDataSource.insertDeckPokemonUseCase(deck.toEntity())
+         deckPokemonDataSource.insertDeckUseCase(deck.toEntity())
     }
 
     override suspend fun removeDeckPokemonUseCase(index: String) {
         TODO("Not yet implemented")
     }
 
-    override fun addCardToDeckPokemonUseCase(index: String) {
+    override fun addCardToDeckPokemonUseCase(card: Card) {
         TODO("Not yet implemented")
     }
 
