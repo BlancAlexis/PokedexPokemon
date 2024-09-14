@@ -44,6 +44,10 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,6 +71,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
+import com.example.pokedexpokemon.presentationLayer.util.CustomDialog
 import com.example.pokedexpokemon.presentationLayer.util.SealedPokemonType
 import kotlin.math.absoluteValue
 
@@ -74,13 +79,27 @@ import kotlin.math.absoluteValue
 @Composable
 fun DetailsPokemonScreen(modifier : Modifier = Modifier,uiState: ListDetailsPokemonUiState?, onNavigate: (String) -> Unit = {}) {
     val context = LocalContext.current
+    var showSecret by rememberSaveable {
+        mutableStateOf(false)
+    }
     if (uiState == null) {
         CircularProgressIndicator()
     } else {
+        if (showSecret) {
+            CustomDialog(
+                onDismissRequest = { showSecret = false },
+                onConfirmRequest = { showSecret = false },
+                confirmButton = "OK",
+                title = "Secret Ability",
+                text = "Chlorophyll",
+                icon = Icons.Filled.Star
+            )
+        }
         Column(
-            modifier = modifier.then(Modifier
-                .fillMaxSize()
-                .background(Color.White)),
+            modifier = modifier.then(
+                Modifier
+                    .fillMaxSize()
+                    .background(Color.White)),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -233,7 +252,7 @@ fun DetailsPokemonScreen(modifier : Modifier = Modifier,uiState: ListDetailsPoke
                                 fontWeight = FontWeight.Bold
                             )
                             if (it.isHidden) {
-                                IconButton(onClick = { }) {
+                                IconButton(onClick = { showSecret = true }) {
                                     Icon(imageVector = Icons.Filled.Star, contentDescription = "")
 
                                 }
