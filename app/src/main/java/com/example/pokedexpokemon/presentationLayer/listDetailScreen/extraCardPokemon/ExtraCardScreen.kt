@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,8 +19,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text2.BasicTextField2
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
@@ -34,6 +38,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -116,12 +121,11 @@ fun ExtraCardScreen(
             }
         }
         if (isSheetOpen) {
-            DialogDeckHost()
-            /* ModalBottomSheet(onDismissRequest = { isSheetOpen = false }) {
+            ModalBottomSheet(onDismissRequest = { isSheetOpen = false }) {
                 selectedCard?.let { a ->
                     detailsSheet(a)
                 }
-            }*/
+            }
         }
     }
 }
@@ -131,6 +135,10 @@ fun ExtraCardScreen(
 private fun detailsSheet(uiState: CardPokemonUiState) {
     val context = LocalContext.current
     var a by rememberSaveable { mutableStateOf(false) }
+    var openDeckDialog by rememberSaveable { mutableStateOf(false) }
+    if (openDeckDialog) {
+        DialogDeckHost()
+    }
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -168,7 +176,7 @@ private fun detailsSheet(uiState: CardPokemonUiState) {
                     )
                     DropdownMenuItem(
                         text = { Text("Save") },
-                        onClick = { Toast.makeText(context, "Save", Toast.LENGTH_SHORT).show() }
+                        onClick = { openDeckDialog = true }
                     )
 
                 }
@@ -227,9 +235,10 @@ private fun DeckDialog(uiState: DeckDialogUiState, onEvent: (DeckDialogEvent) ->
     var re by rememberSaveable { mutableStateOf(false) }
     BasicAlertDialog(onDismissRequest = { /*TODO*/ }) {
         Card(
+            shape = RoundedCornerShape(8.dp),
             modifier = Modifier
                 .fillMaxWidth(0.9f)
-                .padding(10.dp)
+                .padding(horizontal = 10.dp)
         ) {
             LazyColumn {
                 uiState.deckAvailable?.let { it ->
@@ -242,18 +251,43 @@ private fun DeckDialog(uiState: DeckDialogUiState, onEvent: (DeckDialogEvent) ->
                             Text(text = "${value.name}")
                             Checkbox(
                                 checked = value.isSelect,
-                                onCheckedChange = { onEvent(DeckDialogEvent.TriggerSelectedDeck(index)) })
+                                onCheckedChange = {
+                                    onEvent(
+                                        DeckDialogEvent.TriggerSelectedDeck(
+                                            index
+                                        )
+                                    )
+                                })
                         }
                     }
                 }
 
             }
-                androidx.compose.animation.AnimatedVisibility(visible = re) {
-                    BasicTextField2(state = uiState.newDeck, modifier = Modifier.fillMaxWidth().border(1.dp, Color.Black).padding(horizontal = 10.dp))
+            androidx.compose.animation.AnimatedVisibility(
+                visible = re,
+                enter = androidx.compose.animation.fadeIn(),
+                exit = androidx.compose.animation.fadeOut()
+            ) {
+                BasicTextField2(
+                    state = uiState.newDeck,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(1.dp, Color.Black)
+                        .padding(horizontal = 10.dp)
+                )
 
             }
-            Button(onClick = {re = !re }) {
-                Text(text = "Create")
+            Button(onClick = { re = !re }) {
+                Text(text = "Ajouter")
+            }
+            Button(
+                onClick = { onEvent(DeckDialogEvent.SaveDeck) },
+                shape = RoundedCornerShape(bottomEnd = 8.dp, bottomStart = 8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.1f)
+            ) {
+                Text(text = "Confirmer")
             }
         }
 

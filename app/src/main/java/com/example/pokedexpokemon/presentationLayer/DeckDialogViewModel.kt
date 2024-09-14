@@ -74,7 +74,7 @@ class DeckDialogViewModel(
         when (event) {
             is DeckDialogEvent.SaveDeck -> {
                 viewModelScope.launch {
-                    saveDeckUseCase.invoke(event.deck)
+                   // saveDeckUseCase.invoke(event.deck)
                 }
             }
 
@@ -95,7 +95,7 @@ class DeckDialogViewModel(
 }
 
 sealed class DeckDialogEvent {
-    data class SaveDeck(val deck: Deck) : DeckDialogEvent()
+    object SaveDeck : DeckDialogEvent()
     data class TriggerSelectedDeck(val index : Int) : DeckDialogEvent()
 }
 
