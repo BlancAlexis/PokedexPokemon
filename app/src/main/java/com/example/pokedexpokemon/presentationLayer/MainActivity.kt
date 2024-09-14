@@ -18,7 +18,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
@@ -27,7 +26,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -84,7 +82,7 @@ class MainActivity: ComponentActivity(), KoinComponent {
                         Surface(
                             modifier = Modifier.fillMaxSize()
                         ) {
-                            Scaffold( containerColor = Color.Transparent) { innerPadding ->
+                            Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                                 var selectedItemIndex by rememberSaveable {
                                     mutableIntStateOf(0)
                                 }
@@ -92,7 +90,6 @@ class MainActivity: ComponentActivity(), KoinComponent {
                                     currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
                                 val navController = rememberNavController()
                                 NavigationSuiteScaffold(
-
                                     navigationSuiteItems = {
                                         Screen.entries.forEachIndexed { index, screen ->
                                             item(
@@ -113,7 +110,6 @@ class MainActivity: ComponentActivity(), KoinComponent {
                                             )
                                         }
                                     },
-                                    navigationSuiteColors = NavigationSuiteDefaults.colors(navigationRailContentColor = Color.Red, navigationBarContainerColor = Color.Red, ),
                                     layoutType = if (windowWidthClass == WindowWidthSizeClass.EXPANDED) {
                                         NavigationSuiteType.NavigationDrawer
                                     } else {
@@ -137,7 +133,7 @@ class MainActivity: ComponentActivity(), KoinComponent {
                                                         NavigationEvent.PopStack -> TODO()
                                                     }
                                                 },
-                                                modifier = Modifier.padding(top = innerPadding.calculateTopPadding(), bottom = innerPadding.calculateBottomPadding()),
+                                                modifier = Modifier.padding(innerPadding),
                                             )
                                         }
                                         composable(route = Screen.TEAM.toString()) {

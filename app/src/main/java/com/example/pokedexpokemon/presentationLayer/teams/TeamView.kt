@@ -73,10 +73,9 @@ fun TeamView(
 
 ) {
     Column(
-        modifier = modifier.then(
-            Modifier.fillMaxSize()
-
-        ), horizontalAlignment = Alignment.CenterHorizontally
+        modifier =
+            Modifier.fillMaxSize() ,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = "Vos decks", fontWeight = FontWeight.Bold, fontSize = 30.sp)
         LazyColumn(contentPadding = PaddingValues(vertical = 10.dp)) {

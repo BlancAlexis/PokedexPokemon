@@ -78,9 +78,9 @@ fun DetailsPokemonScreen(modifier : Modifier = Modifier,uiState: ListDetailsPoke
         CircularProgressIndicator()
     } else {
         Column(
-            modifier = modifier.then(Modifier
+            modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White)),
+                .background(Color.White),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

@@ -53,7 +53,7 @@ fun ListPokemonScreen(
 ) {
     val context = LocalContext.current
     LazyColumn(
-        modifier = Modifier.fillMaxSize().background(Color.Black), contentPadding = PaddingValues(horizontal = 16.dp)
+        modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(16.dp)
     ) {
         itemsIndexed(uiState.uiStates, key = { _, item -> item.nationalIndices }) { index, value ->
             Spacer(modifier = Modifier.height(20.dp))
@@ -82,31 +82,31 @@ fun ListPokemonScreen(
                     horizontalArrangement = Arrangement.Start,
                     modifier = Modifier.padding(10.dp)
                 ) {
-                          Row(
-                              Modifier
-                                  .fillMaxHeight()
-                                  .size(55.dp)
-                          ) {
-                              val imageLoader = ImageLoader.Builder(context)
-                                  .components {
-                                      add(ImageDecoderDecoder.Factory())
+                    Row(
+                        Modifier
+                            .fillMaxHeight()
+                            .size(55.dp)
+                    ) {
+                        val imageLoader = ImageLoader.Builder(context)
+                            .components {
+                                add(ImageDecoderDecoder.Factory())
 
-                                  }
-                                  .build()
+                            }
+                            .build()
 
-                              val painter: Painter = rememberAsyncImagePainter(
-                                  model = ImageRequest.Builder(context)
-                                      .data(value.sprites?.frontDefault)
-                                      .build(),
-                                  imageLoader = imageLoader
-                              )
-                              Image(
-                                  painter = painter,
-                                  contentDescription = null,
-                                  modifier = Modifier.fillMaxSize(),
-                                  alignment = Alignment.Center
-                              )
-                          }
+                        val painter: Painter = rememberAsyncImagePainter(
+                            model = ImageRequest.Builder(context)
+                                .data(value.sprites?.frontDefault)
+                                .build(),
+                            imageLoader = imageLoader
+                        )
+                        Image(
+                            painter = painter,
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(),
+                            alignment = Alignment.Center
+                        )
+                    }
                     Column(
                         modifier = Modifier.padding(start = 15.dp)
                     ) {
