@@ -67,12 +67,18 @@ import coil.compose.rememberAsyncImagePainter
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
+import com.example.pokedexpokemon.presentationLayer.NavigationEvent
 import com.example.pokedexpokemon.presentationLayer.util.SealedPokemonType
 import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun DetailsPokemonScreen(modifier : Modifier = Modifier,uiState: ListDetailsPokemonUiState?, onNavigate: (String) -> Unit = {}) {
+fun DetailsPokemonScreen(
+    modifier: Modifier = Modifier,
+    uiState: ListDetailsPokemonUiState?,
+    onNavigate: (String) -> Unit = {},
+    navigaionEvent: (NavigationEvent) -> Unit
+) {
     val context = LocalContext.current
     if (uiState == null) {
         CircularProgressIndicator()
@@ -233,7 +239,9 @@ fun DetailsPokemonScreen(modifier : Modifier = Modifier,uiState: ListDetailsPoke
                                 fontWeight = FontWeight.Bold
                             )
                             if (it.isHidden) {
-                                IconButton(onClick = { }) {
+                                IconButton(onClick = {
+                                    navigaionEvent(NavigationEvent.Navigate("deckDialog"))
+                                }) {
                                     Icon(imageVector = Icons.Filled.Star, contentDescription = "")
 
                                 }
@@ -265,7 +273,10 @@ fun DetailsPokemonScreen(modifier : Modifier = Modifier,uiState: ListDetailsPoke
                             horizontalAlignment = Alignment.Start
 
                         ) {
-                            Text(text = "Statistique", modifier = Modifier.align(Alignment.CenterHorizontally))
+                            Text(
+                                text = "Statistique",
+                                modifier = Modifier.align(Alignment.CenterHorizontally)
+                            )
                             uiState.stats.forEach {
                                 Text(text = it.name)
                                 LinearProgressIndicator(
@@ -355,7 +366,7 @@ fun createPokemonPainter(imageUrl: String?, imageLoader: ImageLoader, context: C
 @Composable
 private fun previewDetailsPokemon() {
     DetailsPokemonScreen(
-       uiState =  ListDetailsPokemonUiState(
+        uiState = ListDetailsPokemonUiState(
             name = "Bulbasaur",
             type = listOf(SealedPokemonType.POISON(), SealedPokemonType.GRASS()),
             abilities = listOf(Ability("Chlorophyll", false), Ability("Chlorophyll", false)),
@@ -371,6 +382,7 @@ private fun previewDetailsPokemon() {
                 Stat("hp", 45, 2)
             ),
             nationalIndices = 1
-        )
+        ),
+        navigaionEvent = {}
     )
 }

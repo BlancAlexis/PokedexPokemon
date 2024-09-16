@@ -31,6 +31,7 @@ class SaveCardUseCase(
     }
 
 }
+
 class DeleteCardUseCase(
     private val deckPokemonRepository: DeckPokemonRepository
 ) : KoinComponent {
@@ -43,6 +44,7 @@ class DeleteCardUseCase(
     }
 
 }
+
 class CreateDeckUseCase(
     private val deckPokemonRepository: DeckPokemonRepository
 ) : KoinComponent {

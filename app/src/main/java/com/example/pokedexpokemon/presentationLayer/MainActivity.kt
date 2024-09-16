@@ -31,17 +31,19 @@ import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailPokemonViewModel
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailsHost
 import com.example.pokedexpokemon.presentationLayer.settings.SettingsHost
 import com.example.pokedexpokemon.presentationLayer.teams.TeamViewHost
+import com.example.pokedexpokemon.presentationLayer.teams.deckDialog.DialogDeckHost
 import com.example.pokedexpokemon.presentationLayer.theme.PokedexPokemonTheme
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class MainActivity: ComponentActivity(), KoinComponent {
+class MainActivity : ComponentActivity(), KoinComponent {
 
     private val viewModel: ListDetailPokemonViewModel by inject()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -128,8 +130,12 @@ class MainActivity: ComponentActivity(), KoinComponent {
                                                 navigationEvent = {
                                                     when (it) {
                                                         NavigationEvent.Disconnect -> TODO()
-                                                        is NavigationEvent.Navigate -> TODO()
-                                                        is NavigationEvent.NavigateTo -> TODO()
+                                                        is NavigationEvent.Navigate ->
+                                                            navController.navigate(it.string)
+
+                                                        is NavigationEvent.NavigateTo ->
+                                                            navController.navigate(it.menuId)
+
                                                         NavigationEvent.PopStack -> TODO()
                                                     }
                                                 },
@@ -143,6 +149,9 @@ class MainActivity: ComponentActivity(), KoinComponent {
                                         }
                                         composable(route = Screen.SETTINGS.toString()) {
                                             SettingsHost()
+                                        }
+                                        dialog("deckDialog") {
+                                            DialogDeckHost()
                                         }
                                     }
                                 }

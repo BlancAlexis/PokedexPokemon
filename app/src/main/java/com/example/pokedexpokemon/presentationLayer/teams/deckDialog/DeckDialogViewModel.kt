@@ -1,48 +1,17 @@
-package com.example.pokedexpokemon.presentationLayer
+package com.example.pokedexpokemon.presentationLayer.teams.deckDialog
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.text2.input.TextFieldState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pokedexpokemon.dataLayer.datasource.DeckPokemonRepository
-import com.example.pokedexpokemon.dataLayer.room.Deck
 import com.example.pokedexpokemon.dataLayer.utils.Ressource
-import kotlinx.coroutines.flow.Flow
+import com.example.pokedexpokemon.domainLayer.usecase.GetDeckUseCase
+import com.example.pokedexpokemon.domainLayer.usecase.SaveDeckUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.koin.core.component.KoinComponent
 
-class GetDeckUseCase(
-    private val deckPokemonRepository: DeckPokemonRepository
-) : KoinComponent {
-    suspend fun invoke(): Flow<Ressource<List<Deck>>> {
-        return try {
-            deckPokemonRepository.getAllDeckPokemonUseCase().map {
-                Ressource.Success(it)
-            }
-        } catch (e: Exception) {
-            flowOf(Ressource.Error(exception = e))
-        }
-    }
-
-}
-
-class SaveDeckUseCase(
-    private val deckPokemonRepository: DeckPokemonRepository
-) : KoinComponent {
-    suspend fun invoke(deck: Deck): Ressource<Unit> {
-        return try {
-            Ressource.Success(deckPokemonRepository.insertDeckPokemonUseCase(deck = deck))
-        } catch (e: Exception) {
-            Ressource.Error(e)
-        }
-    }
-
-}
 @OptIn(ExperimentalFoundationApi::class)
 class DeckDialogViewModel(
     private val getDeckUseCase: GetDeckUseCase,
@@ -74,7 +43,7 @@ class DeckDialogViewModel(
         when (event) {
             is DeckDialogEvent.SaveDeck -> {
                 viewModelScope.launch {
-                   // saveDeckUseCase.invoke(event.deck)
+                    // saveDeckUseCase.invoke(event.deck)
                 }
             }
 
@@ -96,7 +65,7 @@ class DeckDialogViewModel(
 
 sealed class DeckDialogEvent {
     object SaveDeck : DeckDialogEvent()
-    data class TriggerSelectedDeck(val index : Int) : DeckDialogEvent()
+    data class TriggerSelectedDeck(val index: Int) : DeckDialogEvent()
 }
 
 data class DeckDialogUiState @OptIn(ExperimentalFoundationApi::class) constructor(

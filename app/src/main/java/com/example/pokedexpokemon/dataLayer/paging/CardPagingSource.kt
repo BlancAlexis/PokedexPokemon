@@ -11,7 +11,7 @@ class CardPagingSource(
     private val remoteDataSource: CardPokemonDataSource,
 ) : PagingSource<Int, PokemonCard>() {
 
-    lateinit var name : String
+    lateinit var name: String
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PokemonCard> { // je conv pas la ?
         return try {

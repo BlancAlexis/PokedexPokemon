@@ -18,7 +18,7 @@ import org.koin.core.component.KoinComponent
 
 
 interface DeckPokemonDataSource {
-     suspend fun getAllDeckPokemonUseCase(): Flow<List<DeckWithPokemonCardMapper>>
+    suspend fun getAllDeckPokemonUseCase(): Flow<List<DeckWithPokemonCardMapper>>
     suspend fun insertDeckUseCase(deck: DeckWithPokemonCardMapper)
     suspend fun removeDeckPokemonUseCase(index: String)
     fun addCardToDeckPokemonUseCase(index: String)
@@ -31,14 +31,14 @@ class DeckPokemonDataSourceImpl(
 ) : DeckPokemonDataSource {
     override suspend fun getAllDeckPokemonUseCase(): Flow<List<DeckWithPokemonCardMapper>> {
         return withContext(dispatcher) {
-             deckPokemonDao.getDeckWithCards()
+            deckPokemonDao.getDeckWithCards()
         }
     }
 
-    suspend override fun insertDeckUseCase(deck: DeckWithPokemonCardMapper)  {
-         withContext(dispatcher) {
-             deckPokemonDao.insertDeckWithCards(deck.deck, deck.cards)
-          //  deckPokemonDao.insertDeck(deck)
+    suspend override fun insertDeckUseCase(deck: DeckWithPokemonCardMapper) {
+        withContext(dispatcher) {
+            deckPokemonDao.insertDeckWithCards(deck.deck, deck.cards)
+            //  deckPokemonDao.insertDeck(deck)
         }
     }
 
@@ -59,19 +59,25 @@ interface DeckPokemonRepository {
     suspend fun getAllDeckPokemonUseCase(): Flow<List<Deck>>
     suspend fun insertDeckPokemonUseCase(deck: Deck)
     suspend fun removeDeckPokemonUseCase(index: String)
-     fun addCardToDeckPokemonUseCase(card: Card)
-     fun removeCardFromDeckPokemonUseCase(index: String)
+    fun addCardToDeckPokemonUseCase(card: Card)
+    fun removeCardFromDeckPokemonUseCase(index: String)
 }
 
 class DeckPokemonRepositoryImpl(
     val deckPokemonDataSource: DeckPokemonDataSource
 ) : DeckPokemonRepository {
     override suspend fun getAllDeckPokemonUseCase(): Flow<List<Deck>> {
-        return deckPokemonDataSource.getAllDeckPokemonUseCase().map { it.map { Deck(  name =  it.deck.name, cards =  it.cards.map { Card(name =  it.name, rarity =  it.image) }) } }
+        return deckPokemonDataSource.getAllDeckPokemonUseCase().map {
+            it.map {
+                Deck(
+                    name = it.deck.name,
+                    cards = it.cards.map { Card(name = it.name, rarity = it.image) })
+            }
+        }
     }
 
-    override suspend fun insertDeckPokemonUseCase(deck: Deck)  {
-         deckPokemonDataSource.insertDeckUseCase(deck.toEntity())
+    override suspend fun insertDeckPokemonUseCase(deck: Deck) {
+        deckPokemonDataSource.insertDeckUseCase(deck.toEntity())
     }
 
     override suspend fun removeDeckPokemonUseCase(index: String) {
@@ -91,7 +97,7 @@ class GetAllDeckPokemonUseCase(
     private val deckPokemonRepository: DeckPokemonRepository
 ) : KoinComponent {
 
-    suspend fun invoke(): Flow<Ressource<List<Deck>>>  {
+    suspend fun invoke(): Flow<Ressource<List<Deck>>> {
         return try {
             deckPokemonRepository.getAllDeckPokemonUseCase().map { Ressource.Success(it) }
         } catch (e: Exception) {
@@ -100,6 +106,7 @@ class GetAllDeckPokemonUseCase(
     }
 
 }
+
 class InsertDeckPokemonUseCase(
     private val deckPokemonRepository: DeckPokemonRepository
 ) : KoinComponent {
@@ -113,6 +120,7 @@ class InsertDeckPokemonUseCase(
     }
 
 }
+
 class DeleteDeckPokemonUseCase(
     private val deckPokemonRepository: DeckPokemonRepository
 ) : KoinComponent {
@@ -128,24 +136,27 @@ class DeleteDeckPokemonUseCase(
 }
 
 
-object mapper{
+object mapper {
     fun Deck.toEntity() = DeckWithPokemonCardMapper(
         deck = DeckEntity(name = name),
         cards = cards.map { it.toEntity() }
     )
+
     fun DeckWithPokemonCardMapper.toDomain() = Deck(
         name = deck.name,
         cards = cards.map { it.toDomain() }
     )
-fun Card.toEntity() = CardEntity(
-    name = name,
-    image = rarity,
-    deckId = 0 //TODO
-)
-fun CardEntity.toDomain() = Card(
-    name = name,
-    rarity = image
-)
+
+    fun Card.toEntity() = CardEntity(
+        name = name,
+        image = rarity,
+        deckId = 0 //TODO
+    )
+
+    fun CardEntity.toDomain() = Card(
+        name = name,
+        rarity = image
+    )
 }
 /*
 class AddCardToDeckPokemonUseCase(

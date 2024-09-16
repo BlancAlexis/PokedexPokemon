@@ -128,7 +128,7 @@ fun ListPokemonScreen(
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp),
                         ) {
-                            value.type.forEach {type ->
+                            value.type.forEach { type ->
                                 AssistChip(
                                     leadingIcon = {
                                         Icon(

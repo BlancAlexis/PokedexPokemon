@@ -15,13 +15,13 @@ data class DeckWithPokemonCardMapper(
 )
 
 data class Deck(
-    val id: Int?= null,
+    val id: Int? = null,
     val name: String,
     val cards: List<Card>
 )
 
 data class Card(
-    val id: Int?= null,
+    val id: Int? = null,
     val name: String,
     val rarity: String,
 )

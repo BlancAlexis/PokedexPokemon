@@ -174,7 +174,7 @@ fun SettingsBackground() {
             Modifier
                 .requiredWidth(width * 1.25f)
                 .rotate(30f)
-                
+
         ) {
             Image(
                 painter = painterResource(id = array.random()),
@@ -190,7 +190,7 @@ fun SettingsBackground() {
             Modifier
                 .requiredWidth(width * 1.25f)
                 .rotate(30f)
-                
+
         ) {
             Image(
                 painter = painterResource(id = array.random()),
@@ -206,7 +206,7 @@ fun SettingsBackground() {
             Modifier
                 .requiredWidth(width * 1.25f)
                 .rotate(30f)
-                
+
         ) {
             Image(
                 painter = painterResource(id = array.random()),
@@ -230,7 +230,7 @@ fun SettingsBackground() {
             Modifier
                 .requiredWidth(width * 1.25f)
                 .rotate(30f)
-                
+
         ) {
             Image(
                 painter = painterResource(id = array.random()),
@@ -247,7 +247,7 @@ fun SettingsBackground() {
             Modifier
                 .requiredWidth(width * 1.25f)
                 .rotate(30f)
-                
+
         ) {
             Image(
                 painter = painterResource(id = array.random()),
@@ -264,7 +264,7 @@ fun SettingsBackground() {
             Modifier
                 .requiredWidth(width * 1.25f)
                 .rotate(30f)
-                
+
         ) {
             Image(
                 painter = painterResource(id = array.random()),

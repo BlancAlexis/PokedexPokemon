@@ -24,7 +24,6 @@ import com.example.pokedexpokemon.presentationLayer.NavigationEvent
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.detaiPokemon.DetailsPokemonScreen
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.extraCardPokemon.ExtraCardHost
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.listPokemon.ListPokemonScreen
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ListDetailsHost(
@@ -36,7 +35,7 @@ fun ListDetailsHost(
     ListDetailLayout(
         modifier = modifier,
         state = state,
-        navigationEvent = { viewModel },
+        navigationEvent = navigationEvent,
         viewModelEvent = viewModel::onEvent
     )
 }
@@ -81,20 +80,27 @@ fun ListDetailLayout(
                 }
             },
             detailPane = @Composable {
-                val content = if(navigator.currentDestination?.content == null){ uiState.uiStates[0] } else { navigator.currentDestination?.content as? ListDetailsPokemonUiState}
+                val content = if (navigator.currentDestination?.content == null) {
+                    uiState.uiStates[0]
+                } else {
+                    navigator.currentDestination?.content as? ListDetailsPokemonUiState
+                }
                 AnimatedPane {
-                    DetailsPokemonScreen(uiState = content  , onNavigate = { name ->
-                        navigator.navigateTo(
-                            pane = ListDetailPaneScaffoldRole.Extra,
-                            content = name
-                        )
-                    })
+                    DetailsPokemonScreen(
+                        uiState = content, onNavigate = { name ->
+                            navigator.navigateTo(
+                                pane = ListDetailPaneScaffoldRole.Extra,
+                                content = name
+                            )
+                        },
+                        navigaionEvent = navigationEvent
+                    )
                 }
             },
             extraPane = @Composable {
                 val content = navigator.currentDestination?.content?.toString() ?: ""
                 AnimatedPane {
-                    ExtraCardHost(name = content)
+                    ExtraCardHost(name = content, navigaionEvent = navigationEvent)
                 }
             })
     }

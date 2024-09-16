@@ -9,14 +9,14 @@ import kotlinx.coroutines.flow.Flow
 
 
 interface CardPokemonRepository {
-    suspend fun getPokemonByName(name : String): Flow<PagingData<PokemonCard>>
+    suspend fun getPokemonByName(name: String): Flow<PagingData<PokemonCard>>
 }
 
 class CardPokemonRepositoryImpl(
     private val cardPokemonPagingSource: CardPagingSource
 ) : CardPokemonRepository {
 
-    override suspend fun getPokemonByName(name : String): Flow<PagingData<PokemonCard>> {
+    override suspend fun getPokemonByName(name: String): Flow<PagingData<PokemonCard>> {
         cardPokemonPagingSource.name = "name:$name"
         return Pager(
             config = PagingConfig(pageSize = 10, prefetchDistance = 2), // truc bizarre

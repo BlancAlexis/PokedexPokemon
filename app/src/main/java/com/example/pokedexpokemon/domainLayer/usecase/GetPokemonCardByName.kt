@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 class GetPokemonCardByNameUseCase(private val pokemonRepository: CardPokemonRepository) {
 
-    suspend operator fun invoke(name : String): Flow<PagingData<PokemonCard>> {
+    suspend operator fun invoke(name: String): Flow<PagingData<PokemonCard>> {
         return pokemonRepository.getPokemonByName(name)
     }
 

@@ -3,13 +3,13 @@ package com.example.pokedexpokemon.dataLayer.dao
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import com.example.pokedexpokemon.dataLayer.entity.CardEntity
 import com.example.pokedexpokemon.dataLayer.entity.DeckEntity
 import com.example.pokedexpokemon.dataLayer.room.DeckWithPokemonCardMapper
 import kotlinx.coroutines.flow.Flow
+
 @Dao
 interface DeckDAO {
     @Insert
@@ -17,6 +17,7 @@ interface DeckDAO {
 
     @Delete
     suspend fun deleteDeck(deck: DeckEntity)
+
     @Insert
     suspend fun insertCard(card: CardEntity): Long
 

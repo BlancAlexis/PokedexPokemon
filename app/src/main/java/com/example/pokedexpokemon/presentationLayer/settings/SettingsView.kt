@@ -16,5 +16,5 @@ fun SettingsHost(
 fun SettingsView(
 
 ) {
-SettingsBackground()
-    }
+    SettingsBackground()
+}

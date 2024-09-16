@@ -23,7 +23,7 @@ class ListDetailPokemonViewModel(
     private val _uiState = MutableStateFlow<ListDetailsState>(ListDetailsState.Loading)
     val uiState = _uiState.asStateFlow()
 
-     val _isLoading = mutableStateOf(true)
+    val _isLoading = mutableStateOf(true)
     fun playPokemonRoar(roarUrl: String) {
         val mediaPlayer = MediaPlayer().apply {
             setAudioAttributes(

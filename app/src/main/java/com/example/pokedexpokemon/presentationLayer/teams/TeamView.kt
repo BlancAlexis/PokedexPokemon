@@ -74,7 +74,7 @@ fun TeamView(
 ) {
     Column(
         modifier =
-            Modifier.fillMaxSize() ,
+        Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = "Vos decks", fontWeight = FontWeight.Bold, fontSize = 30.sp)
@@ -110,7 +110,7 @@ private fun DeckCard(deck: DeckUiState) {
                     )
                 ),
             shape = RoundedCornerShape(4.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.Blue)) {
+            colors = CardDefaults.cardColors(containerColor = Color.Gray)) {
             Column(modifier = Modifier.padding(10.dp)) {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -139,13 +139,12 @@ private fun DeckCard(deck: DeckUiState) {
                     Row(
                         modifier = Modifier
                             .padding(horizontal = 12.dp)
-                            .background(Color.Magenta)
                             .fillMaxWidth()
                     ) {
                         LazyRow(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(Color.Green),
+                                .background(Color.DarkGray),
                         ) {
                             itemsIndexed(100.downTo(0).toList()) { index, card ->
                                 AsyncImage(
