@@ -1,16 +1,14 @@
 package com.example.pokedexpokemon.presentationLayer.listDetailScreen
 
-import BasePokemon
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
 import com.example.pokedexpokemon.dataLayer.ListDetailsState
 import com.example.pokedexpokemon.dataLayer.utils.Ressource
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemonList
-import com.example.pokedexpokemon.presentationLayer.util.toPokemonType
+import com.example.pokedexpokemon.presentationLayer.listDetailScreen.BasePokemonMapper.toUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -62,21 +60,6 @@ class ListDetailPokemonViewModel(
         }
     }
 
-    private fun BasePokemon.toUiState(): ListDetailsPokemonUiState = ListDetailsPokemonUiState(
-        name = this.name.replaceFirstChar { char -> char.uppercase() },
-        weight = this.weight,
-        height = this.height,
-        baseExperience = this.baseExperience,
-        type = this.type.map { it.name.toPokemonType() }.toList(),
-        abilities = this.abilities,
-        gameIndices = this.gameIndices,
-        nationalIndices = this.id,
-        sprites = this.sprites,
-        talent = this.abilities,
-        roar = this.roar.urlLastestRoar,
-        moves = this.moves.filter { it.levelLearnedAt != 0 }.sortedBy { it.levelLearnedAt },
-        stats = this.stats
-    )
 
     fun onEvent(event: ListDetailsPokemonEvent) {
         when (event) {

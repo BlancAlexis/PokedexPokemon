@@ -8,6 +8,7 @@ import com.example.pokedexpokemon.dataLayer.datasource.InsertDeckPokemonUseCase
 import com.example.pokedexpokemon.dataLayer.room.Card
 import com.example.pokedexpokemon.dataLayer.room.Deck
 import com.example.pokedexpokemon.dataLayer.utils.Ressource
+import com.example.pokedexpokemon.presentationLayer.teams.DeckMappers.toUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -61,23 +62,6 @@ class TeamViewModel(
     }
 }
 
-private fun Deck.toUiState(): DeckUiState {
-    return DeckUiState(id = id ?: 0, name = name, cards = cards.map { it.toUiState() })
-}
-
-private fun Card.toUiState(): PokemonCardUiState {
-    return PokemonCardUiState(
-        id = id ?: 0, name = name, number = ""
-    )
-}
-
-data class DeckUiState(
-    val id: Int, val name: String, val cards: List<PokemonCardUiState>
-)
-
-data class PokemonCardUiState(
-    val id: Int, val name: String, val number: String
-)
 
 sealed class TeamEvent {
     data class DeleteDeck(val deck: DeckUiState) : TeamEvent()

@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -44,6 +43,10 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -68,6 +71,7 @@ import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
 import com.example.pokedexpokemon.presentationLayer.NavigationEvent
+import com.example.pokedexpokemon.presentationLayer.util.CustomDialog
 import com.example.pokedexpokemon.presentationLayer.util.SealedPokemonType
 import kotlin.math.absoluteValue
 
@@ -77,12 +81,26 @@ fun DetailsPokemonScreen(
     modifier: Modifier = Modifier,
     uiState: ListDetailsPokemonUiState?,
     onNavigate: (String) -> Unit = {},
-    navigaionEvent: (NavigationEvent) -> Unit
+    navigaionEvent: (NavigationEvent) -> Unit,
+    playRoar: (String) -> Unit
 ) {
     val context = LocalContext.current
+    var showSecret by rememberSaveable {
+        mutableStateOf(false)
+    }
     if (uiState == null) {
         CircularProgressIndicator()
     } else {
+        if (showSecret) {
+            CustomDialog(
+                onDismissRequest = { showSecret = false },
+                onConfirmRequest = { showSecret = false },
+                confirmButton = "OK",
+                title = "Secret Ability",
+                text = "Chlorophyll",
+                icon = Icons.Filled.Star
+            )
+        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -240,7 +258,7 @@ fun DetailsPokemonScreen(
                             )
                             if (it.isHidden) {
                                 IconButton(onClick = {
-                                    navigaionEvent(NavigationEvent.Navigate("deckDialog"))
+                                    navigaionEvent(NavigationEvent.Navigate("pokemonDialog"))
                                 }) {
                                     Icon(imageVector = Icons.Filled.Star, contentDescription = "")
 
@@ -249,7 +267,14 @@ fun DetailsPokemonScreen(
                         }
                     }
                 }
-                Spacer(modifier = Modifier.padding(vertical = 10.dp))
+                Button(
+                    onClick = { playRoar(uiState.roar.toString()) },
+                    shape = RoundedCornerShape(20.dp),
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                ) {
+                    Text(text = "Rugissement")
+
+                }
                 HorizontalDivider(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
@@ -259,7 +284,7 @@ fun DetailsPokemonScreen(
                 Row(
                     modifier = Modifier
                         .padding(vertical = 5.dp)
-                        .fillMaxHeight(0.6f)
+                        .fillMaxHeight(0.7f)
                 ) {
                     Row(
                         modifier = Modifier
@@ -325,17 +350,6 @@ fun DetailsPokemonScreen(
                     }
                 }
 
-                uiState.gameIndices?.size?.let {
-                    LazyRow(modifier = Modifier.background(Color.Cyan)) {
-                        items(it) { index ->
-                            Column {
-                                Text(text = uiState.gameIndices[index].version.name)
-                                Text(text = uiState.gameIndices[index].gameIndex.toString())
-                            }
-
-                        }
-                    }
-                }
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
@@ -383,6 +397,7 @@ private fun previewDetailsPokemon() {
             ),
             nationalIndices = 1
         ),
-        navigaionEvent = {}
+        navigaionEvent = {},
+        playRoar = {}
     )
 }

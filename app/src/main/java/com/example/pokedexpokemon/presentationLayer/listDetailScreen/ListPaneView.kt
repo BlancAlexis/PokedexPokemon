@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.layout.AnimatedPane
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.NavigableListDetailPaneScaffold
@@ -18,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
 import com.example.pokedexpokemon.dataLayer.ListDetailsState
 import com.example.pokedexpokemon.presentationLayer.NavigationEvent
@@ -81,7 +83,11 @@ fun ListDetailLayout(
             },
             detailPane = @Composable {
                 val content = if (navigator.currentDestination?.content == null) {
-                    uiState.uiStates[0]
+                    if (currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED) {
+                        uiState.uiStates[0]
+                    } else {
+                        null
+                    }
                 } else {
                     navigator.currentDestination?.content as? ListDetailsPokemonUiState
                 }
@@ -92,6 +98,9 @@ fun ListDetailLayout(
                                 pane = ListDetailPaneScaffoldRole.Extra,
                                 content = name
                             )
+                        },
+                        playRoar = { it ->
+                            viewModelEvent(ListDetailsPokemonEvent.playRoar(it))
                         },
                         navigaionEvent = navigationEvent
                     )

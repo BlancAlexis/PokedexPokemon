@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -40,6 +41,7 @@ import com.example.pokedexpokemon.presentationLayer.settings.SettingsHost
 import com.example.pokedexpokemon.presentationLayer.teams.TeamViewHost
 import com.example.pokedexpokemon.presentationLayer.teams.deckDialog.DialogDeckHost
 import com.example.pokedexpokemon.presentationLayer.theme.PokedexPokemonTheme
+import com.example.pokedexpokemon.presentationLayer.util.CustomDialog
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -82,7 +84,8 @@ class MainActivity : ComponentActivity(), KoinComponent {
                 setContent {
                     PokedexPokemonTheme {
                         Surface(
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier.fillMaxSize(),
+                            color = MaterialTheme.colorScheme.background
                         ) {
                             Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                                 var selectedItemIndex by rememberSaveable {
@@ -153,9 +156,22 @@ class MainActivity : ComponentActivity(), KoinComponent {
                                         dialog("deckDialog") {
                                             DialogDeckHost()
                                         }
+                                        dialog("pokemonDialog") {
+                                            CustomDialog(
+                                                onConfirmRequest = {
+                                                    navController.popBackStack()
+                                                },
+                                                onDismissRequest = {
+                                                    navController.popBackStack()
+                                                },
+                                                title = "Talent caché",
+                                                text = "Ceci est un talent rare",
+                                                confirmButton = "Confirm",
+                                            )
+                                        }
                                     }
-                                }
 
+                                }
                             }
                         }
                     }
@@ -173,10 +189,10 @@ enum class Screen(val title: String, val icon: ImageVector) {
 sealed interface NavigationEvent {
     data class NavigateTo(val menuId: Int) : NavigationEvent
     data class Navigate(val string: String) : NavigationEvent
-
     object Disconnect : NavigationEvent
     data object PopStack : NavigationEvent
 }
+
 
 
 

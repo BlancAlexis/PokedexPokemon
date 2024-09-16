@@ -45,6 +45,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -80,7 +81,7 @@ fun TeamView(
         Text(text = "Vos decks", fontWeight = FontWeight.Bold, fontSize = 30.sp)
         LazyColumn(contentPadding = PaddingValues(vertical = 10.dp)) {
             itemsIndexed(listUiState) { index, deck ->
-                DeckCard(deck)
+                DeckCard(deck, onEvent)
             }
         }
     }
@@ -88,14 +89,14 @@ fun TeamView(
 
 
 @Composable
-private fun DeckCard(deck: DeckUiState) {
+private fun DeckCard(deck: DeckUiState, onEvent: (TeamEvent) -> Unit) {
     var expandedState by remember { mutableStateOf(false) }
 
     val rotationState by animateFloatAsState(
         targetValue = if (expandedState) 180f else 0f
     )
     SwipeToDeleteContainer(item = deck, onDelete = {
-
+        onEvent(TeamEvent.DeleteDeck(it))
     }, animationDuration = 500) {
         Card(onClick = { /*TODO*/ },
             modifier = Modifier
@@ -140,6 +141,7 @@ private fun DeckCard(deck: DeckUiState) {
                         modifier = Modifier
                             .padding(horizontal = 12.dp)
                             .fillMaxWidth()
+                            .clip(shape = RoundedCornerShape(15.dp))
                     ) {
                         LazyRow(
                             modifier = Modifier
