@@ -54,7 +54,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
         installSplashScreen()
             .apply {
                 setKeepOnScreenCondition {
-                    viewModel._isLoading.value
+                    viewModel.uiState.value is com.example.pokedexpokemon.dataLayer.ListDetailsState.Loading
                 }
                 setOnExitAnimationListener { screen ->
                     val zoomX = ObjectAnimator.ofFloat(

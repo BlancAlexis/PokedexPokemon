@@ -50,21 +50,13 @@ fun ListDetailLayout(
     navigationEvent: (NavigationEvent) -> Unit = {},
     viewModelEvent: (ListDetailsPokemonEvent) -> Unit = {}
 ) {
-    AnimatedVisibility(visible = state is ListDetailsState.Loading) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            CircularProgressIndicator()
-        }
-    }
+
     AnimatedVisibility(
         visible = state is ListDetailsState.onFirstSalveLoad,
         enter = slideInHorizontally(),
         exit = slideOutHorizontally()
     ) {
-        val uiState = state as ListDetailsState.onFirstSalveLoad
+        val uiState = state as? ListDetailsState.onFirstSalveLoad
         val navigator = rememberListDetailPaneScaffoldNavigator<Any>()
         NavigableListDetailPaneScaffold(modifier = Modifier.padding(top = 20.dp),
             navigator = navigator,
@@ -74,7 +66,7 @@ fun ListDetailLayout(
                         uiState = uiState, onNavigate = { index ->
                             navigator.navigateTo(
                                 pane = ListDetailPaneScaffoldRole.Detail,
-                                content = uiState.uiStates[index]
+                                content = null
                             )
                         },
                         viewModelEvent = viewModelEvent
@@ -84,8 +76,7 @@ fun ListDetailLayout(
             detailPane = @Composable {
                 val content = if (navigator.currentDestination?.content == null) {
                     if (currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED) {
-                        uiState.uiStates[0]
-                    } else {
+null                    } else {
                         null
                     }
                 } else {

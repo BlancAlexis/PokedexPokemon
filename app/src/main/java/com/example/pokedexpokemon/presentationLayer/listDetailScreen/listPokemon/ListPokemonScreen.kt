@@ -22,6 +22,7 @@ import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ChipColors
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,15 +48,23 @@ import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetails
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ListPokemonScreen(
-    uiState: ListDetailsState.onFirstSalveLoad,
+    uiState: ListDetailsState.onFirstSalveLoad?,
     onNavigate: (Int) -> Unit = {},
     viewModelEvent: (ListDetailsPokemonEvent) -> Unit = {}
 ) {
     val context = LocalContext.current
+    val threadHold = 8
+   if( uiState == null ){
+        CircularProgressIndicator()
+    }
+    else {
     LazyColumn(
         modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(16.dp)
     ) {
         itemsIndexed(uiState.uiStates, key = { _, item -> item.nationalIndices }) { index, value ->
+            if ((index + threadHold) >= uiState.uiStates.size) {
+                viewModelEvent(ListDetailsPokemonEvent.loadMore)
+            }
             Spacer(modifier = Modifier.height(20.dp))
             Card(
                 onClick = {
@@ -158,6 +167,7 @@ fun ListPokemonScreen(
 
                 }
             }
+        }
         }
     }
 }

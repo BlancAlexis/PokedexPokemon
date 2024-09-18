@@ -5,7 +5,7 @@ import com.example.pokedexpokemon.dataLayer.dto.BasePokemonDTO
 import org.koin.core.component.KoinComponent
 
 interface BasePokemonDataSource {
-    suspend fun getListBasePokemon(): List<BasePokemonDTO>
+    suspend fun getListBasePokemon(page: Int): List<BasePokemonDTO>
     suspend fun getPokemon(index: String): BasePokemonDTO
 
 }
@@ -13,8 +13,11 @@ interface BasePokemonDataSource {
 class BasePokemonDataSourceImpl(
     private val pokedexService: PokedexService
 ) : BasePokemonDataSource, KoinComponent {
-    override suspend fun getListBasePokemon(): List<BasePokemonDTO> {
-        return pokedexService.fetchPokemonList().results.mapNotNull {
+    override suspend fun getListBasePokemon(page: Int): List<BasePokemonDTO> {
+        return pokedexService.fetchPokemonList(
+            limit = PAGING_SIZE,
+            offset = page * PAGING_SIZE,
+        ).results.mapNotNull {
             extractPokemonId(it.url)?.let { id ->
                 try {
                     getPokemon(id)
@@ -31,6 +34,10 @@ class BasePokemonDataSourceImpl(
 
     private fun extractPokemonId(url: String): String? {
         return url.trimEnd('/').split("/").lastOrNull { it.matches("\\d+".toRegex()) }
+    }
+
+    companion object {
+        private const val PAGING_SIZE = 20
     }
 
 }

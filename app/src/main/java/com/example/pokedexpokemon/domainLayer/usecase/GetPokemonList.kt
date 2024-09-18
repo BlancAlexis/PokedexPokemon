@@ -8,9 +8,9 @@ import org.koin.core.component.KoinComponent
 class GetPokemonList(
     private val basePokemonRepository: BasePokemonRepository
 ) : KoinComponent {
-    suspend fun invoke(): Ressource<List<BasePokemon>> {
+    suspend fun invoke(page: Int): Ressource<List<BasePokemon>> {
         return try {
-            Ressource.Success(basePokemonRepository.getListBasePokemon())
+            Ressource.Success(basePokemonRepository.getListBasePokemon(page))
         } catch (e: Exception) {
             Ressource.Error(e)
         }
