@@ -35,6 +35,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import androidx.window.core.layout.WindowWidthSizeClass
+import com.example.pokedexpokemon.presentationLayer.listDetailScreen.HomeUiState
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailPokemonViewModel
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailsHost
 import com.example.pokedexpokemon.presentationLayer.settings.SettingsHost
@@ -54,7 +55,7 @@ class MainActivity : ComponentActivity(), KoinComponent {
         installSplashScreen()
             .apply {
                 setKeepOnScreenCondition {
-                    viewModel.uiState.value is com.example.pokedexpokemon.dataLayer.ListDetailsState.Loading
+                    viewModel.screenUiState.value == HomeUiState.Loading
                 }
                 setOnExitAnimationListener { screen ->
                     val zoomX = ObjectAnimator.ofFloat(

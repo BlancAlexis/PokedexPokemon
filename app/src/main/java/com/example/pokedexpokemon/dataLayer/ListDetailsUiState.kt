@@ -8,11 +8,7 @@ import Stat
 import com.example.pokedexpokemon.presentationLayer.util.SealedPokemonType
 import java.io.Serializable
 
-sealed class ListDetailsState {
-    object Loading : ListDetailsState()
-    object Error : ListDetailsState()
-    data class onFirstSalveLoad(val uiStates: List<ListDetailsPokemonUiState>) : ListDetailsState()
-}
+
 
 data class ListDetailsPokemonUiState(
     val name: String? = null,

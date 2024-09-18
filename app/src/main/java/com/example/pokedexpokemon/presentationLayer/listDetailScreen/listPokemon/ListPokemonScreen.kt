@@ -22,7 +22,6 @@ import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ChipColors
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,33 +41,28 @@ import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
-import com.example.pokedexpokemon.dataLayer.ListDetailsState
+import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailsPokemonEvent
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ListPokemonScreen(
-    uiState: ListDetailsState.onFirstSalveLoad?,
+    uiState: List<ListDetailsPokemonUiState>,
     onNavigate: (Int) -> Unit = {},
     viewModelEvent: (ListDetailsPokemonEvent) -> Unit = {}
 ) {
     val context = LocalContext.current
-    val threadHold = 8
-   if( uiState == null ){
-        CircularProgressIndicator()
-    }
-    else {
+    val threadHold = 15
     LazyColumn(
         modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(16.dp)
     ) {
-        itemsIndexed(uiState.uiStates, key = { _, item -> item.nationalIndices }) { index, value ->
-            if ((index + threadHold) >= uiState.uiStates.size) {
+        itemsIndexed(uiState, key = { _, item -> item.nationalIndices }) { index, value ->
+            if ((index + threadHold) >= uiState.size) {
                 viewModelEvent(ListDetailsPokemonEvent.loadMore)
             }
             Spacer(modifier = Modifier.height(20.dp))
             Card(
                 onClick = {
-                    //viewModelEvent(ListDetailsPokemonEvent.playRoar(value.roar!!))
                     onNavigate(index)
                 },
                 shape = RoundedCornerShape(16.dp),
@@ -167,7 +161,6 @@ fun ListPokemonScreen(
 
                 }
             }
-        }
         }
     }
 }

@@ -3,11 +3,7 @@ package com.example.pokedexpokemon.presentationLayer.listDetailScreen
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.layout.AnimatedPane
@@ -15,13 +11,11 @@ import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffoldRole
 import androidx.compose.material3.adaptive.navigation.NavigableListDetailPaneScaffold
 import androidx.compose.material3.adaptive.navigation.rememberListDetailPaneScaffoldNavigator
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
-import com.example.pokedexpokemon.dataLayer.ListDetailsState
 import com.example.pokedexpokemon.presentationLayer.NavigationEvent
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.detaiPokemon.DetailsPokemonScreen
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.extraCardPokemon.ExtraCardHost
@@ -46,27 +40,27 @@ fun ListDetailsHost(
 @Composable
 fun ListDetailLayout(
     modifier: Modifier = Modifier,
-    state: ListDetailsState,
+    state: List<ListDetailsPokemonUiState>,
     navigationEvent: (NavigationEvent) -> Unit = {},
     viewModelEvent: (ListDetailsPokemonEvent) -> Unit = {}
 ) {
 
     AnimatedVisibility(
-        visible = state is ListDetailsState.onFirstSalveLoad,
+        visible = true,
         enter = slideInHorizontally(),
         exit = slideOutHorizontally()
     ) {
-        val uiState = state as? ListDetailsState.onFirstSalveLoad
         val navigator = rememberListDetailPaneScaffoldNavigator<Any>()
         NavigableListDetailPaneScaffold(modifier = Modifier.padding(top = 20.dp),
             navigator = navigator,
             listPane = @Composable {
                 AnimatedPane {
                     ListPokemonScreen(
-                        uiState = uiState, onNavigate = { index ->
+                        uiState = state, onNavigate = { index ->
                             navigator.navigateTo(
                                 pane = ListDetailPaneScaffoldRole.Detail,
-                                content = null
+                                content = state[index]
+
                             )
                         },
                         viewModelEvent = viewModelEvent
@@ -76,7 +70,8 @@ fun ListDetailLayout(
             detailPane = @Composable {
                 val content = if (navigator.currentDestination?.content == null) {
                     if (currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED) {
-null                    } else {
+                        state.firstOrNull()
+                    } else {
                         null
                     }
                 } else {
