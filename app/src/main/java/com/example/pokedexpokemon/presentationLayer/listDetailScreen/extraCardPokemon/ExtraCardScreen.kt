@@ -43,11 +43,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.pokedexpokemon.presentationLayer.NavigationEvent
+import com.example.pokedexpokemon.presentationLayer.listDetailScreen.HomeUiState
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.detaiPokemon.CardPokemonUiState
 import org.koin.androidx.compose.koinViewModel
 
@@ -74,17 +76,29 @@ fun ExtraCardScreen(
     onEvent: (CardPokemonEvent) -> Unit = {},
     navigationEvent: (NavigationEvent) -> Unit = {},
 ) {
-    val context = LocalContext.current
-    var isSheetOpenIndex by rememberSaveable {
-        mutableIntStateOf(-1)
-    }
+    println("load bleu stp")
+    println("${uiState.loadState.append} append ${uiState.loadState.refresh} refresh ${uiState.loadState.prepend} prepend ")
+    Box(modifier = Modifier.fillMaxSize()) {
+        if (uiState.loadState.refresh is LoadState.Loading) {
+            println("load rouge stp")
+            Column(modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Red)) {
+                CircularProgressIndicator()
+            }
+        }
 
-    var selectedCard by rememberSaveable { mutableStateOf<CardPokemonUiState?>(null) }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-                LazyVerticalGrid(
+        val context = LocalContext.current
+        var isSheetOpenIndex by rememberSaveable {
+            mutableIntStateOf(-1)
+        }
+
+        var selectedCard by rememberSaveable { mutableStateOf<CardPokemonUiState?>(null) }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            LazyVerticalGrid(
                 columns = GridCells.Fixed(2), contentPadding = PaddingValues(vertical = 20.dp)
             ) {
                 items(uiState.itemCount) { index ->
@@ -104,6 +118,7 @@ fun ExtraCardScreen(
             }
         }
     }
+}
 
 
 @Composable

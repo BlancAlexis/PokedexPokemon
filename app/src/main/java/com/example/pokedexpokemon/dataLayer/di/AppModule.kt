@@ -135,7 +135,7 @@ interface PokedexService {
 
     @GET("pokemon")
     suspend fun fetchPokemonList(
-        @Query("limit") limit: Int = 50,
+        @Query("limit") limit: Int = 10,
         @Query("offset") offset: Int = 0,
     ): PokedexResponse
 
@@ -147,7 +147,7 @@ interface PokemonCardService {
     @GET("cards")
     suspend fun getPokemonCardByName(
         @Query("page") pageNumber: Int,
-        @Query("pageSize") pageSize: Int = 20,
+        @Query("pageSize") pageSize: Int = 5,
         @Query("q") name: String,
         @Header("X-Api-Key") apiKey: String = BuildConfig.CARD_POKEMON_API_KEY
     ): ResponseCardApi
