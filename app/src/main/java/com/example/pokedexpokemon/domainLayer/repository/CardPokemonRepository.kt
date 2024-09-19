@@ -19,7 +19,7 @@ class CardPokemonRepositoryImpl(
     override suspend fun getPokemonByName(name: String): Flow<PagingData<PokemonCard>> {
         cardPokemonPagingSource.name = "name:$name"
         return Pager(
-            config = PagingConfig(pageSize = 10, prefetchDistance = 2), // truc bizarre
+            config = PagingConfig(pageSize = 20, prefetchDistance = 2), // truc bizarre
             pagingSourceFactory = {
                 cardPokemonPagingSource
             }

@@ -97,7 +97,7 @@ sealed interface ListDetailsPokemonEvent {
 }
 
 @Stable
-internal sealed interface HomeUiState {
+sealed interface HomeUiState {
 
     data object Idle : HomeUiState
 

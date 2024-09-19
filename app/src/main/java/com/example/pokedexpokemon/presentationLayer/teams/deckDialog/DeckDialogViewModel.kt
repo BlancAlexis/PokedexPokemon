@@ -1,7 +1,7 @@
 package com.example.pokedexpokemon.presentationLayer.teams.deckDialog
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.text2.input.TextFieldState
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pokedexpokemon.dataLayer.utils.Ressource
@@ -68,7 +68,7 @@ sealed class DeckDialogEvent {
     data class TriggerSelectedDeck(val index: Int) : DeckDialogEvent()
 }
 
-data class DeckDialogUiState @OptIn(ExperimentalFoundationApi::class) constructor(
+data class DeckDialogUiState  constructor(
     val deckAvailable: List<DeckStatusUiState>? = null,
     val newDeck: TextFieldState = TextFieldState()
 )
