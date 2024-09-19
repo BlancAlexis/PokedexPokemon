@@ -79,7 +79,11 @@ class CardPokemonViewModel(
             }
     }
 
-
+    init {
+        viewModelScope.launch {
+            getCard("pikachu")
+        }
+    }
     fun onEvent(cardPokemonEvent: CardPokemonEvent) {
         when (cardPokemonEvent) {
             is CardPokemonEvent.saveCard -> {
