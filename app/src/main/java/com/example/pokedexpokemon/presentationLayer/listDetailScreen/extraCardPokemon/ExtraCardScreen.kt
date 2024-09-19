@@ -32,6 +32,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -62,7 +63,7 @@ fun ExtraCardHost(
     ExtraCardScreen(
         uiState = pokemonCardPagingItems,
         onEvent = viewModel::onEvent,
-        navigaionEvent = navigationEvent
+        navigationEvent = navigationEvent
     )
 }
 
@@ -71,85 +72,69 @@ fun ExtraCardHost(
 fun ExtraCardScreen(
     uiState: LazyPagingItems<CardPokemonUiState>,
     onEvent: (CardPokemonEvent) -> Unit = {},
-    navigaionEvent: (NavigationEvent) -> Unit = {},
+    navigationEvent: (NavigationEvent) -> Unit = {},
 ) {
     val context = LocalContext.current
-    var isSheetOpen by rememberSaveable {
-        mutableStateOf(false)
+    var isSheetOpenIndex by rememberSaveable {
+        mutableIntStateOf(-1)
     }
+
     var selectedCard by rememberSaveable { mutableStateOf<CardPokemonUiState?>(null) }
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.LightGray)
     ) {
-        if (uiState.itemCount == 0) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                CircularProgressIndicator()
-            }
-        } else {
-            LazyVerticalGrid(
+                LazyVerticalGrid(
                 columns = GridCells.Fixed(2), contentPadding = PaddingValues(vertical = 20.dp)
             ) {
                 items(uiState.itemCount) { index ->
                     CardPreview({
-                        isSheetOpen = true
+                        isSheetOpenIndex = index
                         selectedCard = uiState[index]
-                    }, selectedCard, uiState, index, context)
+
+                    }, uiState.itemSnapshotList.items[index], index, context)
                 }
             }
-            if (isSheetOpen) {
-                ModalBottomSheet(onDismissRequest = { isSheetOpen = false }) {
-                    selectedCard?.let { a ->
-                        detailsSheet(a, navigaionEvent)
+            if (isSheetOpenIndex != -1) {
+                ModalBottomSheet(onDismissRequest = { isSheetOpenIndex = -1 }) {
+                    selectedCard?.let { card ->
+                        DetailsCardSheet(card, navigationEvent)
                     }
                 }
             }
         }
     }
 
-}
 
 @Composable
 private fun CardPreview(
-    isSheetOpen: (Unit) -> Unit = {},
-    selectedCard: CardPokemonUiState?,
-    uiState: LazyPagingItems<CardPokemonUiState>,
+    selectedCard: (Int) -> Unit = {},
+    uiState: CardPokemonUiState,
     index: Int,
     context: Context
 ) {
-    var isSheetOpen1 = isSheetOpen
-    var selectedCard1 = selectedCard
     Card(
         modifier = Modifier
             .padding(vertical = 20.dp)
             .wrapContentSize()
             .clickable {
-                isSheetOpen1 = true
-                selectedCard1 = uiState[index]
-            },
-        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp)
+                selectedCard(index)
+            }, elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp)
     ) {
-        val a = ImageRequest.Builder(context).data(uiState[index]?.image).build()
+        val imageRequest = ImageRequest.Builder(context).data(uiState.image).build()
         AsyncImage(
             modifier = Modifier.align(Alignment.CenterHorizontally),
-            model = a,
+            model = imageRequest,
             contentDescription = ""
         )
     }
 }
 
 @Composable
-private fun detailsSheet(
+private fun DetailsCardSheet(
     uiState: CardPokemonUiState, navigationEvent: (NavigationEvent) -> Unit = {}
 ) {
     val context = LocalContext.current
-    var dropDownStatus by rememberSaveable { mutableStateOf(false) }
-
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -166,35 +151,33 @@ private fun detailsSheet(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = uiState.name, fontSize = 20.sp)
-            DropDownBox(dropDownStatus, context, navigationEvent)
+            DropDownBox(context, navigationEvent)
         }
 
         CardDetails(uiState)
         Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-        priceBar(uiState)
+        PriceBar(uiState)
 
     }
 }
 
 @Composable
 private fun DropDownBox(
-    dropDownStatus: Boolean,
-    context: Context,
-    navigationEvent: (NavigationEvent) -> Unit
+    context: Context, navigationEvent: (NavigationEvent) -> Unit
 ) {
-    var dropDownStatus1 = dropDownStatus
+    var dropDownStatus by rememberSaveable { mutableStateOf(false) }
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentSize(Alignment.TopEnd)
     ) {
-        IconButton(onClick = { dropDownStatus1 = !dropDownStatus1 }) {
+        IconButton(onClick = { dropDownStatus = !dropDownStatus }) {
             Icon(
                 imageVector = Icons.Default.MoreVert, contentDescription = "More"
             )
         }
 
-        DropdownMenu(expanded = dropDownStatus1, onDismissRequest = { dropDownStatus1 = false }) {
+        DropdownMenu(expanded = dropDownStatus, onDismissRequest = { dropDownStatus = false }) {
             DropdownMenuItem(text = { Text("Load") },
                 onClick = { Toast.makeText(context, "Load", Toast.LENGTH_SHORT).show() })
             DropdownMenuItem(text = { Text("Save") },
@@ -212,22 +195,21 @@ private fun CardDetails(uiState: CardPokemonUiState) {
             .fillMaxWidth()
             .padding(start = 10.dp),
     ) {
+        Text(
+            text = "artist : ${uiState.artist}",
 
-    Text(
-        text = "artist : ${uiState.artist}",
-
-    )
-    Text(
-        text = "rarity : ${uiState.rarity}",
-    )
-    Text(
-        text = "number : ${uiState.number}",
-    )
-}
+            )
+        Text(
+            text = "rarity : ${uiState.rarity}",
+        )
+        Text(
+            text = "number : ${uiState.number}",
+        )
+    }
 }
 
 @Composable
-private fun priceBar(uiState: CardPokemonUiState) {
+private fun PriceBar(uiState: CardPokemonUiState) {
     Row(
         modifier = Modifier
             .fillMaxWidth(0.5f)
@@ -241,13 +223,11 @@ private fun priceBar(uiState: CardPokemonUiState) {
     ) {
         Text(
             text = uiState.cardPrice.prices.directLow.toString() + "€",
-            modifier = Modifier
-                .padding(start = 10.dp)
+            modifier = Modifier.padding(start = 10.dp)
         )
         Text(
             text = uiState.cardPrice.prices.high.toString() + "€",
-            modifier = Modifier
-                .padding(end = 10.dp)
+            modifier = Modifier.padding(end = 10.dp)
         )
     }
 }

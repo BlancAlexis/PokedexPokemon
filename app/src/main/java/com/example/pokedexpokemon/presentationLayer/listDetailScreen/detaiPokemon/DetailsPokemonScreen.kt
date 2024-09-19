@@ -82,7 +82,7 @@ fun DetailsPokemonScreen(
     modifier: Modifier = Modifier,
     uiState: ListDetailsPokemonUiState?,
     onNavigate: (String) -> Unit = {},
-    navigaionEvent: (NavigationEvent) -> Unit,
+    navigationEvent: (NavigationEvent) -> Unit,
     playRoar: (String) -> Unit
 ) {
     val context = LocalContext.current
@@ -91,7 +91,8 @@ fun DetailsPokemonScreen(
     }
     if (uiState == null) {
         CircularProgressIndicator()
-    } else {
+    }
+    else {
         if (showSecret) {
             CustomDialog(
                 onDismissRequest = { showSecret = false },
@@ -110,7 +111,7 @@ fun DetailsPokemonScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            topSection(uiState, context)
+            TopSectionCard(uiState, context)
             Text(text = uiState.name.toString(), fontSize = 40.sp, fontWeight = FontWeight.Bold)
             Row(
                 modifier = Modifier.fillMaxWidth(0.7f),
@@ -124,15 +125,15 @@ fun DetailsPokemonScreen(
                         label = { Text(text = stringResource(id = type.name)) })
                 }
             }
-            bottmSECTION(uiState, navigaionEvent, playRoar, onNavigate)
+            BottomSectionCard(uiState, navigationEvent, playRoar, onNavigate)
         }
     }
 }
 
 @Composable
-private fun bottmSECTION(
+private fun BottomSectionCard(
     uiState: ListDetailsPokemonUiState,
-    navigaionEvent: (NavigationEvent) -> Unit,
+    navigationEvent: (NavigationEvent) -> Unit,
     playRoar: (String) -> Unit,
     onNavigate: (String) -> Unit
 ) {
@@ -160,7 +161,7 @@ private fun bottmSECTION(
             fontSize = 25.sp,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
-        Abilities(uiState, navigaionEvent)
+        AbilitiesRow(uiState.abilities, navigationEvent)
         Button(
             onClick = { playRoar(uiState.roar.toString()) },
             shape = RoundedCornerShape(20.dp),
@@ -186,8 +187,7 @@ private fun bottmSECTION(
                     .fillMaxHeight(),
             ) {
                 Column(
-                    modifier = Modifier
-                        .padding(horizontal = 5.dp),
+                    modifier = Modifier.padding(horizontal = 5.dp),
                     verticalArrangement = Arrangement.SpaceAround,
                     horizontalAlignment = Alignment.Start
 
@@ -216,9 +216,7 @@ private fun bottmSECTION(
                     item {
                         Text(text = "Attaques")
                     }
-                    itemsIndexed(
-                        uiState.moves,
-                        key = { _, move -> move.moveName }) { index, move ->
+                    itemsIndexed(uiState.moves, key = { _, move -> move.moveName }) { index, move ->
                         AttackItem(move)
                     }
                 }
@@ -226,8 +224,7 @@ private fun bottmSECTION(
         }
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
+            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center
         ) {
             Button(
                 onClick = { onNavigate(uiState.name?.lowercase() ?: "") },
@@ -240,17 +237,15 @@ private fun bottmSECTION(
 }
 
 @Composable
-private fun Abilities(
-    uiState: ListDetailsPokemonUiState,
-    navigaionEvent: (NavigationEvent) -> Unit
+private fun AbilitiesRow(
+    uiState: List<Ability>?, navigaionEvent: (NavigationEvent) -> Unit
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        uiState.abilities?.forEach {
+        uiState?.forEach {
             Row(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
@@ -276,8 +271,7 @@ private fun Abilities(
 @Composable
 private fun AttackItem(move: Move) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize()
+        horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxSize()
     ) {
         Row(
             modifier = Modifier
@@ -285,33 +279,28 @@ private fun AttackItem(move: Move) {
                 .padding(5.dp),
         ) {
             Text(
-                text = "${move.moveName} lvl.${move.levelLearnedAt}",
-                fontWeight = FontWeight.Medium
+                text = "${move.moveName} lvl.${move.levelLearnedAt}", fontWeight = FontWeight.Medium
             )
         }
         HorizontalDivider(
-            color = Color.Black,
-            modifier = Modifier.fillMaxWidth(0.6f)
+            color = Color.Black, modifier = Modifier.fillMaxWidth(0.6f)
         )
     }
 }
 
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
-private fun topSection(
-    uiState: ListDetailsPokemonUiState,
-    context: Context
+private fun TopSectionCard(
+    uiState: ListDetailsPokemonUiState, context: Context
 ) {
     Row(
         Modifier
             .shadow(10.dp, shape = RoundedCornerShape(1.dp, 1.dp, 120.dp, 120.dp))
-            .background(brush = Brush.sweepGradient(
-                colors = if (uiState.type.size > 1) {
-                    uiState.type.map { it.color }
-                } else {
-                    listOf(uiState.type.first().color, uiState.type.first().color)
-                }
-            ), shape = RoundedCornerShape(1.dp, 1.dp, 120.dp, 120.dp))
+            .background(brush = Brush.sweepGradient(colors = if (uiState.type.size > 1) {
+                uiState.type.map { it.color }
+            } else {
+                listOf(uiState.type.first().color, uiState.type.first().color)
+            }), shape = RoundedCornerShape(1.dp, 1.dp, 120.dp, 120.dp))
             .fillMaxHeight(0.3f)
             .border(
                 border = BorderStroke(2.dp, Color.Black),
@@ -321,16 +310,12 @@ private fun topSection(
             .padding(top = 40.dp, bottom = 20.dp),
         horizontalArrangement = Arrangement.Center,
     ) {
-        val imageLoader = ImageLoader.Builder(context)
-            .components {
-                add(ImageDecoderDecoder.Factory())
+        val imageLoader = ImageLoader.Builder(context).components {
+            add(ImageDecoderDecoder.Factory())
 
-            }
-            .build()
-        val frontPainter =
-            createPokemonPainter(uiState.sprites?.frontDefault, imageLoader, context)
-        val backPainter =
-            createPokemonPainter(uiState.sprites?.backDefault, imageLoader, context)
+        }.build()
+        val frontPainter = createPokemonPainter(uiState.sprites?.frontDefault, imageLoader, context)
+        val backPainter = createPokemonPainter(uiState.sprites?.backDefault, imageLoader, context)
         val painters = listOf(frontPainter, backPainter)
         val pagerState = rememberPagerState(pageCount = { painters.size })
         LaunchedEffect(pagerState) {
@@ -343,15 +328,11 @@ private fun topSection(
                     modifier = Modifier
                         .wrapContentSize()
                         .graphicsLayer {
-                            val pageOffset = (
-                                    (pagerState.currentPage - page) + pagerState
-                                        .currentPageOffsetFraction
-                                    ).absoluteValue
+                            val pageOffset =
+                                ((pagerState.currentPage - page) + pagerState.currentPageOffsetFraction).absoluteValue
 
                             alpha = lerp(
-                                start = 0.5f,
-                                stop = 1f,
-                                fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                                start = 0.5f, stop = 1f, fraction = 1f - pageOffset.coerceIn(0f, 1f)
                             )
                         },
                 ) {
@@ -365,42 +346,33 @@ private fun topSection(
             }
 
 
-            DtatPokemon(uiState, modifier = Modifier.align(Alignment.TopStart))
+            FormDataPokemon(uiState, modifier = Modifier.align(Alignment.TopStart))
         }
     }
 }
 
 @Composable
-private fun DtatPokemon(uiState: ListDetailsPokemonUiState, modifier: Modifier) {
+private fun FormDataPokemon(uiState: ListDetailsPokemonUiState, modifier: Modifier) {
     Column(
-        modifier = modifier
-            .then(
-                Modifier
-                    .offset(x = (30).dp)
-                    .padding(2.dp)
-            ),
+        modifier = modifier.then(
+            Modifier
+                .offset(x = (30).dp)
+                .padding(2.dp)
+        ),
 
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "taille",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
+            text = "taille", fontSize = 20.sp, fontWeight = FontWeight.Bold
         )
         Text(
-            text = uiState.height.toString(),
-            fontSize = 25.sp,
-            fontWeight = FontWeight.Bold
+            text = uiState.height.toString(), fontSize = 25.sp, fontWeight = FontWeight.Bold
         )
         Text(
-            text = "poids",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
+            text = "poids", fontSize = 20.sp, fontWeight = FontWeight.Bold
         )
         Text(
-            text = uiState.weight.toString(),
-            fontSize = 25.sp,
-            fontWeight = FontWeight.Bold
+            text = uiState.weight.toString(), fontSize = 25.sp, fontWeight = FontWeight.Bold
         )
 
     }
@@ -409,35 +381,28 @@ private fun DtatPokemon(uiState: ListDetailsPokemonUiState, modifier: Modifier) 
 @Composable
 fun createPokemonPainter(imageUrl: String?, imageLoader: ImageLoader, context: Context): Painter {
     return rememberAsyncImagePainter(
-        model = ImageRequest.Builder(context)
-            .data(imageUrl)
-            .build(),
-        imageLoader = imageLoader
+        model = ImageRequest.Builder(context).data(imageUrl).build(), imageLoader = imageLoader
     )
 }
 
 @Preview
 @Composable
 private fun previewDetailsPokemon() {
-    DetailsPokemonScreen(
-        uiState = ListDetailsPokemonUiState(
-            name = "Bulbasaur",
-            type = listOf(SealedPokemonType.POISON(), SealedPokemonType.GRASS()),
-            abilities = listOf(Ability("Chlorophyll", false), Ability("Chlorophyll", false)),
-            moves = listOf(),
-            height = 7,
-            weight = 69,
-            sprites = Sprites(
-                baseSprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
-                backDefault = "",
-                frontDefault = ""
-            ),
-            stats = listOf(
-                Stat("hp", 45, 2)
-            ),
-            nationalIndices = 1
+    DetailsPokemonScreen(uiState = ListDetailsPokemonUiState(
+        name = "Bulbasaur",
+        type = listOf(SealedPokemonType.POISON(), SealedPokemonType.GRASS()),
+        abilities = listOf(Ability("Chlorophyll", false), Ability("Chlorophyll", false)),
+        moves = listOf(),
+        height = 7,
+        weight = 69,
+        sprites = Sprites(
+            baseSprite = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
+            backDefault = "",
+            frontDefault = ""
         ),
-        navigaionEvent = {},
-        playRoar = {}
-    )
+        stats = listOf(
+            Stat("hp", 45, 2)
+        ),
+        nationalIndices = 1
+    ), navigationEvent = {}, playRoar = {})
 }
