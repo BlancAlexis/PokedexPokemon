@@ -1,5 +1,6 @@
 package com.example.pokedexpokemon.presentationLayer.listDetailScreen.extraCardPokemon
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -47,22 +48,21 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.pokedexpokemon.presentationLayer.NavigationEvent
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.detaiPokemon.CardPokemonUiState
-import com.example.pokedexpokemon.presentationLayer.teams.deckDialog.DialogDeckHost
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ExtraCardHost(
     viewModel: CardPokemonViewModel = koinViewModel(),
     name: String,
-    navigaionEvent: (NavigationEvent) -> Unit = {}
+    navigationEvent: (NavigationEvent) -> Unit = {}
 ) {
-    viewModel.getPokemonByName(name)
+    viewModel.getPokemonByName(name) // LE passé dans un state flow?
     val pokemonCardPagingItems: LazyPagingItems<CardPokemonUiState> =
         viewModel.uiState.collectAsLazyPagingItems()
     ExtraCardScreen(
         uiState = pokemonCardPagingItems,
         onEvent = viewModel::onEvent,
-        navigaionEvent = navigaionEvent
+        navigaionEvent = navigationEvent
     )
 }
 
@@ -96,23 +96,10 @@ fun ExtraCardScreen(
                 columns = GridCells.Fixed(2), contentPadding = PaddingValues(vertical = 20.dp)
             ) {
                 items(uiState.itemCount) { index ->
-                    Card(
-                        modifier = Modifier
-                            .padding(vertical = 20.dp)
-                            .wrapContentSize()
-                            .clickable {
-                                isSheetOpen = true
-                                selectedCard = uiState[index]
-                            },
-                        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp)
-                    ) {
-                        val a = ImageRequest.Builder(context).data(uiState[index]?.image).build()
-                        AsyncImage(
-                            modifier = Modifier.align(Alignment.CenterHorizontally),
-                            model = a,
-                            contentDescription = ""
-                        )
-                    }
+                    CardPreview({
+                        isSheetOpen = true
+                        selectedCard = uiState[index]
+                    }, selectedCard, uiState, index, context)
                 }
             }
             if (isSheetOpen) {
@@ -128,15 +115,41 @@ fun ExtraCardScreen(
 }
 
 @Composable
+private fun CardPreview(
+    isSheetOpen: (Unit) -> Unit = {},
+    selectedCard: CardPokemonUiState?,
+    uiState: LazyPagingItems<CardPokemonUiState>,
+    index: Int,
+    context: Context
+) {
+    var isSheetOpen1 = isSheetOpen
+    var selectedCard1 = selectedCard
+    Card(
+        modifier = Modifier
+            .padding(vertical = 20.dp)
+            .wrapContentSize()
+            .clickable {
+                isSheetOpen1 = true
+                selectedCard1 = uiState[index]
+            },
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp)
+    ) {
+        val a = ImageRequest.Builder(context).data(uiState[index]?.image).build()
+        AsyncImage(
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            model = a,
+            contentDescription = ""
+        )
+    }
+}
+
+@Composable
 private fun detailsSheet(
     uiState: CardPokemonUiState, navigationEvent: (NavigationEvent) -> Unit = {}
 ) {
     val context = LocalContext.current
-    var a by rememberSaveable { mutableStateOf(false) }
-    var openDeckDialog by rememberSaveable { mutableStateOf(false) }
-    if (openDeckDialog) {
-        DialogDeckHost()
-    }
+    var dropDownStatus by rememberSaveable { mutableStateOf(false) }
+
     Column(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -153,69 +166,89 @@ private fun detailsSheet(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = uiState.name, fontSize = 20.sp)
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentSize(Alignment.TopEnd)
-            ) {
-                IconButton(onClick = { a = !a }) {
-                    Icon(
-                        imageVector = Icons.Default.MoreVert, contentDescription = "More"
-                    )
-                }
-
-                DropdownMenu(expanded = a, onDismissRequest = { a = false }) {
-                    DropdownMenuItem(text = { Text("Load") },
-                        onClick = { Toast.makeText(context, "Load", Toast.LENGTH_SHORT).show() })
-                    DropdownMenuItem(text = { Text("Save") },
-                        onClick = { navigationEvent(NavigationEvent.Navigate("deckDialog")) })
-
-                }
-            }
+            DropDownBox(dropDownStatus, context, navigationEvent)
         }
 
-        Text(
-            text = "artist : ${uiState.artist}",
-            modifier = Modifier
-                .align(Alignment.Start)
-                .padding(start = 10.dp),
-        )
-        Text(
-            text = "rarity : ${uiState.rarity}",
-            modifier = Modifier
-                .align(Alignment.Start)
-                .padding(start = 10.dp)
-        )
-        Text(
-            text = "number : ${uiState.number}",
-            modifier = Modifier
-                .align(Alignment.Start)
-                .padding(start = 10.dp)
-        )
+        CardDetails(uiState)
         Spacer(modifier = Modifier.fillMaxHeight(0.05f))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(0.5f)
-                .border(1.dp, Color.Black)
-                .background(
-                    Brush.horizontalGradient(
-                        colors = listOf(Color.Green, Color.Yellow, Color.Red)
-                    )
-                ),
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Text(
-                text = uiState.cardPrice.prices.directLow.toString() + "€",
-                modifier = Modifier
-                    .padding(start = 10.dp)
-            )
-            Text(
-                text = uiState.cardPrice.prices.high.toString() + "€",
-                modifier = Modifier
-                    .padding(end = 10.dp)
+        priceBar(uiState)
+
+    }
+}
+
+@Composable
+private fun DropDownBox(
+    dropDownStatus: Boolean,
+    context: Context,
+    navigationEvent: (NavigationEvent) -> Unit
+) {
+    var dropDownStatus1 = dropDownStatus
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentSize(Alignment.TopEnd)
+    ) {
+        IconButton(onClick = { dropDownStatus1 = !dropDownStatus1 }) {
+            Icon(
+                imageVector = Icons.Default.MoreVert, contentDescription = "More"
             )
         }
 
+        DropdownMenu(expanded = dropDownStatus1, onDismissRequest = { dropDownStatus1 = false }) {
+            DropdownMenuItem(text = { Text("Load") },
+                onClick = { Toast.makeText(context, "Load", Toast.LENGTH_SHORT).show() })
+            DropdownMenuItem(text = { Text("Save") },
+                onClick = { navigationEvent(NavigationEvent.Navigate("deckDialog")) })
+
+        }
+    }
+}
+
+@Composable
+private fun CardDetails(uiState: CardPokemonUiState) {
+    Column(
+        horizontalAlignment = Alignment.Start,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 10.dp),
+    ) {
+
+    Text(
+        text = "artist : ${uiState.artist}",
+
+    )
+    Text(
+        text = "rarity : ${uiState.rarity}",
+    )
+    Text(
+        text = "number : ${uiState.number}",
+    )
+}
+}
+
+@Composable
+private fun priceBar(uiState: CardPokemonUiState) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(0.5f)
+            .border(1.dp, Color.Black)
+            .background(
+                Brush.horizontalGradient(
+                    colors = listOf(Color.Green, Color.Yellow, Color.Red)
+                )
+            ),
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Text(
+            text = uiState.cardPrice.prices.directLow.toString() + "€",
+            modifier = Modifier
+                .padding(start = 10.dp)
+        )
+        Text(
+            text = uiState.cardPrice.prices.high.toString() + "€",
+            modifier = Modifier
+                .padding(end = 10.dp)
+        )
     }
 }
 

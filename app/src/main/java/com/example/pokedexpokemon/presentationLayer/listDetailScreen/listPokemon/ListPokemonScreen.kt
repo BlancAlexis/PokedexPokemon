@@ -1,5 +1,6 @@
 package com.example.pokedexpokemon.presentationLayer.listDetailScreen.listPokemon
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -52,115 +53,132 @@ fun ListPokemonScreen(
     viewModelEvent: (ListDetailsPokemonEvent) -> Unit = {}
 ) {
     val context = LocalContext.current
-    val threadHold = 15
+    val itemAnticipation = 15
     LazyColumn(
         modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(16.dp)
     ) {
         itemsIndexed(uiState, key = { _, item -> item.nationalIndices }) { index, value ->
-            if ((index + threadHold) >= uiState.size) {
+            if ((index + itemAnticipation) >= uiState.size) {
                 viewModelEvent(ListDetailsPokemonEvent.loadMore)
             }
+            pokeCard(onNavigate, index, value, context)
             Spacer(modifier = Modifier.height(20.dp))
-            Card(
-                onClick = {
-                    onNavigate(index)
-                },
+        }
+    }
+}
+
+@Composable
+private fun pokeCard(
+    onNavigate: (Int) -> Unit,
+    index: Int,
+    value: ListDetailsPokemonUiState,
+    context: Context
+) {
+    Card(
+        onClick = {
+            onNavigate(index)
+        },
+        shape = RoundedCornerShape(16.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
                 shape = RoundedCornerShape(16.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        shape = RoundedCornerShape(16.dp),
-                        brush = Brush.linearGradient(
-                            colors = if (value.type.size > 1) {
-                                value.type.map { it.color }
-                            } else {
-                                listOf(value.type.first().color, value.type.first().color)
-                            }
-                        )
-                    ),
-                colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+                brush = Brush.linearGradient(
+                    colors = if (value.type.size > 1) {
+                        value.type.map { it.color }
+                    } else {
+                        listOf(value.type.first().color, value.type.first().color)
+                    }
+                )
+            ),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start,
+            modifier = Modifier.padding(10.dp)
+        ) {
+            Row(
+                Modifier
+                    .fillMaxHeight()
+                    .size(55.dp)
+            ) {
+                val imageLoader = ImageLoader.Builder(context)
+                    .components {
+                        add(ImageDecoderDecoder.Factory())
+
+                    }
+                    .build()
+
+                val painter: Painter = rememberAsyncImagePainter(
+                    model = ImageRequest.Builder(context)
+                        .data(value.sprites?.frontDefault)
+                        .build(),
+                    imageLoader = imageLoader
+                )
+                Image(
+                    painter = painter,
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    alignment = Alignment.Center
+                )
+            }
+            Column(
+                modifier = Modifier.padding(start = 15.dp)
             ) {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start,
-                    modifier = Modifier.padding(10.dp)
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Row(
-                        Modifier
-                            .fillMaxHeight()
-                            .size(55.dp)
-                    ) {
-                        val imageLoader = ImageLoader.Builder(context)
-                            .components {
-                                add(ImageDecoderDecoder.Factory())
-
-                            }
-                            .build()
-
-                        val painter: Painter = rememberAsyncImagePainter(
-                            model = ImageRequest.Builder(context)
-                                .data(value.sprites?.frontDefault)
-                                .build(),
-                            imageLoader = imageLoader
-                        )
-                        Image(
-                            painter = painter,
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxSize(),
-                            alignment = Alignment.Center
-                        )
-                    }
-                    Column(
-                        modifier = Modifier.padding(start = 15.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = value.name.toString(),
-                                style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                            )
-                            Text(
-                                text = "#" + value.nationalIndices.toString(),
-                                style = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.Medium)
-                            )
-                        }
-                        FlowRow(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                        ) {
-                            value.type.forEach { type ->
-                                AssistChip(
-                                    leadingIcon = {
-                                        Icon(
-                                            painter = painterResource(id = type.icon),
-                                            tint = Color.Black,
-                                            contentDescription = null,
-                                            modifier = Modifier.size(25.dp)
-                                        )
-                                    },
-                                    colors = ChipColors(
-                                        containerColor = type.color,
-                                        labelColor = Color.Black,
-                                        leadingIconContentColor = Color.Black,
-                                        disabledLabelColor = Color.Black,
-                                        disabledContainerColor = Color.Black,
-                                        trailingIconContentColor = Color.Black,
-                                        disabledLeadingIconContentColor = Color.Black,
-                                        disabledTrailingIconContentColor = Color.Black
-                                    ),
-                                    onClick = { /*TODO*/ },
-                                    label = { Text(text = stringResource(id = type.name)) }
-                                )
-                            }
-                        }
-
-                    }
-
+                    Text(
+                        text = value.name.toString(),
+                        style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    )
+                    Text(
+                        text = "#" + value.nationalIndices.toString(),
+                        style = TextStyle(fontSize = 10.sp, fontWeight = FontWeight.Medium)
+                    )
                 }
+                PokeType(value)
+
             }
+
+        }
+    }
+}
+
+@Composable
+@OptIn(ExperimentalLayoutApi::class)
+private fun PokeType(value: ListDetailsPokemonUiState) {
+    FlowRow(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+    ) {
+        value.type.forEach { type ->
+            AssistChip(
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = type.icon),
+                        tint = Color.Black,
+                        contentDescription = null,
+                        modifier = Modifier.size(25.dp)
+                    )
+                },
+                colors = ChipColors(
+                    containerColor = type.color,
+                    labelColor = Color.Black,
+                    leadingIconContentColor = Color.Black,
+                    disabledLabelColor = Color.Black,
+                    disabledContainerColor = Color.Black,
+                    trailingIconContentColor = Color.Black,
+                    disabledLeadingIconContentColor = Color.Black,
+                    disabledTrailingIconContentColor = Color.Black
+                ),
+                onClick = { /*TODO*/ },
+                label = { Text(text = stringResource(id = type.name)) },
+                modifier = Modifier.padding(horizontal = 5.dp)
+            )
         }
     }
 }

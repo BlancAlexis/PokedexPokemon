@@ -95,7 +95,7 @@ fun ListDetailLayout(
             extraPane = @Composable {
                 val content = navigator.currentDestination?.content?.toString() ?: ""
                 AnimatedPane {
-                    ExtraCardHost(name = content, navigaionEvent = navigationEvent)
+                    ExtraCardHost(name = content, navigationEvent = navigationEvent)
                 }
             })
     }

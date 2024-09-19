@@ -100,6 +100,7 @@ class CardPokemonViewModel(
     )
 
     fun getPokemonByName(name: String) {
+        println("name : $name")
         viewModelScope.launch {
             getCard(name)
         }

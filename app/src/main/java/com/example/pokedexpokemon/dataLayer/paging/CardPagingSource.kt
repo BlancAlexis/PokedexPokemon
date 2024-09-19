@@ -13,7 +13,7 @@ class CardPagingSource(
 
     lateinit var name: String
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PokemonCard> { // je conv pas la ?
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PokemonCard> {
         return try {
             val currentPage = params.key ?: 1
             val apiResponse = remoteDataSource.getPokemonByName(
