@@ -5,7 +5,7 @@ import android.media.MediaPlayer
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
+import com.example.pokedexpokemon.dataLayer.ListDetailsUiState
 import com.example.pokedexpokemon.dataLayer.utils.Ressource
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemonList
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.BasePokemonMapper.toUiState
@@ -25,7 +25,7 @@ class ListDetailPokemonViewModel(
     private val getPokemonList: GetPokemonList,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<List<ListDetailsPokemonUiState>>(listOf())
+    private val _uiState = MutableStateFlow<ListDetailsUiState>(ListDetailsUiState())
     private val pokemonFetchingIndex: MutableStateFlow<Int> = MutableStateFlow(0)
     internal val screenUiState: MutableStateFlow<HomeUiState> = MutableStateFlow(HomeUiState.Loading)
 
@@ -67,8 +67,9 @@ class ListDetailPokemonViewModel(
                             if (newData.isNotEmpty()) {
                                 emit(HomeUiState.Idle)
                                 _uiState.update {
-                                    it + newData
-                                }
+                                    it.copy(
+                                        pokemonUiState = it.pokemonUiState + newData
+                                    )                                }
                             }
                         }
                     }

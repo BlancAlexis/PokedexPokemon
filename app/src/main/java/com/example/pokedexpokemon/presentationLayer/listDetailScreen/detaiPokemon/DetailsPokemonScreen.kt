@@ -70,7 +70,7 @@ import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
-import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
+import com.example.pokedexpokemon.dataLayer.PokemonUiState
 import com.example.pokedexpokemon.presentationLayer.NavigationEvent
 import com.example.pokedexpokemon.presentationLayer.util.CustomDialog
 import com.example.pokedexpokemon.presentationLayer.util.SealedPokemonType
@@ -80,7 +80,7 @@ import kotlin.math.absoluteValue
 @Composable
 fun DetailsPokemonScreen(
     modifier: Modifier = Modifier,
-    uiState: ListDetailsPokemonUiState?,
+    uiState: PokemonUiState?,
     onNavigate: (String) -> Unit = {},
     navigationEvent: (NavigationEvent) -> Unit,
     playRoar: (String) -> Unit
@@ -132,7 +132,7 @@ fun DetailsPokemonScreen(
 
 @Composable
 private fun BottomSectionCard(
-    uiState: ListDetailsPokemonUiState,
+    uiState: PokemonUiState,
     navigationEvent: (NavigationEvent) -> Unit,
     playRoar: (String) -> Unit,
     onNavigate: (String) -> Unit
@@ -291,7 +291,7 @@ private fun AttackItem(move: Move) {
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
 private fun TopSectionCard(
-    uiState: ListDetailsPokemonUiState, context: Context
+    uiState: PokemonUiState, context: Context
 ) {
     Row(
         Modifier
@@ -352,7 +352,7 @@ private fun TopSectionCard(
 }
 
 @Composable
-private fun FormDataPokemon(uiState: ListDetailsPokemonUiState, modifier: Modifier) {
+private fun FormDataPokemon(uiState: PokemonUiState, modifier: Modifier) {
     Column(
         modifier = modifier.then(
             Modifier
@@ -388,7 +388,7 @@ fun createPokemonPainter(imageUrl: String?, imageLoader: ImageLoader, context: C
 @Preview
 @Composable
 private fun previewDetailsPokemon() {
-    DetailsPokemonScreen(uiState = ListDetailsPokemonUiState(
+    DetailsPokemonScreen(uiState = PokemonUiState(
         name = "Bulbasaur",
         type = listOf(SealedPokemonType.POISON(), SealedPokemonType.GRASS()),
         abilities = listOf(Ability("Chlorophyll", false), Ability("Chlorophyll", false)),
