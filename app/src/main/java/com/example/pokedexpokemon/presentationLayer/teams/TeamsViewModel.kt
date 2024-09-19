@@ -8,6 +8,9 @@ import com.example.pokedexpokemon.dataLayer.datasource.InsertDeckPokemonUseCase
 import com.example.pokedexpokemon.dataLayer.room.Card
 import com.example.pokedexpokemon.dataLayer.room.Deck
 import com.example.pokedexpokemon.dataLayer.utils.Ressource
+import com.example.pokedexpokemon.presentationLayer.BaseViewModel
+import com.example.pokedexpokemon.presentationLayer.ViewModelStateFlow
+import com.example.pokedexpokemon.presentationLayer.listDetailScreen.HomeUiState
 import com.example.pokedexpokemon.presentationLayer.teams.DeckMappers.toUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,11 +23,12 @@ class TeamViewModel(
     private val deleteDeckPokemonUseCase: DeleteDeckPokemonUseCase,
     /* private val addCardToDeckPokemonUseCase: AddCardToDeckPokemonUseCase,
      private val removeCardFromDeckPokemonUseCase: RemoveCardFromDeckPokemonUseCase*/
-) : ViewModel() {
+) : BaseViewModel() {
 
     private val _uiState = MutableStateFlow<List<DeckUiState>>(listOf())
     val uiState = _uiState.asStateFlow()
-
+    internal val screenUiState: ViewModelStateFlow<HomeUiState> =
+        viewModelStateFlow(HomeUiState.Loading)
 
     init {
         viewModelScope.launch {

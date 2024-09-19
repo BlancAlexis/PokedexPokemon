@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
 import com.example.pokedexpokemon.dataLayer.utils.Ressource
 import com.example.pokedexpokemon.domainLayer.usecase.GetPokemonList
+import com.example.pokedexpokemon.presentationLayer.BaseViewModel
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.BasePokemonMapper.toUiState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,11 +24,11 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalCoroutinesApi::class)
 class ListDetailPokemonViewModel(
     private val getPokemonList: GetPokemonList,
-) : ViewModel() {
+) : BaseViewModel() {
 
     private val _uiState = MutableStateFlow<List<ListDetailsPokemonUiState>>(listOf())
     private val pokemonFetchingIndex: MutableStateFlow<Int> = MutableStateFlow(0)
-    internal val screenUiState: MutableStateFlow<HomeUiState> = MutableStateFlow(HomeUiState.Loading)
+    internal val screenUiState: MutableStateFlow<HomeUiState> = viewModelStateFlow(HomeUiState.Loading)
 
     val uiState = _uiState
         .onStart {
