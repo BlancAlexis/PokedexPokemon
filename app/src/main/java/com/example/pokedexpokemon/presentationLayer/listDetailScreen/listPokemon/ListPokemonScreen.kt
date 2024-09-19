@@ -40,25 +40,27 @@ import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
-import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
+import com.example.pokedexpokemon.dataLayer.ListDetailsUiState
+import com.example.pokedexpokemon.dataLayer.PokemonUiState
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailsPokemonEvent
 import com.example.pokedexpokemon.presentationLayer.util.SealedPokemonType
 
 @Composable
 fun ListPokemonScreen(
     modifier: Modifier = Modifier,
-    uiState: List<ListDetailsPokemonUiState>,
+    uiState: ListDetailsUiState,
     onNavigate: (Int) -> Unit = {},
     viewModelEvent: (ListDetailsPokemonEvent) -> Unit = {}
 ) {
     val context = LocalContext.current
     val itemAnticipation = 15
     LazyColumn(
+        state = uiState.lazyColumnState,
         modifier = Modifier.padding(top = 20.dp).fillMaxSize(),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp)
     ) {
-        itemsIndexed(uiState, key = { _, item -> item.nationalIndices }) { index, value ->
-            if ((index + itemAnticipation) >= uiState.size) {
+        itemsIndexed(uiState.pokemonUiState, key = { _, item -> item.nationalIndices }) { index, value ->
+            if ((index + itemAnticipation) >= uiState.pokemonUiState.size) {
                 viewModelEvent(ListDetailsPokemonEvent.loadMore)
             }
             PokemonCard(onNavigate = {
@@ -70,7 +72,7 @@ fun ListPokemonScreen(
 
 @Composable
 private fun PokemonCard(
-    onNavigate: () -> Unit, pokemonUiState: ListDetailsPokemonUiState, context: Context
+    onNavigate: () -> Unit, pokemonUiState: PokemonUiState, context: Context
 ) {
     Card(onClick = {
         onNavigate()

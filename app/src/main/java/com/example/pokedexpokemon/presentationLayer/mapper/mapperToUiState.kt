@@ -1,11 +1,11 @@
 package com.example.pokedexpokemon.presentationLayer.mapper
 
 import BasePokemon
-import com.example.pokedexpokemon.dataLayer.ListDetailsPokemonUiState
+import com.example.pokedexpokemon.dataLayer.PokemonUiState
 import com.example.pokedexpokemon.presentationLayer.util.toPokemonType
 
 object mapperToUiState {
-    private fun BasePokemon.toUiState(): ListDetailsPokemonUiState = ListDetailsPokemonUiState(
+    private fun BasePokemon.toUiState(): PokemonUiState = PokemonUiState(
         name = this.name.replaceFirstChar { char -> char.uppercase() },
         weight = this.weight,
         height = this.height,

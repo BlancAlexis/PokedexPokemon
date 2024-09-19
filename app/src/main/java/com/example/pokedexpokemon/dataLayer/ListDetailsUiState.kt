@@ -5,12 +5,16 @@ import GameIndex
 import Move
 import Sprites
 import Stat
+import androidx.compose.foundation.lazy.LazyListState
 import com.example.pokedexpokemon.presentationLayer.util.SealedPokemonType
 import java.io.Serializable
 
+data class ListDetailsUiState(
+    val lazyColumnState: LazyListState = LazyListState(),
+    val pokemonUiState: List<PokemonUiState> = listOf()
+)
 
-
-data class ListDetailsPokemonUiState(
+data class PokemonUiState(
     val name: String? = null,
     val weight: Int? = null,
     val height: Int? = null,
