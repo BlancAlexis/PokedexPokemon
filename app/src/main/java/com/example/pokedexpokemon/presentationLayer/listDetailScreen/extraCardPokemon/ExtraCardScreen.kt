@@ -27,6 +27,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.Key.Companion.D
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -55,10 +57,11 @@ fun ExtraCardHost(
     name: String,
     navigationEvent: (NavigationEvent) -> Unit = {}
 ) {
-    //viewModel.getPokemonByName(name) // LE passé dans un state flow?
+    viewModel.getPokemonByName(name) // LE passé dans un state flow?
     val pokemonCardPagingItems: LazyPagingItems<CardPokemonUiState> =
         viewModel.uiState.collectAsLazyPagingItems()
     ExtraCardScreen(
+        uiState = pokemonCardPagingItems,
         onEvent = viewModel::onEvent,
         navigationEvent = navigationEvent
     )
@@ -67,7 +70,7 @@ fun ExtraCardHost(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExtraCardScreen(
-    viewModel: CardPokemonViewModel = koinViewModel(),
+    uiState: LazyPagingItems<CardPokemonUiState>,
     onEvent: (CardPokemonEvent) -> Unit = {},
     navigationEvent: (NavigationEvent) -> Unit = {},
 ) {
@@ -75,9 +78,6 @@ fun ExtraCardScreen(
     var isSheetOpenIndex by rememberSaveable {
         mutableIntStateOf(-1)
     }
-    val uiState: LazyPagingItems<CardPokemonUiState> =
-        viewModel.uiState.collectAsLazyPagingItems()
-    var selectedCard by rememberSaveable { mutableStateOf<CardPokemonUiState?>(null) }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -88,13 +88,18 @@ fun ExtraCardScreen(
                 items(uiState.itemCount) { index ->
                     CardPreview({
                         isSheetOpenIndex = index
-                        selectedCard = uiState[index]
-
                     }, uiState.itemSnapshotList.items[index], index, context)
                 }
             }
+    }
+        if (isSheetOpenIndex != -1) {
+            ModalBottomSheet(onDismissRequest = { isSheetOpenIndex = -1 }) {
+                DetailsCardSheet(uiState = uiState.itemSnapshotList.items[isSheetOpenIndex])
 
+            }
         }
+
+
     }
 
 
