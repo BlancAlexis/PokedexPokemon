@@ -90,7 +90,11 @@ fun DetailsPokemonScreen(
         mutableStateOf(false)
     }
     if (uiState == null) {
-        CircularProgressIndicator()
+        Column(
+            modifier = Modifier.fillMaxSize().background(Color.White),
+        ) {
+
+        }
     }
     else {
         if (showSecret) {
