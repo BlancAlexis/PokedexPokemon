@@ -2,12 +2,13 @@ package com.example.pokedexpokemon.presentationLayer.util
 
 import androidx.compose.ui.graphics.Color
 import com.example.pokedexpokemon.R
+import java.io.Serializable
 
 sealed class SealedPokemonType(
     val color: Color,
     val icon: Int,
     val name: Int
-) {
+) : Serializable {
     class FIRE : SealedPokemonType(Color(0xFFFFA726), R.drawable.fire, R.string.feu)
     class WATER : SealedPokemonType(Color(0xFF42A5F5), R.drawable.water, R.string.water)
     class GRASS : SealedPokemonType(Color(0xFF66BB6A), R.drawable.grass, R.string.grass)
