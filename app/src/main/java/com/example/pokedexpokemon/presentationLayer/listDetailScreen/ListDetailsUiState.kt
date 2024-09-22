@@ -1,4 +1,4 @@
-package com.example.pokedexpokemon.dataLayer
+package com.example.pokedexpokemon.presentationLayer.listDetailScreen
 
 import Ability
 import GameIndex

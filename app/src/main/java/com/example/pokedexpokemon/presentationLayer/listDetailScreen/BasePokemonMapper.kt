@@ -1,7 +1,6 @@
 package com.example.pokedexpokemon.presentationLayer.listDetailScreen
 
 import BasePokemon
-import com.example.pokedexpokemon.dataLayer.PokemonUiState
 import com.example.pokedexpokemon.presentationLayer.util.toPokemonType
 
 object BasePokemonMapper {

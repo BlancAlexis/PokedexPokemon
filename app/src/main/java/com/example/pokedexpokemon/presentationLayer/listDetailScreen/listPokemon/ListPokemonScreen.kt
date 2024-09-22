@@ -34,15 +34,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
-import com.example.pokedexpokemon.dataLayer.ListDetailsUiState
-import com.example.pokedexpokemon.dataLayer.PokemonUiState
+import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailsUiState
+import com.example.pokedexpokemon.presentationLayer.listDetailScreen.PokemonUiState
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailsPokemonEvent
 import com.example.pokedexpokemon.presentationLayer.util.SealedPokemonType
 
