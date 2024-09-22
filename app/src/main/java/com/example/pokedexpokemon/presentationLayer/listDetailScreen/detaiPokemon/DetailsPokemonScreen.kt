@@ -370,13 +370,13 @@ private fun FormDataPokemon(uiState: PokemonUiState, modifier: Modifier) {
             text = "taille", fontSize = 20.sp, fontWeight = FontWeight.Bold
         )
         Text(
-            text = uiState.height.toString(), fontSize = 25.sp, fontWeight = FontWeight.Bold
+            text = "${uiState.height.toString()}m", fontSize = 25.sp, fontWeight = FontWeight.Bold
         )
         Text(
             text = "poids", fontSize = 20.sp, fontWeight = FontWeight.Bold
         )
         Text(
-            text = uiState.weight.toString(), fontSize = 25.sp, fontWeight = FontWeight.Bold
+            text = "${uiState.weight.toString()}kg", fontSize = 25.sp, fontWeight = FontWeight.Bold
         )
 
     }
