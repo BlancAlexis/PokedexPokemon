@@ -94,13 +94,12 @@ class CardPokemonViewModel(
         subtypes = subtypes.map { it.toPokemonType() },
         types = types,
         number = number,
-        artist = artist,
+        artist = artist ?: "non spécifié",
         rarity = rarity,
         cardPrice = cardPrice
     )
 
     fun getPokemonByName(name: String) {
-        println("name : $name")
         viewModelScope.launch {
             getCard(name)
         }

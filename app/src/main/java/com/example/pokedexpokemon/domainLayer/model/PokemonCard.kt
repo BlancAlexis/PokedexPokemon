@@ -7,7 +7,7 @@ data class PokemonCard(
     val hp: String,
     val types: List<String>,
     val number: String,
-    val artist: String,
+    val artist: String? = "non spécifié",
     val rarity: String,
     val images: String,
     val cardPrice: CardPrice
