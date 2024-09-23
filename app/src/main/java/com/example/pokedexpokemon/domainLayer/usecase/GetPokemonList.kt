@@ -12,8 +12,9 @@ class GetPokemonList(
         return try {
             Ressource.Success(basePokemonRepository.getListBasePokemon(page))
         } catch (e: Exception) {
+
             Ressource.Error(e)
         }
-    }
 
+    }
 }

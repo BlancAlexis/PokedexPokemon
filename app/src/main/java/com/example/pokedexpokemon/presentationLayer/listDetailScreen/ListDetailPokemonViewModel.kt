@@ -59,7 +59,7 @@ class ListDetailPokemonViewModel(
                 flow {
                     emit(HomeUiState.Loading)
                     when (val result = getPokemonList.invoke(page)) {
-                        is Ressource.Error -> emit(HomeUiState.Error(result.message))
+                        is Ressource.Error -> emit(HomeUiState.Error("Problème de connexion réseau, veuillez vérifier votre connexion internet."))
                         is Ressource.Loading -> emit(HomeUiState.Loading)
                         is Ressource.Success -> {
                             val newData = result.data?.map { it.toUiState() } ?: emptyList()
