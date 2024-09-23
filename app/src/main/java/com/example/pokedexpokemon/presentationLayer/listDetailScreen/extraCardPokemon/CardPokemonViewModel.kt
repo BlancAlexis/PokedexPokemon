@@ -16,7 +16,6 @@ import com.example.pokedexpokemon.presentationLayer.util.toPokemonType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 
 class SaveCardUseCase(
@@ -70,7 +69,7 @@ class CardPokemonViewModel(
     val uiState = _uiState.asStateFlow()
 
 
-    private suspend fun getCard(name: String) {
+     suspend fun getPaginateCards(name: String) {
         getPokemonCardByNameUseCase.invoke(name)
             .distinctUntilChanged()
             .cachedIn(viewModelScope)
@@ -99,11 +98,7 @@ class CardPokemonViewModel(
         cardPrice = cardPrice
     )
 
-    fun getPokemonByName(name: String) {
-        viewModelScope.launch {
-            getCard(name)
-        }
-    }
+
 
 }
 
