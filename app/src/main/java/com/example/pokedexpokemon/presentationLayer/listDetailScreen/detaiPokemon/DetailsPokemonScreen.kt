@@ -75,7 +75,7 @@ import com.example.pokedexpokemon.presentationLayer.util.CustomDialog
 import com.example.pokedexpokemon.presentationLayer.util.SealedPokemonType
 import kotlin.math.absoluteValue
 
-@OptIn(ExperimentalFoundationApi::class)
+private const val MAX_BASE_STAT = 255f
 @Composable
 fun DetailsPokemonScreen(
     modifier: Modifier = Modifier,
@@ -202,7 +202,7 @@ private fun BottomSectionCard(
                     uiState.stats.forEach {
                         Text(text = it.name)
                         LinearProgressIndicator(
-                            progress = { it.baseStat / 100f },
+                            progress = { it.baseStat / MAX_BASE_STAT },
                         )
                         Spacer(modifier = Modifier.weight(1f))
                     }
@@ -369,17 +369,35 @@ private fun FormDataPokemon(uiState: PokemonUiState, modifier: Modifier) {
             text = "taille", fontSize = 20.sp, fontWeight = FontWeight.Bold
         )
         Text(
-            text = "${uiState.height.toString()}m", fontSize = 25.sp, fontWeight = FontWeight.Bold
+            text = "${heightFormatter(uiState.height.toString())}m", fontSize = 25.sp, fontWeight = FontWeight.Bold
         )
         Text(
             text = "poids", fontSize = 20.sp, fontWeight = FontWeight.Bold
         )
         Text(
-            text = "${uiState.weight.toString()}kg", fontSize = 25.sp, fontWeight = FontWeight.Bold
+            text = "${weightFormatter(uiState.weight.toString())}kg", fontSize = 25.sp, fontWeight = FontWeight.Bold
         )
 
     }
 }
+
+@Composable
+private fun weightFormatter(weight: String) =
+    if (weight.length > 1) {
+        StringBuilder(weight).insert(weight.length - 1, ".")
+            .toString()
+    } else {
+        weight
+    }
+
+@Composable
+private fun heightFormatter(height: String) =
+    if (height.length > 1) {
+        StringBuilder(height).insert(height.length - 1, ".")
+            .toString()
+    } else {
+        "0.$height"
+    }
 
 @Composable
 fun createPokemonPainter(imageUrl: String?, imageLoader: ImageLoader, context: Context): Painter {
