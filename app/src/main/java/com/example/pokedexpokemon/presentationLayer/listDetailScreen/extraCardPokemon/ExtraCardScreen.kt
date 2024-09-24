@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -43,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -54,10 +56,13 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import coil.size.Scale
 import com.example.pokedexpokemon.R
 import com.example.pokedexpokemon.presentationLayer.NavigationEvent
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.HomeUiState
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.detaiPokemon.CardPokemonUiState
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -84,19 +89,6 @@ fun ExtraCardHost(
                 CircularProgressIndicator()
             }
         }
-        if ((pokemonCardPagingItems.loadState.refresh is LoadState.Error) || (pokemonCardPagingItems.loadState.append is LoadState.Error)) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .alpha(0.5f)
-                    .background(Color.Red)
-                    .zIndex(1f),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(text = "Error", color = Color.White, textAlign = androidx.compose.ui.text.style.TextAlign.Center, modifier = Modifier.padding(10.dp))
-            }
-        }
         ExtraCardScreen(uiState = pokemonCardPagingItems)
     }
 }
@@ -118,26 +110,20 @@ fun ExtraCardScreen(uiState: LazyPagingItems<CardPokemonUiState>) {
             contentPadding = PaddingValues(vertical = 20.dp)
         ) {
             items(uiState.itemCount, key =  uiState.itemKey()) { index ->
-                Card(
-                    modifier = Modifier
-                        .padding(vertical = 20.dp)
-                        .wrapContentSize()
-                        .clickable { isSheetOpenIndex = index },
-                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = 10.dp)
-                ) {
-                    AsyncImage(modifier = Modifier.align(Alignment.CenterHorizontally).fillMaxSize(0.7f),
+                    AsyncImage(
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(vertical = 10.dp)
+                            .clickable { isSheetOpenIndex = index },
                         model = ImageRequest.Builder(context)
                             .data(uiState[index]?.image)
-                            .crossfade(true)
                             .build(),
                         placeholder = painterResource(id = R.drawable.back_card_pokemon),
-                        error = painterResource(id = R.drawable.icicle_badge),
-                        contentDescription = ""
+                        contentDescription = "",
                     )
 
                 }
             }
-        }
     }
     if (isSheetOpenIndex != -1) {
         ModalBottomSheet(onDismissRequest = { isSheetOpenIndex = -1 }) {
@@ -158,7 +144,7 @@ private fun DetailsCardSheet(
         modifier = Modifier.fillMaxWidth()
     ) {
         AsyncImage(
-            modifier = Modifier.align(Alignment.CenterHorizontally),
+            modifier = Modifier.align(Alignment.CenterHorizontally).height(300.dp),
             model = ImageRequest.Builder(context).data(uiState.image).build(),
             contentDescription = ""
         )
@@ -170,6 +156,10 @@ private fun DetailsCardSheet(
             Text(text = uiState.name, fontSize = 20.sp)
             DropDownBox(context, navigationEvent)
         }
+
+        CardDetails(uiState)
+        Spacer(modifier = Modifier.fillMaxHeight(0.05f))
+        PriceBar(uiState)
 
         CardDetails(uiState)
         Spacer(modifier = Modifier.fillMaxHeight(0.05f))
