@@ -69,7 +69,7 @@ class CardPokemonViewModel(
     val uiState = _uiState.asStateFlow()
 
 
-     suspend fun getPaginateCards(name: String) {
+    suspend fun getPaginateCards(name: String) {
         getPokemonCardByNameUseCase.invoke(name)
             .distinctUntilChanged()
             .cachedIn(viewModelScope)
@@ -97,7 +97,6 @@ class CardPokemonViewModel(
         rarity = rarity,
         cardPrice = cardPrice
     )
-
 
 
 }

@@ -69,13 +69,14 @@ import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
-import com.example.pokedexpokemon.presentationLayer.listDetailScreen.PokemonUiState
 import com.example.pokedexpokemon.presentationLayer.NavigationEvent
+import com.example.pokedexpokemon.presentationLayer.listDetailScreen.PokemonUiState
 import com.example.pokedexpokemon.presentationLayer.util.CustomDialog
 import com.example.pokedexpokemon.presentationLayer.util.SealedPokemonType
 import kotlin.math.absoluteValue
 
 private const val MAX_BASE_STAT = 255f
+
 @Composable
 fun DetailsPokemonScreen(
     modifier: Modifier = Modifier,
@@ -90,12 +91,13 @@ fun DetailsPokemonScreen(
     }
     if (uiState == null) {
         Column(
-            modifier = Modifier.fillMaxSize().background(Color.White),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White),
         ) {
 
         }
-    }
-    else {
+    } else {
         if (showSecret) {
             CustomDialog(
                 onDismissRequest = { showSecret = false },
@@ -325,7 +327,7 @@ private fun TopSectionCard(
             snapshotFlow { pagerState.currentPage }.collect { page ->
             }
         }
-        Box() {
+        Box {
             HorizontalPager(state = pagerState) { page ->
                 Box(
                     modifier = Modifier
@@ -369,13 +371,17 @@ private fun FormDataPokemon(uiState: PokemonUiState, modifier: Modifier) {
             text = "taille", fontSize = 20.sp, fontWeight = FontWeight.Bold
         )
         Text(
-            text = "${heightFormatter(uiState.height.toString())}m", fontSize = 25.sp, fontWeight = FontWeight.Bold
+            text = "${heightFormatter(uiState.height.toString())}m",
+            fontSize = 25.sp,
+            fontWeight = FontWeight.Bold
         )
         Text(
             text = "poids", fontSize = 20.sp, fontWeight = FontWeight.Bold
         )
         Text(
-            text = "${weightFormatter(uiState.weight.toString())}kg", fontSize = 25.sp, fontWeight = FontWeight.Bold
+            text = "${weightFormatter(uiState.weight.toString())}kg",
+            fontSize = 25.sp,
+            fontWeight = FontWeight.Bold
         )
 
     }

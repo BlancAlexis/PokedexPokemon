@@ -72,15 +72,22 @@ fun ListDetailLayout(
                 CircularProgressIndicator()
             }
         }
-        if(screenUiState is HomeUiState.Error){
-            Column(modifier = Modifier
-                .fillMaxSize()
-                .alpha(0.5f)
-                .background(Color.Red)
-                .zIndex(1f),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(text = screenUiState.message.toString(), color = Color.White, textAlign = androidx.compose.ui.text.style.TextAlign.Center, modifier = Modifier.padding(10.dp))
+        if (screenUiState is HomeUiState.Error) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .alpha(0.5f)
+                    .background(Color.Red)
+                    .zIndex(1f),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = screenUiState.message.toString(),
+                    color = Color.White,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    modifier = Modifier.padding(10.dp)
+                )
             }
         }
         AnimatedVisibility(

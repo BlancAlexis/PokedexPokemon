@@ -55,7 +55,8 @@ fun <T : Any> AutoScrollingLazyRow(
 
             if (index == items.lastIndex) {
                 val currentList = items
-                val firstVisibleItemIndex = remember { derivedStateOf { lazyListState.firstVisibleItemIndex } }
+                val firstVisibleItemIndex =
+                    remember { derivedStateOf { lazyListState.firstVisibleItemIndex } }
                 val secondPart = currentList.subList(0, firstVisibleItemIndex.value)
                 val firstPart =
                     currentList.subList(firstVisibleItemIndex.value, currentList.size)

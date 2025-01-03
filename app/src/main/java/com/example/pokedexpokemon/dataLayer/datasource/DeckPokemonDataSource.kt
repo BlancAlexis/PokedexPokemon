@@ -35,14 +35,14 @@ class DeckPokemonDataSourceImpl(
         }
     }
 
-    suspend override fun insertDeckUseCase(deck: DeckWithPokemonCardMapper) {
+    override suspend fun insertDeckUseCase(deck: DeckWithPokemonCardMapper) {
         withContext(dispatcher) {
             deckPokemonDao.insertDeckWithCards(deck.deck, deck.cards)
             //  deckPokemonDao.insertDeck(deck)
         }
     }
 
-    suspend override fun removeDeckPokemonUseCase(index: String) {
+    override suspend fun removeDeckPokemonUseCase(index: String) {
         TODO("Not yet implemented")
     }
 

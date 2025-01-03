@@ -23,7 +23,7 @@ data class Stat(
 
 data class Ability(
     val abilityName: String, val isHidden: Boolean
-): Serializable
+) : Serializable
 
 
 data class Roar(
@@ -33,7 +33,7 @@ data class Roar(
 
 data class GameIndex(
     val gameIndex: Int, val version: Version
-): Serializable
+) : Serializable
 
 data class Version(
     val name: String // Avoir un logo ici?
@@ -41,7 +41,7 @@ data class Version(
 
 data class Move(
     val moveName: String, val levelLearnedAt: Int
-): Serializable
+) : Serializable
 
 // Move variant entre jeux
 
@@ -49,7 +49,7 @@ data class Sprites(
     val baseSprite: String,
     val backDefault: String,
     val frontDefault: String,
-): Serializable
+) : Serializable
 
 
 

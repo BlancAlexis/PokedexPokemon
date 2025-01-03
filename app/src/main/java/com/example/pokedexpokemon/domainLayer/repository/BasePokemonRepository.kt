@@ -6,7 +6,7 @@ import com.example.pokedexpokemon.domainLayer.card_mapper.PokemonMapper.toDomain
 import org.koin.core.component.KoinComponent
 
 interface BasePokemonRepository {
-    suspend fun getListBasePokemon(page : Int): List<BasePokemon>
+    suspend fun getListBasePokemon(page: Int): List<BasePokemon>
     suspend fun getPokemon(index: String): BasePokemon
 }
 

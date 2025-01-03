@@ -40,9 +40,9 @@ import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
+import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailsPokemonEvent
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailsUiState
 import com.example.pokedexpokemon.presentationLayer.listDetailScreen.PokemonUiState
-import com.example.pokedexpokemon.presentationLayer.listDetailScreen.ListDetailsPokemonEvent
 import com.example.pokedexpokemon.presentationLayer.util.SealedPokemonType
 
 @Composable
@@ -56,10 +56,14 @@ fun ListPokemonScreen(
     val itemAnticipation = 15
     LazyColumn(
         state = uiState.lazyColumnState,
-        modifier = Modifier.padding(top = 20.dp).fillMaxSize(),
+        modifier = Modifier
+            .padding(top = 20.dp)
+            .fillMaxSize(),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp)
     ) {
-        itemsIndexed(uiState.pokemonUiState, key = { _, item -> item.nationalIndices }) { index, value ->
+        itemsIndexed(
+            uiState.pokemonUiState,
+            key = { _, item -> item.nationalIndices }) { index, value ->
             if ((index + itemAnticipation) >= uiState.pokemonUiState.size) {
                 viewModelEvent(ListDetailsPokemonEvent.loadMore)
             }
@@ -99,11 +103,12 @@ private fun PokemonCard(
                     .size(55.dp)
             ) {
                 val imageLoader = ImageLoader.Builder(context).components {
-                        add(ImageDecoderDecoder.Factory())
-                    }.build()
+                    add(ImageDecoderDecoder.Factory())
+                }.build()
 
                 val painter: Painter = rememberAsyncImagePainter(
-                    model = ImageRequest.Builder(context).data(pokemonUiState.sprites?.frontDefault).build(),
+                    model = ImageRequest.Builder(context).data(pokemonUiState.sprites?.frontDefault)
+                        .build(),
                     imageLoader = imageLoader
                 )
                 Image(
@@ -146,14 +151,15 @@ private fun PokemonTypeFlowRow(listPokemonType: List<SealedPokemonType>) {
             .padding(horizontal = 16.dp),
     ) {
         listPokemonType.forEach { type ->
-            AssistChip(leadingIcon = {
-                Icon(
-                    painter = painterResource(id = type.icon),
-                    tint = Color.Black,
-                    contentDescription = null,
-                    modifier = Modifier.size(25.dp)
-                )
-            },
+            AssistChip(
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = type.icon),
+                        tint = Color.Black,
+                        contentDescription = null,
+                        modifier = Modifier.size(25.dp)
+                    )
+                },
                 colors = AssistChipDefaults.assistChipColors(
                     containerColor = type.color,
                 ),
