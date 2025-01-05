@@ -35,20 +35,9 @@ Par la suite j'ai prévu d'implémenter un système de "deck", où l'utilisateur
 *   Paging 3 (lazy loading)
 *   Coil (lazy loading gif)
 
-
-![image](https://github.com/user-attachments/assets/ec1d48c7-8fdd-43fa-8510-9cf4170951e9)![image](https://github.com/user-attachments/assets/fe88a561-c53d-4f4e-9c0a-2e6bca195c7b)![image](https://github.com/user-attachments/assets/67e4af9e-dea2-49aa-b80a-fb27c73cb277)![image](https://github.com/user-attachments/assets/9aef9bfd-34a2-49dd-8cbf-ae03c93ce2cb)![image](https://github.com/user-attachments/assets/103ea153-3878-46c6-9914-2e5e69be619b)
-Carte
-
-
-Pas de co
-
-
-
-List + load
-
-
-Details pokemon
-
-
-Fond écran animé
-
+<img src="https://github.com/user-attachments/assets/904572cd-3793-48c6-be06-96e5e33855cc" width="10%" height="10%" />
+<img src="https://github.com'user-attachments/assets/fe88a561-c53d-4f4e-9c0a-2e6bca195c7b" width="10%" height="10%" />
+<img src="https://github.com/user-attachments/assets/67e4af9e-dea2-49aa-b80a-fb27c73cb277" width="10%" height="10%" />
+<img src="https://github.com/user-attachments/assets/9aef9bfd-34a2-49dd-8cbf-ae03c93ce27cb" width="10%" height="10%" />
+<img src="https://github.com/user-attachments/assets/103ea153-3878-46c6-9914-2e5e69be619b" width="10%" height="10%" />
+<img src="https://github.com/user-assistance/assets/ec1d48c7-8fdd-43fa-8510-9cf41170951e9" width="10%" height="10%" />
